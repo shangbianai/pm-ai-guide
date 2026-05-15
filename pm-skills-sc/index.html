@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM 技能库概览</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0b1120;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #94a3b8;
+        }
+        .skill-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.8));
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .skill-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(71, 85, 105, 0.8);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+        }
+        .card-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            opacity: 0.5;
+        }
+        .accent-blue { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .accent-green { background: linear-gradient(90deg, #10b981, #34d399); }
+        .accent-orange { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .accent-purple { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+        .accent-indigo { background: linear-gradient(90deg, #6366f1, #818cf8); }
+        .accent-teal { background: linear-gradient(90deg, #14b8a6, #2dd4bf); }
+        .accent-pink { background: linear-gradient(90deg, #ec4899, #f472b6); }
+        .accent-gray { background: linear-gradient(90deg, #64748b, #94a3b8); }
+
+        .tag-badge {
+            background-color: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            font-family: monospace;
+        }
+        
+        .coming-soon-card {
+            border: 1px dashed rgba(51, 65, 85, 0.8);
+            background: transparent;
+        }
+
+        .gradient-text-blue { color: #3b82f6; }
+        .gradient-text-yellow { color: #eab308; }
+        .gradient-text-green { color: #22c55e; }
+    </style>
+</head>
+<body class="min-h-screen p-8 md:p-16">
+    <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Product Discovery -->
+            <div class="skill-card rounded-xl p-8 flex flex-col h-full">
+                <div class="card-accent accent-blue"></div>
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-white text-2xl font-bold tracking-tight">产品探索</h2>
+                    <span class="tag-badge text-[10px] text-slate-500 px-2 py-1 rounded">pm-product-discovery</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-auto">
+                    涵盖产品构思、实验设计、假设测试、功能优先级排序和客户访谈。
+                </p>
+                <div class="mt-8 flex gap-4 text-xs font-medium">
+                    <div><span class="text-blue-500 font-bold mr-1">13</span> 技能</div>
+                    <div><span class="text-blue-400 font-bold mr-1">5</span> 命令</div>
+                </div>
+            </div>
+
+            <!-- Product Strategy -->
+            <div class="skill-card rounded-xl p-8 flex flex-col h-full">
+                <div class="card-accent accent-green"></div>
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-white text-2xl font-bold tracking-tight">产品战略</h2>
+                    <span class="tag-badge text-[10px] text-slate-500 px-2 py-1 rounded">pm-产品战略</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-auto">
+                    涵盖愿景规划、战略画布、价值主张、商业模式、SWOT、PESTLE 及波特五力分析。
+                </p>
+                <div class="mt-8 flex gap-4 text-xs font-medium">
+                    <div><span class="text-green-500 font-bold mr-1">12</span> 技能</div>
+                    <div><span class="text-green-400 font-bold mr-1">5</span> 命令</div>
+                </div>
+            </div>
+
+            <!-- Execution -->
+            <div class="skill-card rounded-xl p-8 flex flex-col h-full">
+                <div class="card-accent accent-orange"></div>
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-white text-2xl font-bold tracking-tight">执行管理</h2>
+                    <span class="tag-badge text-[10px] text-slate-500 px-2 py-1 rounded">pm-执行管理</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-auto">
+                    涵盖 PRD 编写、OKR 规划、路线图、Sprint 管理、事前剖析及用户故事。
+                </p>
+                <div class="mt-8 flex gap-4 text-xs font-medium">
+                    <div><span class="text-orange-500 font-bold mr-1">15</span> 技能</div>
+                    <div><span class="text-orange-400 font-bold mr-1">10</span> 命令</div>
+                </div>
+            </div>
+
+            <!-- Market Research -->
+            <div class="skill-card rounded-xl p-8 flex flex-col h-full">
+                <div class="card-accent accent-purple"></div>
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-white text-2xl font-bold tracking-tight">市场研究</h2>
+                    <span class="tag-badge text-[10px] text-slate-500 px-2 py-1 rounded">pm-市场研究</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-auto">
+                    涵盖用户画像、市场细分、市场规模估算 (TAM/SAM/SOM) 及竞争对手分析。
+                </p>
+                <div class="mt-8 flex gap-4 text-xs font-medium">
+                    <div><span class="text-purple-500 font-bold mr-1">7</span> 技能</div>
+                    <div><span class="text-purple-400 font-bold mr-1">3</span> 命令</div>
+                </div>
+            </div>
+
+            <!-- Data Analytics -->
+            <div class="skill-card rounded-xl p-8 flex flex-col h-full">
+                <div class="card-accent accent-indigo"></div>
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-white text-2xl font-bold tracking-tight">数据分析</h2>
+                    <span class="tag-badge text-[10px] text-slate-500 px-2 py-1 rounded">pm-数据分析</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-auto">
+                    涵盖 SQL 查询生成、同期群分析、留存分析及 A/B 测试统计分析。
+                </p>
+                <div class="mt-8 flex gap-4 text-xs font-medium">
+                    <div><span class="text-indigo-500 font-bold mr-1">3</span> 技能</div>
+                    <div><span class="text-indigo-400 font-bold mr-1">3</span> 命令</div>
+                </div>
+            </div>
+
+            <!-- Go-to-Market -->
+            <div class="skill-card rounded-xl p-8 flex flex-col h-full">
+                <div class="card-accent accent-teal"></div>
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-white text-2xl font-bold tracking-tight text-nowrap">进入市场</h2>
+                    <span class="tag-badge text-[10px] text-slate-500 px-2 py-1 rounded">pm-进入市场</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-auto">
+                    涵盖 GTM 战略、增长循环、滩头市场细分、ICP 识别及竞争对比话术。
+                </p>
+                <div class="mt-8 flex gap-4 text-xs font-medium">
+                    <div><span class="text-teal-500 font-bold mr-1">6</span> 技能</div>
+                    <div><span class="text-teal-400 font-bold mr-1">3</span> 命令</div>
+                </div>
+            </div>
+
+            <!-- Marketing & Growth -->
+            <div class="skill-card rounded-xl p-8 flex flex-col h-full">
+                <div class="card-accent accent-pink"></div>
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-white text-2xl font-bold tracking-tight">营销增长</h2>
+                    <span class="tag-badge text-[10px] text-slate-500 px-2 py-1 rounded">pm-营销增长</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-auto">
+                    涵盖营销构思、价值主张陈述、产品命名、定位策略及北极星指标。
+                </p>
+                <div class="mt-8 flex gap-4 text-xs font-medium">
+                    <div><span class="text-pink-500 font-bold mr-1">5</span> 技能</div>
+                    <div><span class="text-yellow-400 font-bold mr-1">2</span> 命令</div>
+                </div>
+            </div>
+
+            <!-- PM Toolkit -->
+            <div class="skill-card rounded-xl p-8 flex flex-col h-full">
+                <div class="card-accent accent-gray"></div>
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-white text-2xl font-bold tracking-tight">项目工具箱</h2>
+                    <span class="tag-badge text-[10px] text-slate-500 px-2 py-1 rounded">pm-工具箱</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-auto">
+                    涵盖简历评审与定制、NDA 起草、隐私政策生成及文本语法/流畅度检查。
+                </p>
+                <div class="mt-8 flex gap-4 text-xs font-medium">
+                    <div><span class="text-slate-500 font-bold mr-1">4</span> 技能</div>
+                    <div><span class="text-slate-400 font-bold mr-1">5</span> 命令</div>
+                </div>
+            </div>
+
+            <!-- More coming soon -->
+            <div class="coming-soon-card rounded-xl p-8 flex flex-col items-center justify-center text-center">
+                <div class="mb-6">
+                    <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-slate-200 text-xl font-bold mb-2">更多技能敬请期待</h2>
+                <p class="text-slate-500 text-xs">在 GitHub 上关注并收藏以获取最新动态</p>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

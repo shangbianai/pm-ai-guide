@@ -1,0 +1,8 @@
+.DS_Store
+Thumbs.db
+*.Zone.Identifier
+*.pyc
+__pycache__/
+.trae/
+*.tmp
+*.bak

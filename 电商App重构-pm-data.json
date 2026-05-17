@@ -1,0 +1,200 @@
+{
+  "product": "电商App重构",
+  "cover_title": "项目管理：电商App重构",
+  "cover_lead": "4人团队、3个月交付，从技术债清理到全量上线的实战项目管理方案",
+  "period": "2026年5月18日 — 2026年8月18日（12周）",
+  "executive_summary": {
+    "overall_evaluation": "4人团队3个月完成电商App重构，时间紧但可行。核心瓶颈在后端（仅1人），必须通过前后端分离、接口先行、Mock数据等策略减轻后端压力。前端2人可并行推进，但需注意代码规范统一。测试1人需贯穿全程，不能只做最后验收。",
+    "top_findings": [
+      {"finding": "后端是整个项目的资源瓶颈", "data": "仅1名后端，需承担API重构、数据库迁移、支付对接、性能优化全部服务端工作，预估总工作量约55人天，负载率约92%"},
+      {"finding": "3个月时间窗口需要极简MVP策略", "data": "重构项目常见的二开陷阱是贪多求全，12周内必须锁定核心交易链路（首页→搜索→详情→购物车→下单→支付），非核心功能延后迭代"},
+      {"finding": "前端2人需高度协同避免重复造轮子", "data": "重构意味着从零搭建组件库、路由、状态管理，如果2人各搞一套会导致严重返工，第1周必须统一技术规范"}
+    ],
+    "top_actions": [
+      {"priority": "P0", "action": "项目启动第1天完成技术方案评审，锁定架构选型和接口规范", "effect": "避免中后期因技术分歧导致返工"},
+      {"priority": "P0", "action": "后端立即启动接口设计，输出API文档，前端用Mock数据并行开发", "effect": "前后端解耦，后端不再成为前端阻塞点"},
+      {"priority": "P1", "action": "测试从第2周介入编写自动化测试用例，不做纯手工验收", "effect": "提高回归效率，保障重构不引入新Bug"}
+    ]
+  },
+  "project_overview": {
+    "goal": "在2026年8月18日前完成电商App的技术重构并全量上线。重构后App启动速度提升50%以上，核心页面加载时间<1.5秒，Crash率<0.1%，同时保持现有核心功能100%可用。",
+    "scope": "重构范围：首页/分类/搜索/商品详情/购物车/订单/支付/个人中心8大核心模块的技术架构升级和UI重做。不含：商家后台、CRM系统、BI数据平台、营销引擎（仅保留入口，引擎本身不重构）。技术栈：前端采用跨平台方案统一代码库，后端微服务化拆分，数据库从单库迁移到分库分表。",
+    "constraints": [
+      "时间约束：2026年8月18日必须全量上线，不可延期（配合9月大促）",
+      "人力约束：固定4人团队（2前端+1后端+1测试），不增加编制",
+      "兼容性约束：新App需兼容现有用户数据和在途订单，不能丢失任何业务数据",
+      "技术约束：需同时支持iOS和Android两端，跨平台方案选型在第1周确定"
+    ],
+    "success_criteria": [
+      "核心交易链路（首页→搜索→详情→购物车→下单→支付）功能完整，P0/P1 Bug清零",
+      "App冷启动时间<2秒，核心页面首屏加载<1.5秒（当前为3.5秒）",
+      "Crash率<0.1%，ANR率<0.5%（当前Crash率1.2%）",
+      "兼容在途订单和用户数据迁移，数据丢失率=0",
+      "自动化测试覆盖率>60%，核心链路>80%"
+    ]
+  },
+  "wbs": {
+    "phases": [
+      {
+        "phase": "阶段一：项目启动与技术准备（第1-2周）",
+        "tasks": [
+          {"task": "技术方案评审，锁定架构选型（前端框架、后端技术栈、数据库方案）", "owner": "后端开发", "effort": "2天", "dependencies": "无", "priority": "P0", "deliverable": "技术方案文档"},
+          {"task": "前端技术规范制定（组件规范、命名规范、Git工作流）", "owner": "前端开发A", "effort": "2天", "dependencies": "架构选型确定", "priority": "P0", "deliverable": "前端开发规范文档"},
+          {"task": "搭建前端工程脚手架（构建工具、路由、状态管理、请求封装）", "owner": "前端开发B", "effort": "3天", "dependencies": "架构选型确定", "priority": "P0", "deliverable": "前端工程模板"},
+          {"task": "后端API接口设计（核心交易链路全部接口定义+Swagger文档）", "owner": "后端开发", "effort": "3天", "dependencies": "架构选型确定", "priority": "P0", "deliverable": "API接口文档"},
+          {"task": "搭建Mock Server，前端可基于Mock数据开发", "owner": "前端开发A", "effort": "2天", "dependencies": "API接口文档", "priority": "P0", "deliverable": "Mock Server"},
+          {"task": "测试计划编写，确定测试策略和用例框架", "owner": "测试工程师", "effort": "2天", "dependencies": "技术方案确定", "priority": "P1", "deliverable": "测试计划文档"},
+          {"task": "旧系统核心链路回归测试基线采集", "owner": "测试工程师", "effort": "2天", "dependencies": "无", "priority": "P1", "deliverable": "基线测试报告"},
+          {"task": "数据库迁移方案设计（分库分表策略+数据迁移脚本）", "owner": "后端开发", "effort": "2天", "dependencies": "架构选型确定", "priority": "P1", "deliverable": "数据库迁移方案"}
+        ]
+      },
+      {
+        "phase": "阶段二：核心功能开发（第3-7周）",
+        "tasks": [
+          {"task": "首页+分类模块前端开发", "owner": "前端开发A", "effort": "3天", "dependencies": "工程脚手架+Mock Server", "priority": "P0", "deliverable": "首页+分类页面"},
+          {"task": "搜索模块前端开发（含搜索结果页+筛选）", "owner": "前端开发B", "effort": "3天", "dependencies": "工程脚手架+Mock Server", "priority": "P0", "deliverable": "搜索页面"},
+          {"task": "商品详情页前端开发", "owner": "前端开发A", "effort": "3天", "dependencies": "首页完成", "priority": "P0", "deliverable": "商品详情页"},
+          {"task": "购物车模块前端开发", "owner": "前端开发B", "effort": "3天", "dependencies": "商品详情页接口定义", "priority": "P0", "deliverable": "购物车页面"},
+          {"task": "订单+支付模块前端开发", "owner": "前端开发A", "effort": "3天", "dependencies": "购物车完成", "priority": "P0", "deliverable": "订单+支付页面"},
+          {"task": "个人中心前端开发", "owner": "前端开发B", "effort": "2天", "dependencies": "订单模块接口定义", "priority": "P1", "deliverable": "个人中心页面"},
+          {"task": "通用UI组件库封装（按钮、弹窗、列表、卡片等）", "owner": "前端开发B", "effort": "3天", "dependencies": "工程脚手架", "priority": "P0", "deliverable": "组件库"},
+          {"task": "用户服务后端开发（注册/登录/Token/个人信息）", "owner": "后端开发", "effort": "3天", "dependencies": "API接口文档", "priority": "P0", "deliverable": "用户服务"},
+          {"task": "商品服务后端开发（SPU/SKU/库存/分类/搜索）", "owner": "后端开发", "effort": "3天", "dependencies": "用户服务完成", "priority": "P0", "deliverable": "商品服务"},
+          {"task": "订单服务后端开发（创建/取消/状态流转/超时关单）", "owner": "后端开发", "effort": "3天", "dependencies": "商品服务完成", "priority": "P0", "deliverable": "订单服务"},
+          {"task": "支付服务后端开发（对接支付渠道+回调+对账）", "owner": "后端开发", "effort": "3天", "dependencies": "订单服务完成", "priority": "P0", "deliverable": "支付服务"},
+          {"task": "数据库迁移执行（旧数据导入+分库分表+数据校验）", "owner": "后端开发", "effort": "2天", "dependencies": "数据库迁移方案", "priority": "P0", "deliverable": "迁移完成报告"},
+          {"task": "核心链路接口联调（首页→搜索→详情→购物车→下单→支付）", "owner": "全员", "effort": "3天", "dependencies": "前后端核心模块完成", "priority": "P0", "deliverable": "联调通过报告"},
+          {"task": "核心链路自动化测试用例编写", "owner": "测试工程师", "effort": "3天", "dependencies": "API接口文档", "priority": "P1", "deliverable": "自动化测试用例"},
+          {"task": "接口级自动化测试用例编写（用户/商品/订单/支付）", "owner": "测试工程师", "effort": "3天", "dependencies": "后端各服务完成", "priority": "P1", "deliverable": "接口测试用例"}
+        ]
+      },
+      {
+        "phase": "阶段三：集成测试与优化（第8-10周）",
+        "tasks": [
+          {"task": "全量功能测试（8大模块逐个功能验证）", "owner": "测试工程师", "effort": "3天", "dependencies": "联调完成", "priority": "P0", "deliverable": "功能测试报告"},
+          {"task": "兼容性测试（iOS/Android各3款主流机型）", "owner": "测试工程师", "effort": "2天", "dependencies": "功能测试通过", "priority": "P0", "deliverable": "兼容性测试报告"},
+          {"task": "性能测试（启动速度、页面加载、接口响应）", "owner": "测试工程师", "effort": "2天", "dependencies": "功能测试通过", "priority": "P0", "deliverable": "性能测试报告"},
+          {"task": "前端性能优化（图片懒加载、列表虚拟滚动、代码分割）", "owner": "前端开发A", "effort": "3天", "dependencies": "性能测试报告", "priority": "P0", "deliverable": "优化后性能数据"},
+          {"task": "后端性能优化（慢SQL治理、缓存策略、接口并发优化）", "owner": "后端开发", "effort": "3天", "dependencies": "性能测试报告", "priority": "P0", "deliverable": "优化后性能数据"},
+          {"task": "Bug修复（P0/P1优先清零）", "owner": "全员", "effort": "3天", "dependencies": "测试报告", "priority": "P0", "deliverable": "Bug清零报告"},
+          {"task": "UI还原度走查与视觉优化", "owner": "前端开发B", "effort": "2天", "dependencies": "功能基本稳定", "priority": "P1", "deliverable": "UI走查报告"},
+          {"task": "数据迁移验证（全量数据对比+抽样验证）", "owner": "测试工程师", "effort": "2天", "dependencies": "数据库迁移完成", "priority": "P0", "deliverable": "数据迁移验证报告"}
+        ]
+      },
+      {
+        "phase": "阶段四：灰度发布与全量上线（第11-12周）",
+        "tasks": [
+          {"task": "灰度发布方案制定（灰度策略、回滚预案、监控指标）", "owner": "后端开发", "effort": "1天", "dependencies": "Bug修复完成", "priority": "P0", "deliverable": "灰度发布方案"},
+          {"task": "灰度发布5%用户（监控核心指标24小时）", "owner": "全员", "effort": "2天", "dependencies": "灰度方案确定", "priority": "P0", "deliverable": "灰度5%监控报告"},
+          {"task": "灰度扩大至30%用户（监控核心指标48小时）", "owner": "全员", "effort": "2天", "dependencies": "5%灰度无异常", "priority": "P0", "deliverable": "灰度30%监控报告"},
+          {"task": "全量发布（100%用户切换）", "owner": "全员", "effort": "1天", "dependencies": "30%灰度无异常", "priority": "P0", "deliverable": "全量上线完成"},
+          {"task": "上线后监控值守（7天内重点监控Crash/订单/支付）", "owner": "全员", "effort": "3天", "dependencies": "全量发布", "priority": "P0", "deliverable": "上线监控报告"},
+          {"task": "项目复盘文档编写", "owner": "全员", "effort": "1天", "dependencies": "上线稳定", "priority": "P2", "deliverable": "项目复盘文档"}
+        ]
+      }
+    ]
+  },
+  "milestones": [
+    {"milestone": "M1：技术方案锁定", "target_date": "2026-05-22", "deliverable": "技术方案文档+API接口文档+前端工程模板", "dependencies": "无", "risk_flag": "中"},
+    {"milestone": "M2：Mock Server就绪，前后端可并行开发", "target_date": "2026-05-29", "deliverable": "Mock Server+前端规范文档", "dependencies": "M1", "risk_flag": "低"},
+    {"milestone": "M3：后端核心服务全部完成", "target_date": "2026-06-26", "deliverable": "用户/商品/订单/支付4个服务", "dependencies": "M2", "risk_flag": "高"},
+    {"milestone": "M4：前端核心页面全部完成", "target_date": "2026-07-03", "deliverable": "8大核心页面+组件库", "dependencies": "M2", "risk_flag": "中"},
+    {"milestone": "M5：核心链路联调通过", "target_date": "2026-07-10", "deliverable": "核心交易链路端到端联调通过报告", "dependencies": "M3+M4", "risk_flag": "高"},
+    {"milestone": "M6：集成测试通过+Bug清零", "target_date": "2026-07-31", "deliverable": "测试报告+Bug清零报告", "dependencies": "M5", "risk_flag": "高"},
+    {"milestone": "M7：灰度发布30%", "target_date": "2026-08-07", "deliverable": "灰度30%监控报告", "dependencies": "M6", "risk_flag": "中"},
+    {"milestone": "M8：全量上线", "target_date": "2026-08-14", "deliverable": "全量上线+上线监控报告", "dependencies": "M7", "risk_flag": "中"}
+  ],
+  "resource_allocation": {
+    "team": [
+      {"role": "前端开发A", "name": "前端A", "allocation": "100%", "phases": "阶段一~四（全流程）", "workload": "高"},
+      {"role": "前端开发B", "name": "前端B", "allocation": "100%", "phases": "阶段一~四（全流程）", "workload": "高"},
+      {"role": "后端开发", "name": "后端", "allocation": "100%", "phases": "阶段一~四（全流程）", "workload": "高"},
+      {"role": "测试工程师", "name": "测试", "allocation": "100%", "phases": "阶段一~四（全流程）", "workload": "中"}
+    ],
+    "workload_analysis": "后端开发是全项目最大瓶颈：4个核心微服务+数据库迁移+支付对接+性能优化全部压在1人身上，预估总工作量约55人天，在12周（60个工作日）中负载率达92%，几乎没有容错空间。前端2人合计约50人天工作量，人均25人天，负载率约42%，相对充裕，可考虑在阶段二承担部分组件封装和联调辅助工作。测试工程师约30人天工作量，负载率约50%，但测试工作集中在阶段三（连续高强度），需要提前在阶段二就介入用例编写。建议：后端如遇阻塞，前端2人可协助Mock Server维护和接口联调。"
+  },
+  "risk_management": {
+    "risks": [
+      {"category": "资源", "risk": "后端开发过载导致关键路径延期", "probability": "高", "impact": "高", "mitigation": "1.接口先行+Mock数据，减少前后端耦合等待；2.后端任务按P0/P1严格排序，非核心功能延后；3.如第6周后端进度落后>20%，考虑临时借调或砍掉低优先级功能", "owner": "项目经理"},
+      {"category": "技术", "risk": "跨平台框架性能不达预期，需要原生优化", "probability": "中", "impact": "高", "mitigation": "第1周技术评审时做性能Benchmark，如果跨平台方案在核心场景性能差距>30%，立即切换为原生开发或混合方案", "owner": "前端开发A"},
+      {"category": "技术", "risk": "数据库迁移导致数据丢失或不一致", "probability": "中", "impact": "高", "mitigation": "1.先在测试环境做3轮完整迁移演练；2.迁移脚本加数据校验断言；3.旧库保留30天不删除，随时可回退；4.灰度期间双写双读验证", "owner": "后端开发"},
+      {"category": "进度", "risk": "前后端联调耗时超预期", "probability": "高", "impact": "中", "mitigation": "1.接口文档先于开发完成，前端用Mock并行；2.每周至少2次联调对齐会；3.预留第8周作为联调Buffer", "owner": "全员"},
+      {"category": "外部", "risk": "第三方支付渠道对接延迟或资质审核不通过", "probability": "低", "impact": "高", "mitigation": "1.第2周就启动支付渠道资质申请；2.提前准备备选支付渠道；3.支付模块设计为可插拔，方便切换渠道", "owner": "后端开发"},
+      {"category": "需求", "risk": "重构过程中业务方临时加需求", "probability": "中", "impact": "中", "mitigation": "1.项目启动时与业务方对齐范围，书面确认不做清单；2.所有需求变更走变更评审流程，评估影响后决策；3.预留10%的Buffer时间应对合理变更", "owner": "项目经理"}
+    ]
+  },
+  "quality_assurance": {
+    "standards": [
+      "代码质量：所有代码必须经过Code Review才能合并，核心模块需2人Review",
+      "接口质量：所有API接口必须有完整的入参校验和错误码定义，响应时间<500ms",
+      "功能质量：P0 Bug必须24小时内修复，P1 Bug必须在发布前清零",
+      "性能质量：App冷启动<2秒，核心页面首屏<1.5秒，Crash率<0.1%",
+      "测试质量：核心交易链路自动化测试覆盖率>80%，全量功能测试覆盖率>60%"
+    ],
+    "checkpoints": [
+      {"checkpoint": "技术方案评审", "criteria": "架构选型有理有据，技术可行性验证通过，团队达成共识", "method": "全员评审会", "timing": "第1周五"},
+      {"checkpoint": "API接口评审", "criteria": "核心交易链路全部接口定义完成，字段无歧义，前后端理解一致", "method": "前后端联合评审", "timing": "第2周五"},
+      {"checkpoint": "后端核心服务提测", "criteria": "用户/商品/订单/支付4个服务接口全部可用，单接口测试通过", "method": "接口自动化测试+人工验证", "timing": "第7周五"},
+      {"checkpoint": "核心链路联调通过", "criteria": "首页→搜索→详情→购物车→下单→支付端到端链路通畅", "method": "端到端联调测试", "timing": "第8周五"},
+      {"checkpoint": "集成测试通过", "criteria": "全量功能测试+兼容性测试+性能测试全部通过，P0/P1 Bug清零", "method": "综合测试报告评审", "timing": "第10周五"},
+      {"checkpoint": "灰度发布验证", "criteria": "30%灰度用户无P0/P1 Bug，核心指标（Crash率、支付成功率）与旧版持平或更优", "method": "线上监控+用户反馈", "timing": "第11周五"},
+      {"checkpoint": "全量上线验收", "criteria": "100%用户切换完成，核心指标达标，无重大线上事故", "method": "上线监控报告评审", "timing": "第12周五"}
+    ]
+  },
+  "communication": {
+    "stakeholders": [
+      {"role": "项目Sponsor（业务负责人）", "name": "业务总监", "interest": "高", "power": "高", "strategy": "每周五邮件汇报进度，重大风险立即电话沟通，关键里程碑邀请参加评审"},
+      {"role": "技术负责人", "name": "技术总监", "interest": "高", "power": "高", "strategy": "参与技术方案评审和架构决策，每周同步技术风险"},
+      {"role": "产品经理", "name": "产品经理", "interest": "高", "power": "中", "strategy": "参与需求对齐和验收测试，每周同步功能完成情况"},
+      {"role": "运营团队", "name": "运营负责人", "interest": "中", "power": "低", "strategy": "上线前2周通知运营准备，灰度期间协调配合"},
+      {"role": "客服团队", "name": "客服主管", "interest": "中", "power": "低", "strategy": "灰度发布前培训新App操作，建立问题反馈通道"}
+    ],
+    "plan": [
+      {"meeting": "每日站会", "frequency": "每天10:00，15分钟", "participants": "4人团队全员", "purpose": "同步昨日完成/今日计划/阻塞问题"},
+      {"meeting": "周进度评审", "frequency": "每周五16:00，30分钟", "participants": "4人团队+项目经理", "purpose": "本周进度复盘、下周计划、风险预警"},
+      {"meeting": "技术方案评审", "frequency": "按需（里程碑节点）", "participants": "全员+技术总监", "purpose": "架构决策、技术风险讨论"},
+      {"meeting": "里程碑评审", "frequency": "每个里程碑达成时", "participants": "全员+业务负责人", "purpose": "交付物验收、下阶段启动"},
+      {"meeting": "灰度复盘会", "frequency": "灰度期间每天17:00", "participants": "全员", "purpose": "灰度数据复盘、问题应急处理"}
+    ]
+  },
+  "progress_tracking": {
+    "overall_status": "项目处于规划阶段，尚未启动。基于当前资源和时间约束评估，项目整体风险等级为「中高」。关键路径在后端开发，需重点关注后端负载和进度偏差。",
+    "alerts": [
+      {"signal": "后端开发进度偏差>10%", "detail": "后端是唯一瓶颈资源，任何进度偏差都会直接传导到联调和上线。建议每天站会关注后端实际完成vs计划完成，连续2天偏差即触发预警", "severity": "高"},
+      {"signal": "核心链路联调第8周未通过", "detail": "联调是前后端集成的关键节点，如果第8周五未能通过，全量上线时间将受到严重威胁。建议从第6周开始每周做1次局部联调", "severity": "高"},
+      {"signal": "P0/P1 Bug数量在第9周仍>10个", "detail": "Bug修复速度直接决定能否按时上线。如果第9周末P0/P1 Bug仍>10个，需考虑全员集中灭火或调整上线范围", "severity": "中"},
+      {"signal": "性能指标未达预期", "detail": "如果第10周性能测试结果与目标差距>20%，需要追加1周优化时间或降低性能指标", "severity": "中"}
+    ],
+    "recommendations": [
+      "第1周必须完成技术方案评审，这是整个项目的基石，拖延不得",
+      "测试从第2周开始写自动化用例，不要等到开发完了才开始测试准备",
+      "后端开发按照用户→商品→订单→支付的顺序推进，这个顺序就是前端联调的依赖顺序",
+      "每周五做一次进度偏差分析，偏差>10%立即调整计划"
+    ]
+  },
+  "action_plan": {
+    "short_term": [
+      {"priority": "P0", "action": "召开项目启动会，全员对齐目标、范围、时间节点", "expected_effect": "团队统一认知，减少后续沟通成本", "owner": "项目经理", "deadline": "第1周周一"},
+      {"priority": "P0", "action": "完成技术方案评审，确定前后端技术栈和架构方案", "expected_effect": "锁定技术路线，避免中后期技术分歧", "owner": "后端开发", "deadline": "第1周五"},
+      {"priority": "P0", "action": "输出完整API接口文档+搭建Mock Server", "expected_effect": "前后端解耦并行开发，消除后端瓶颈对前端的阻塞", "owner": "后端开发+前端A", "deadline": "第2周五"},
+      {"priority": "P1", "action": "启动支付渠道资质申请", "expected_effect": "避免支付对接因资质审核延迟", "owner": "后端开发", "deadline": "第2周五"}
+    ],
+    "mid_term": [
+      {"priority": "P1", "action": "后端按序完成4个核心服务开发，每周做一次Code Review", "expected_effect": "保障代码质量，及时发现架构问题", "owner": "后端开发", "timeline": "第3-7周"},
+      {"priority": "P1", "action": "前端2人并行开发8大核心页面，统一使用组件库", "expected_effect": "提高前端开发效率，保持代码一致性", "owner": "前端A+前端B", "timeline": "第3-7周"},
+      {"priority": "P1", "action": "测试同步编写自动化测试用例，第7周前完成核心链路用例", "expected_effect": "联调完成后可立即执行自动化回归", "owner": "测试工程师", "timeline": "第3-7周"}
+    ],
+    "long_term": [
+      {"priority": "P2", "action": "建立持续集成/持续部署流水线", "expected_effect": "后续迭代发布效率提升50%", "milestone": "M8全量上线"},
+      {"priority": "P2", "action": "沉淀组件库和开发规范，作为后续项目的基础设施", "expected_effect": "降低新项目启动成本，提高团队整体效率", "milestone": "M8全量上线"},
+      {"priority": "P2", "action": "编写项目复盘文档，总结经验教训", "expected_effect": "为后续项目提供参考，避免重复踩坑", "milestone": "M8全量上线"}
+    ],
+    "not_to_do": [
+      {"item": "不重构商家后台系统", "reason": "超出本次项目范围，商家后台独立迭代"},
+      {"item": "不做新的营销玩法开发", "reason": "重构项目核心是技术升级，不是功能新增，营销玩法在上线后迭代"},
+      {"item": "不追求100%自动化测试覆盖率", "reason": "4人团队3个月，80%核心链路覆盖率已足够，追求100%会严重挤压开发时间"},
+      {"item": "不同时支持React Native和Flutter两套跨平台方案", "reason": "团队资源有限，选定一套方案贯彻到底"},
+      {"item": "不在重构期间做大规模UI改版", "reason": "UI以平移为主，避免同时做技术重构和UI重构双重风险"}
+    ]
+  }
+}

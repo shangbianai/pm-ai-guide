@@ -104,11 +104,15 @@ def _metric_row(metrics):
     return '<div class="metric-row">{}</div>'.format(cards)
 
 
-def _data_table(headers, rows):
-    th = "".join("<th>{}</th>".format(h) for h in headers)
+def _data_table(cols, rows):
+    if cols and isinstance(cols[0], (list, tuple)):
+        pairs = cols
+    else:
+        pairs = [(h, h) for h in cols]
+    th = "".join("<th>{}</th>".format(label) for label, _ in pairs)
     tr = ""
     for row in rows:
-        tr += "<tr>" + "".join("<td>{}</td>".format(e(row.get(h, ""))) for h in headers) + "</tr>"
+        tr += "<tr>" + "".join("<td>{}</td>".format(e(row.get(key, ""))) for _, key in pairs) + "</tr>"
     return '<table class="data-table"><thead><tr>{}</tr></thead><tbody>{}</tbody></table>'.format(th, tr)
 
 
@@ -222,7 +226,7 @@ def _build_report(d):
     wbs_phases_html = ""
     for phase in wbs.get("phases", []):
         phase_name = e(phase.get("phase", ""))
-        task_headers = ["任务", "负责人", "工作量", "依赖", "优先级", "交付物"]
+        task_headers = [("任务","task"),("负责人","owner"),("工作量","effort"),("依赖","dependencies"),("优先级","priority"),("交付物","deliverable")]
         tasks_html = _data_table(task_headers, phase.get("tasks", []))
         wbs_phases_html += (
             '<div class="tl-phase tl-now"><h4>{}</h4>{}</div>'.format(phase_name, tasks_html)
@@ -233,23 +237,14 @@ def _build_report(d):
 
     # Module 3: 里程碑规划
     milestones = d.get("milestones", [])
-    ms_headers = ["里程碑", "目标日期", "交付物", "依赖关系", "风险"]
-    ms_rows = []
-    for m in milestones:
-        ms_rows.append({
-            "里程碑": m.get("milestone", ""),
-            "目标日期": m.get("target_date", ""),
-            "交付物": m.get("deliverable", ""),
-            "依赖关系": m.get("dependencies", ""),
-            "风险": m.get("risk_flag", ""),
-        })
+    ms_headers = [("里程碑","milestone"),("目标日期","target_date"),("交付物","deliverable"),("依赖关系","dependencies"),("风险","risk_flag")]
     parts.append(_section("Module 03", "里程碑规划", "关键里程碑、依赖关系、时间线",
-        _data_table(ms_headers, ms_rows)
+        _data_table(ms_headers, milestones)
     ))
 
     # Module 4: 资源分配
     ra = d.get("resource_allocation", {})
-    team_headers = ["角色", "姓名", "投入比例", "参与阶段", "工作负载"]
+    team_headers = [("角色","role"),("姓名","name"),("投入比例","allocation"),("参与阶段","phases"),("工作负载","workload")]
     parts.append(_section("Module 04", "资源分配", "人力分配矩阵 + 资源负载分析",
         '<h3 style="margin:0 0 12px;font-size:15px;font-weight:700">团队分配矩阵</h3>'
         '{}'
@@ -293,29 +288,20 @@ def _build_report(d):
         '<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">检查点</h3>'
         '{}'.format(
             _styled_list(qa.get("standards", [])),
-            _data_table(["检查点", "验收标准", "检查方式", "时机"], qa.get("checkpoints", []))
+            _data_table([("检查点","checkpoint"),("验收标准","criteria"),("检查方式","method"),("时机","timing")], qa.get("checkpoints", []))
         )
     ))
 
     # Module 7: 沟通管理
     comm = d.get("communication", {})
-    sh_headers = ["干系人角色", "姓名", "利益", "权力", "沟通策略"]
-    sh_rows = []
-    for s in comm.get("stakeholders", []):
-        sh_rows.append({
-            "干系人角色": s.get("role", ""),
-            "姓名": s.get("name", ""),
-            "利益": s.get("interest", ""),
-            "权力": s.get("power", ""),
-            "沟通策略": s.get("strategy", ""),
-        })
+    sh_headers = [("干系人角色","role"),("姓名","name"),("利益","interest"),("权力","power"),("沟通策略","strategy")]
     parts.append(_section("Module 07", "沟通管理", "干系人矩阵 + 沟通计划",
         '<h3 style="margin:0 0 12px;font-size:15px;font-weight:700">干系人矩阵</h3>'
         '{}'
         '<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">沟通计划</h3>'
         '{}'.format(
-            _data_table(sh_headers, sh_rows),
-            _data_table(["会议", "频率", "参与者", "目的"], comm.get("plan", []))
+            _data_table(sh_headers, comm.get("stakeholders", [])),
+            _data_table([("会议","meeting"),("频率","frequency"),("参与者","participants"),("目的","purpose")], comm.get("plan", []))
         )
     ))
 

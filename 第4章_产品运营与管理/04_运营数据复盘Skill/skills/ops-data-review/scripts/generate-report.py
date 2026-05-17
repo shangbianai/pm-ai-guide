@@ -45,11 +45,15 @@ def _styled_list(items):
     return '<ul class="styled-list">' + "".join(f"<li>{e(i)}</li>" for i in items) + "</ul>"
 
 
-def _data_table(headers, rows):
-    th = "".join(f"<th>{h}</th>" for h in headers)
+def _data_table(cols, rows):
+    if cols and isinstance(cols[0], (list, tuple)):
+        pairs = cols
+    else:
+        pairs = [(h, h) for h in cols]
+    th = "".join(f"<th>{label}</th>" for label, _ in pairs)
     tr = ""
     for row in rows:
-        tr += "<tr>" + "".join(f"<td>{e(row.get(h,''))}</td>" for h in headers) + "</tr>"
+        tr += "<tr>" + "".join(f"<td>{e(row.get(key, ''))}</td>" for _, key in pairs) + "</tr>"
     return f'<table class="data-table"><thead><tr>{th}</tr></thead><tbody>{tr}</tbody></table>'
 
 
@@ -164,9 +168,9 @@ def _build_report(d):
         f'<h3 style="margin:0 0 12px;font-size:15px;font-weight:700">新增用户趋势</h3>'
         f'<div class="metric-row">{growth_rows}</div>'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">渠道来源分析</h3>'
-        f'{_data_table(["渠道","占比","质量","说明"], ug.get("channel_analysis",[]))}'
+        f'{_data_table([("渠道","channel"),("占比","proportion"),("质量","quality"),("说明","note")], ug.get("channel_analysis",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">激活漏斗</h3>'
-        f'{_data_table(["步骤","转化率","流失率"], ug.get("activation_funnel",[]))}'
+        f'{_data_table([("步骤","step"),("转化率","conversion_rate"),("流失率","drop_rate")], ug.get("activation_funnel",[]))}'
     ))
 
     # ── M3 用户活跃分析 ──
@@ -179,16 +183,16 @@ def _build_report(d):
         f'<strong>DAU/MAU</strong>：{e(dm.get("ratio",""))} | '
         f'{e(dm.get("trend",""))}</p></div>'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">用户分层</h3>'
-        f'{_data_table(["分群","用户数","占比","趋势"], ua.get("user_segments",[]))}'
+        f'{_data_table([("分群","segment"),("用户数","users"),("占比","proportion"),("趋势","trend")], ua.get("user_segments",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">功能使用热度</h3>'
-        f'{_data_table(["功能","使用率","使用频次","满意度"], ua.get("feature_heatmap",[]))}'
+        f'{_data_table([("功能","feature"),("使用率","usage_rate"),("使用频次","frequency"),("满意度","satisfaction")], ua.get("feature_heatmap",[]))}'
     ))
 
     # ── M4 转化漏斗分析 ──
     cf = d.get("conversion_funnel", {})
     bn = cf.get("bottleneck", {})
     parts.append(_section("Module 04", "转化漏斗分析", "回答：用户在哪个环节流失最多？",
-        f'{_data_table(["步骤","用户数","累计转化率","该步流失率"], cf.get("funnel",[]))}'
+        f'{_data_table([("步骤","step"),("用户数","users"),("累计转化率","cumulative_rate"),("该步流失率","drop_rate")], cf.get("funnel",[]))}'
         f'<div class="hl-box" style="background:var(--red-bg);border-left-color:var(--red);margin-top:20px">'
         f'<p><strong>⚠ 瓶颈定位</strong>：{e(bn.get("step",""))}（流失率 {e(bn.get("drop_rate",""))}）</p>'
         f'<p>可能原因：{e(" / ".join(bn.get("possible_reasons",[])))}</p></div>'
@@ -208,11 +212,12 @@ def _build_report(d):
         f'<div class="meta-line">{e(w.get("detail",""))}</div></div>'
         for w in ret.get("warnings", [])
     )
+    warnings_section = (f'<h3 style="margin:16px 0 12px;font-size:15px;font-weight:700;color:var(--red)">预警信号</h3>{warnings}' if warnings else "")
     parts.append(_section("Module 05", "留存分析", "回答：用户留下来了吗？留存趋势如何？",
         f'<div class="metric-row">{ret_rows}</div>'
         f'<h3 style="margin:16px 0 12px;font-size:15px;font-weight:700">健康度评估</h3>'
         f'<p>{e(ret.get("health_assessment",""))}</p>'
-        (f'<h3 style="margin:16px 0 12px;font-size:15px;font-weight:700;color:var(--red)">预警信号</h3>{warnings}' if warnings else "")
+        f'{warnings_section}'
     ))
 
     # ── M6 商业化分析 ──
@@ -230,7 +235,7 @@ def _build_report(d):
         f'<strong>ARPU</strong>：{e(mon.get("arpu",{}).get("current",""))}（{e(mon.get("arpu",{}).get("trend",""))}） | '
         f'<strong>ARPPU</strong>：{e(mon.get("arppu",{}).get("current",""))}（{e(mon.get("arppu",{}).get("trend",""))}）</p></div>'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">付费转化漏斗</h3>'
-        f'{_data_table(["步骤","转化率"], mon.get("pay_conversion_funnel",[]))}'
+        f'{_data_table([("步骤","step"),("转化率","conversion_rate")], mon.get("pay_conversion_funnel",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">单位经济模型</h3>'
         f'<div class="roi-grid">'
         f'<div class="roi-card"><div class="roi-val">{e(ltv.get("value",""))}</div><div class="roi-label">LTV 估算</div></div>'
@@ -269,11 +274,11 @@ def _build_report(d):
     ca = d.get("cross_analysis", {})
     parts.append(_section("Module 08", "跨维度交叉分析", "回答：不同维度的数据交叉后发现了什么？",
         f'<h3 style="margin:0 0 12px;font-size:15px;font-weight:700">用户分群 × 行为特征</h3>'
-        f'{_data_table(["分群","行为特征","留存","价值贡献"], ca.get("segment_behavior",[]))}'
+        f'{_data_table([("分群","segment"),("行为特征","behavior"),("留存","retention"),("价值贡献","value")], ca.get("segment_behavior",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">渠道 × 质量 × 成本</h3>'
-        f'{_data_table(["渠道","质量评分","CAC","LTV","ROI"], ca.get("channel_quality_cost",[]))}'
+        f'{_data_table([("渠道","channel"),("质量评分","quality_score"),("CAC","cac"),("LTV","ltv"),("ROI","roi")], ca.get("channel_quality_cost",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">功能 × 留存影响</h3>'
-        f'{_data_table(["功能","使用率","对留存影响","满意度"], ca.get("feature_retention_impact",[]))}'
+        f'{_data_table([("功能","feature"),("使用率","usage_rate"),("对留存影响","retention_impact"),("满意度","satisfaction")], ca.get("feature_retention_impact",[]))}'
     ))
 
     # ── M9 问题诊断 ──
@@ -315,7 +320,7 @@ def _build_report(d):
     # ── M11 监测计划 ──
     mp = d.get("monitoring_plan", [])
     parts.append(_section("Module 11", "监测计划", "回答：怎么持续跟踪？看什么信号？",
-        _data_table(["关键信号","观察指标","数据来源","检查频率"], mp)
+        _data_table([("关键信号","signal"),("观察指标","metric"),("数据来源","source"),("检查频率","frequency")], mp)
     ))
 
     # ── Footer ──

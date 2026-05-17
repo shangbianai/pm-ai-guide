@@ -66,29 +66,88 @@
 
 ## 已完成的 Skills
 
-### 市场洞察 Skill（market-insight）
+所有 Skill 统一采用 **JSON 数据 + Python 脚本 + HTML 模板** 架构：AI 分析结果整理为 JSON → `generate-report.py` 基于模板渲染 → 输出精美 HTML 报告。
+
+### 🏪 市场洞察 Skill（market-insight）
 
 位置：`第1章_市场洞察/02_市场洞察Skills：内置SWOT模型等方法论/skills/market-insight/`
 
-目录结构：
+内置 SWOT / PESTEL / KANO 等分析框架，覆盖市场全景、外部环境、内部能力、用户需求、业务判断五大维度，输出叙事驱动的 HTML 报告。
+
 ```
 skills/market-insight/
-├── SKILL.md              # Skill 主指令文件
+├── SKILL.md              # Skill 主指令文件（7 章报告结构）
 ├── reference/            # 参考文档
 │   ├── swot-guide.md     # SWOT 分析详细指南
 │   ├── pestel-guide.md   # PESTEL 六维度详解
 │   └── kano-guide.md     # KANO 需求分类指南
-├── scripts/              # 生成脚本
+├── scripts/
 │   └── generate-report.py  # 报告生成器（JSON → HTML）
-└── assets/               # 资源文件
-    └── report-template.html  # 现代化 HTML 报告模板
+└── assets/
+    └── report-template.html  # HTML 报告模板
 ```
 
-使用方式：
-1. 在 Claude Code 中激活 Skill
-2. 提供产品名称和行业信息
-3. AI 自动完成多框架分析，生成 JSON 数据
-4. 通过 Python 脚本基于模板生成 HTML 报告
+### 📋 BRD/MRD 一键输出大师（brd-mrd-master）
+
+位置：`第1章_市场洞察/03_超强提示词+PPT Skills：一键输出BRD-MRD文档/skills/brd-mrd-master/`
+
+一键输出专业级 BRD（商业需求文档）和/或 MRD（市场需求文档）HTML 报告。BRD 覆盖 10 章（执行摘要→成功指标），MRD 覆盖 7 章（市场机会→数据支撑），支持同时生成两份。
+
+```
+skills/brd-mrd-master/
+├── SKILL.md              # Skill 主指令文件（BRD 10章 + MRD 7章 + 完整 JSON 结构）
+├── reference/
+│   ├── brd-guide.md              # BRD 编写方法论指南
+│   ├── mrd-guide.md              # MRD 编写方法论指南
+│   └── industry-analysis-framework.md  # 行业分析框架（TAM/SAM/SOM、波特五力等）
+├── scripts/
+│   └── generate-report.py  # 支持 BRD/MRD 两种文档类型的报告生成器
+└── assets/
+    └── report-template.html
+```
+
+### 📊 运营数据复盘 Skill（ops-data-review）
+
+位置：`第4章_产品运营与管理/04_运营数据复盘Skill/skills/ops-data-review/`
+
+基于产品运营数据，运用 AARRR 全链路与 HEART 体验框架，输出结构化复盘报告，包含指标仪表盘、漏斗分析、留存分析、商业化分析、问题诊断与行动方案。
+
+```
+skills/ops-data-review/
+├── SKILL.md              # Skill 主指令文件（12 个模块 + 完整 JSON 结构）
+├── reference/
+│   ├── data-analysis-framework.md  # 数据分析框架（AARRR、HEART、5-Why、同比环比等）
+│   └── metrics-system.md           # 运营指标体系（北极星、留存、商业化、NPS 等）
+├── scripts/
+│   └── generate-report.py  # 运营数据复盘报告生成器
+└── assets/
+    └── report-template.html
+```
+
+### 📐 综合项目管理 Skill（project-management-master）
+
+位置：`第5章_项目管理/02_综合项目管理Skills/skills/project-management-master/`
+
+实战型项目管理 Skill（非 PMBOK 理论课），覆盖 WBS 任务分解、里程碑规划、资源分配、风险管理、质量保障、沟通管理全流程，输出可执行的项目管理报告。
+
+```
+skills/project-management-master/
+├── SKILL.md              # Skill 主指令文件（10 个模块 + 完整 JSON 结构）
+├── reference/
+│   ├── agile-framework.md          # 敏捷项目管理框架（Scrum/看板/混合模式）
+│   └── stakeholder-management.md   # 干系人管理（权力-利益矩阵、沟通策略）
+├── scripts/
+│   └── generate-report.py  # 项目管理报告生成器
+└── assets/
+    └── report-template.html
+```
+
+### 通用使用方式
+
+1. 在 Claude Code / Cursor 中激活对应 Skill
+2. 提供产品/项目信息及业务背景
+3. AI 自动完成框架分析，整理结果为 JSON 数据
+4. 通过 `python3 generate-report.py data.json output.html` 生成 HTML 报告
 
 ## 参考资源
 

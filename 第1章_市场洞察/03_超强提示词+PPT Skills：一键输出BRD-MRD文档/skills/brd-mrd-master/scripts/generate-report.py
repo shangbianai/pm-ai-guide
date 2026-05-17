@@ -66,11 +66,15 @@ def _metric_row(metrics):
     ) + '</div>'
 
 
-def _data_table(headers, rows):
-    th = "".join(f"<th>{h}</th>" for h in headers)
+def _data_table(cols, rows):
+    if cols and isinstance(cols[0], (list, tuple)):
+        pairs = cols
+    else:
+        pairs = [(h, h) for h in cols]
+    th = "".join(f"<th>{label}</th>" for label, _ in pairs)
     tr = ""
     for row in rows:
-        tr += "<tr>" + "".join(f"<td>{e(row.get(h,''))}</td>" for h in headers) + "</tr>"
+        tr += "<tr>" + "".join(f"<td>{e(row.get(key, ''))}</td>" for _, key in pairs) + "</tr>"
     return f'<table class="data-table"><thead><tr>{th}</tr></thead><tbody>{tr}</tbody></table>'
 
 
@@ -198,9 +202,9 @@ def _build_brd(d):
         f'<h3 style="margin:0 0 12px;font-size:15px;font-weight:700">盈利模式</h3>'
         f'{_styled_list(bm.get("revenue_model",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">收入预测</h3>'
-        f'{_data_table(["年份","收入预测","关键假设"], bm.get("revenue_forecast",[]))}'
+        f'{_data_table([("年份","year"),("收入预测","revenue"),("关键假设","note")], bm.get("revenue_forecast",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">成本结构</h3>'
-        f'{_data_table(["成本类目","类型","估算金额","说明"], bm.get("cost_structure",[]))}'
+        f'{_data_table([("成本类目","category"),("类型","type"),("估算金额","estimate"),("说明","note")], bm.get("cost_structure",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">ROI 分析</h3>'
         f'<div class="roi-grid">'
         f'<div class="roi-card"><div class="roi-val">{e(roi.get("breakeven",""))}</div><div class="roi-label">盈亏平衡点</div></div>'
@@ -234,14 +238,14 @@ def _build_brd(d):
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">分阶段路线图</h3>'
         f'<div class="timeline">{tl}</div>'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">优先级矩阵</h3>'
-        f'{_data_table(["功能","优先级","开发成本","业务影响","说明"], fp.get("priority_matrix",[]))}'
+        f'{_data_table([("功能","feature"),("优先级","priority"),("开发成本","effort"),("业务影响","impact"),("说明","note")], fp.get("priority_matrix",[]))}'
     ))
 
     # Ch7 运营策略
     os_ = d.get("operation_strategy", {})
     parts.append(_section("Chapter 07", "运营策略", "回答：怎么获客？怎么增长？",
         f'<h3 style="margin:0 0 12px;font-size:15px;font-weight:700">获客渠道</h3>'
-        f'{_data_table(["渠道","类型","预估成本","预期效果"], os_.get("channels",[]))}'
+        f'{_data_table([("渠道","channel"),("类型","type"),("预估成本","cost"),("预期效果","expectation")], os_.get("channels",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">增长策略</h3>'
         f'{_styled_list(os_.get("growth_strategy",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">合作伙伴</h3>'
@@ -272,11 +276,11 @@ def _build_brd(d):
     rr = d.get("resource_requirements", {})
     parts.append(_section("Chapter 09", "资源需求", "回答：需要多少人？多少钱？多长时间？",
         f'<h3 style="margin:0 0 12px;font-size:15px;font-weight:700">团队配置</h3>'
-        f'{_data_table(["岗位","人数","阶段","职责说明"], rr.get("team",[]))}'
+        f'{_data_table([("岗位","role"),("人数","count"),("阶段","phase"),("职责说明","note")], rr.get("team",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">预算估算</h3>'
-        f'{_data_table(["类目","金额","说明"], rr.get("budget",[]))}'
+        f'{_data_table([("类目","category"),("金额","amount"),("说明","note")], rr.get("budget",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">时间规划</h3>'
-        f'{_data_table(["里程碑","目标时间","交付物"], rr.get("timeline",[]))}'
+        f'{_data_table([("里程碑","milestone"),("目标时间","date"),("交付物","deliverable")], rr.get("timeline",[]))}'
     ))
 
     # Ch10 成功指标
@@ -284,9 +288,9 @@ def _build_brd(d):
     parts.append(_section("Chapter 10", "成功指标", "回答：怎么判断做成了？",
         f'<div class="hl-box hl-blue"><p><strong>北极星指标</strong>：{e(sm.get("north_star",""))}</p></div>'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">阶段性 KPI</h3>'
-        f'{_data_table(["阶段","指标","目标值","时间"], sm.get("kpis",[]))}'
+        f'{_data_table([("阶段","phase"),("指标","metric"),("目标值","target"),("时间","timeline")], sm.get("kpis",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">关键里程碑</h3>'
-        f'{_data_table(["里程碑","目标日期","达成标准"], sm.get("milestones",[]))}'
+        f'{_data_table([("里程碑","milestone"),("目标日期","target_date"),("达成标准","success_criteria")], sm.get("milestones",[]))}'
     ))
 
     # 决策
@@ -358,9 +362,9 @@ def _build_mrd(d):
     parts.append(_section("Chapter 03", "用户需求分析", "回答：用户到底要什么？最痛的是什么？",
         f'{_persona_cards(un.get("personas",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">核心需求列表</h3>'
-        f'{_data_table(["需求","类型","重要性","现有方案","满意度"], un.get("core_needs",[]))}'
+        f'{_data_table([("需求","need"),("类型","category"),("重要性","importance"),("现有方案","current_solution"),("满意度","satisfaction")], un.get("core_needs",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">痛点优先级</h3>'
-        f'{_data_table(["痛点","频率","严重度","影响范围","优先级"], un.get("pain_priority",[]))}'
+        f'{_data_table([("痛点","pain"),("频率","frequency"),("严重度","severity"),("影响范围","affected_users"),("优先级","priority")], un.get("pain_priority",[]))}'
     ))
 
     # Ch4 竞品分析
@@ -368,7 +372,7 @@ def _build_mrd(d):
     swot = ca.get("swot_comparison", {})
     parts.append(_section("Chapter 04", "竞品分析", "回答：谁在做？做得怎么样？我们的机会在哪？",
         f'<h3 style="margin:0 0 12px;font-size:15px;font-weight:700">直接竞品</h3>'
-        f'{_data_table(["竞品","市场份额","优势","劣势","定价"], ca.get("direct",[]))}'
+        f'{_data_table([("竞品","name"),("市场份额","market_share"),("优势","strengths"),("劣势","weaknesses"),("定价","pricing")], ca.get("direct",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">间接竞品</h3>'
         + "\n".join(
             f'<div class="ind-item"><strong>{e(i.get("name",""))}</strong> '
@@ -391,7 +395,7 @@ def _build_mrd(d):
     ps = d.get("product_suggestions", {})
     parts.append(_section("Chapter 05", "产品建议", "回答：应该做什么产品？",
         f'<h3 style="margin:0 0 12px;font-size:15px;font-weight:700">功能需求优先级</h3>'
-        f'{_data_table(["功能建议","优先级","用户需求强度","竞品差距","开发成本"], ps.get("feature_priorities",[]))}'
+        f'{_data_table([("功能建议","feature"),("优先级","priority"),("用户需求强度","user_demand"),("竞品差距","competitive_gap"),("开发成本","effort")], ps.get("feature_priorities",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">用户体验建议</h3>'
         f'{_styled_list(ps.get("ux_suggestions",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">技术方向建议</h3>'
@@ -409,20 +413,20 @@ def _build_mrd(d):
         f'<strong>竞品对比</strong>：{e(pricing.get("competitor_comparison",""))}<br>'
         f'<strong>定价逻辑</strong>：{e(pricing.get("rationale",""))}</p></div>'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">渠道策略</h3>'
-        f'{_data_table(["渠道","类型","优先级","说明"], gtm.get("channels",[]))}'
+        f'{_data_table([("渠道","channel"),("类型","type"),("优先级","priority"),("说明","note")], gtm.get("channels",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">推广策略</h3>'
-        f'{_data_table(["策略","阶段","预算占比","预期效果"], gtm.get("promotion",[]))}'
+        f'{_data_table([("策略","strategy"),("阶段","phase"),("预算占比","budget_allocation"),("预期效果","expected_effect")], gtm.get("promotion",[]))}'
     ))
 
     # Ch7 数据支撑
     ds = d.get("data_support", {})
     parts.append(_section("Chapter 07", "数据支撑", "回答：结论从哪来？",
         f'<h3 style="margin:0 0 12px;font-size:15px;font-weight:700">行业数据</h3>'
-        f'{_data_table(["来源","数据内容","年份","相关性"], ds.get("industry_data",[]))}'
+        f'{_data_table([("来源","source"),("数据内容","data"),("年份","year"),("相关性","relevance")], ds.get("industry_data",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">用户调研</h3>'
-        f'{_data_table(["方法","样本量","关键发现","置信度"], ds.get("user_research",[]))}'
+        f'{_data_table([("方法","method"),("样本量","sample"),("关键发现","finding"),("置信度","confidence")], ds.get("user_research",[]))}'
         f'<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">市场预测</h3>'
-        f'{_data_table(["指标","当前值","1年后预测","3年后预测","假设"], ds.get("market_forecast",[]))}'
+        f'{_data_table([("指标","metric"),("当前值","current"),("1年后预测","projected_1y"),("3年后预测","projected_3y"),("假设","assumption")], ds.get("market_forecast",[]))}'
     ))
 
     # 决策

@@ -57,6 +57,7 @@
 - 会议纪要：Gemini Gem 一键生成 PRD 等
 - 日报助手：日报自动化的 2 个 AI 方法
 - AI 效率工具实战：Markdown 转 Word/PDF
+- **PPT 生成 Skills**：AI 一键生成幻灯片图片并合并为 PPTX/PDF
 
 ### 第 7 章：新天地
 - 课程资料分享：内部资料与知识库
@@ -164,6 +165,56 @@ skills/project-management-master/
 │   └── generate-report.py  # 项目管理报告生成器
 └── assets/
     └── report-template.html
+```
+
+### 🎨 PPT 生成 Skill（pm-slide-deck）
+
+位置：`第6章_其他日常工作/06_AI生成PPT Skill/skills/pm-slide-deck/`
+
+将内容转化为专业幻灯片图片。通过豆包 Seedream 模型渲染图片，最终合并为 PPTX/PDF。
+
+**4 个自定义维度**（5×7×5×3 = 525 种组合）：质感（clean / grid / organic / pixel / paper）、氛围（professional / warm / cool / vibrant / dark / neutral / macaron）、排版（geometric / humanist / handwritten / editorial / technical）、密度（minimal / balanced / dense）。
+
+**17 种预设风格**（维度组合的最佳实践）：
+
+| 预设 | 中文名称 | 适用场景 |
+|------|----------|----------|
+| blueprint | 技术蓝图 | 架构设计、系统设计 |
+| chalkboard | 粉笔黑板 | 教育、教程 |
+| corporate | 商务精英 | 投资人演示、商业提案 |
+| minimal | 极简主义 | 高管简报 |
+| sketch-notes | 手绘笔记 | 教育、教程 |
+| hand-drawn-edu | 手绘教学 | 教育图表、流程说明 |
+| watercolor | 水彩画 | 生活方式、健康 |
+| dark-atmospheric | 暗黑氛围 | 娱乐、游戏 |
+| notion | Notion 风格 | 产品演示、SaaS |
+| bold-editorial | 大胆杂志风 | 产品发布、主题演讲 |
+| editorial-infographic | 编辑信息图 | 技术解读、研究报告 |
+| fantasy-animation | 奇幻动画 | 教育叙事 |
+| intuition-machine | 直觉机器 | 技术文档、学术 |
+| pixel-art | 像素艺术 | 游戏、开发者演讲 |
+| scientific | 科学严谨 | 生物、化学、医学 |
+| vector-illustration | 矢量插画 | 创意、儿童内容 |
+| vintage | 复古怀旧 | 历史、文化遗产 |
+
+```
+skills/pm-slide-deck/
+├── SKILL.md              # Skill 主指令文件（9 步工作流 + 确认门控）
+├── scripts/
+│   ├── merge-to-pptx.ts  # 幻灯片合并为 PowerPoint
+│   └── merge-to-pdf.ts   # 幻灯片合并为 PDF
+└── references/           # 参考文档
+    ├── styles/           # 17 种预设风格详细规格
+    ├── dimensions/       # 4 维度规格（质感/氛围/排版/密度）
+    ├── config/           # EXTEND.md 偏好配置
+    ├── analysis-framework.md    # 内容分析框架
+    ├── outline-template.md      # 大纲结构模板
+    ├── base-prompt.md           # 图片生成基础提示词
+    ├── layouts.md               # 24 种布局图鉴
+    ├── design-guidelines.md     # 排版与色彩设计指南
+    ├── content-rules.md         # 内容准则
+    ├── modification-guide.md    # 幻灯片修改工作流
+    └── confirmation.md          # 各确认步骤的选项文案
 ```
 
 ### 通用使用方式

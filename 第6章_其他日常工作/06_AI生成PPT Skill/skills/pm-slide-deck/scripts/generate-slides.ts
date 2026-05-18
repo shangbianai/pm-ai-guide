@@ -2,8 +2,27 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync, copyFileSync } from "fs";
 import { join, basename, resolve } from "path";
 
-const API_URL = "https://ark.cn-beijing.volces.com/api/v3/images/generations";
-const MODEL = "doubao-seedream-5-0-260128";
+type BackendType = "doubao" | "openai" | "gemini";
+
+const BACKEND_CONFIG: Record<BackendType, { apiUrl: string; model: string; label: string }> = {
+  doubao: {
+    apiUrl: "https://ark.cn-beijing.volces.com/api/v3/images/generations",
+    model: "doubao-seedream-5-0-260128",
+    label: "豆包 Seedream",
+  },
+  openai: {
+    apiUrl: "https://api.openai.com/v1/images/generations",
+    model: "gpt-image-2",
+    label: "OpenAI GPT-image-2",
+  },
+  gemini: {
+    apiUrl: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent",
+    model: "gemini-2.0-flash-exp",
+    label: "Gemini 2.0 Flash Exp",
+  },
+};
+
+const OPENAI_SUPPORTED_SIZES = ["1024x1024", "1536x1024", "1024x1536"];
 
 interface SlideTask {
   promptFile: string;
@@ -46,17 +65,40 @@ function loadEnv(): Record<string, string> {
   return env;
 }
 
-function getApiKey(env: Record<string, string>): string | null {
-  return env.ARK_API_KEY || env.DOUBAO_API_KEY || null;
+function getApiKey(env: Record<string, string>, backend: BackendType): string | null {
+  switch (backend) {
+    case "doubao":
+      return env.ARK_API_KEY || env.DOUBAO_API_KEY || null;
+    case "openai":
+      return env.OPENAI_API_KEY || null;
+    case "gemini":
+      return env.GEMINI_API_KEY || env.GOOGLE_API_KEY || null;
+  }
 }
 
-function parseArgs(): { promptsDir: string; outputDir: string; size: string; batchSize: number; retry: boolean } {
+function printApiKeyHint(backend: BackendType): void {
+  switch (backend) {
+    case "doubao":
+      console.error("请在 .env 文件中设置 ARK_API_KEY 或 DOUBAO_API_KEY，或通过环境变量传入。");
+      console.error("获取方式：https://console.volcengine.com/ark");
+      break;
+    case "openai":
+      console.error("请设置 OPENAI_API_KEY，获取方式：https://platform.openai.com/api-keys");
+      break;
+    case "gemini":
+      console.error("请设置 GEMINI_API_KEY 或 GOOGLE_API_KEY，获取方式：https://aistudio.google.com/apikey");
+      break;
+  }
+}
+
+function parseArgs(): { promptsDir: string; outputDir: string; size: string; batchSize: number; retry: boolean; backend: BackendType } {
   const args = process.argv.slice(2);
   let promptsDir = "";
   let outputDir = "";
   let size = "2K";
   let batchSize = 1;
   let retry = false;
+  let backend: BackendType = "doubao";
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--output-dir" && args[i + 1]) {
@@ -67,13 +109,20 @@ function parseArgs(): { promptsDir: string; outputDir: string; size: string; bat
       batchSize = Math.min(8, Math.max(1, parseInt(args[++i], 10) || 1));
     } else if (args[i] === "--retry") {
       retry = true;
+    } else if (args[i] === "--backend" && args[i + 1]) {
+      const val = args[++i] as BackendType;
+      if (val !== "doubao" && val !== "openai" && val !== "gemini") {
+        console.error(`不支持的后端：${val}，可选值：doubao, openai, gemini`);
+        process.exit(1);
+      }
+      backend = val;
     } else if (!args[i].startsWith("-") && !promptsDir) {
       promptsDir = args[i];
     }
   }
 
   if (!promptsDir) {
-    console.error("用法：bun generate-slides.ts <提示词目录> [--output-dir 输出目录] [--size 尺寸] [--batch-size N] [--retry]");
+    console.error("用法：bun generate-slides.ts <提示词目录> [--output-dir 输出目录] [--size 尺寸] [--batch-size N] [--retry] [--backend doubao|openai|gemini]");
     process.exit(1);
   }
 
@@ -81,7 +130,7 @@ function parseArgs(): { promptsDir: string; outputDir: string; size: string; bat
     outputDir = join(promptsDir, "..");
   }
 
-  return { promptsDir, outputDir, size, batchSize, retry };
+  return { promptsDir, outputDir, size, batchSize, retry, backend };
 }
 
 function discoverTasks(promptsDir: string, outputDir: string, retry: boolean): SlideTask[] {
@@ -127,15 +176,28 @@ function readPrompt(filePath: string): string {
   return content.trim();
 }
 
-async function generateImage(prompt: string, apiKey: string, size: string): Promise<Buffer> {
-  const response = await fetch(API_URL, {
+async function generateImage(prompt: string, apiKey: string, size: string, backend: BackendType): Promise<Buffer> {
+  const config = BACKEND_CONFIG[backend];
+
+  switch (backend) {
+    case "doubao":
+      return generateImageDoubao(prompt, apiKey, size, config.apiUrl, config.model);
+    case "openai":
+      return generateImageOpenai(prompt, apiKey, size, config.apiUrl, config.model);
+    case "gemini":
+      return generateImageGemini(prompt, apiKey, config.apiUrl);
+  }
+}
+
+async function generateImageDoubao(prompt: string, apiKey: string, size: string, apiUrl: string, model: string): Promise<Buffer> {
+  const response = await fetch(apiUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: MODEL,
+      model,
       prompt,
       sequential_image_generation: "disabled",
       response_format: "b64_json",
@@ -168,6 +230,90 @@ async function generateImage(prompt: string, apiKey: string, size: string): Prom
   throw new Error("API 返回数据中未找到图片");
 }
 
+async function generateImageOpenai(prompt: string, apiKey: string, size: string, apiUrl: string, model: string): Promise<Buffer> {
+  const actualSize = OPENAI_SUPPORTED_SIZES.includes(size) ? size : "1024x1024";
+  if (size !== actualSize) {
+    console.log(`  OpenAI 不支持尺寸 ${size}，已自动转为 ${actualSize}`);
+  }
+
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      prompt,
+      n: 1,
+      size: actualSize,
+      response_format: "b64_json",
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`API 请求失败 (${response.status})：${errorText}`);
+  }
+
+  const data = await response.json() as any;
+
+  if (data.data && data.data.length > 0) {
+    const item = data.data[0];
+    if (item.b64_json) {
+      return Buffer.from(item.b64_json, "base64");
+    }
+    if (item.url) {
+      const imgResp = await fetch(item.url);
+      if (!imgResp.ok) throw new Error(`下载图片失败 (${imgResp.status})`);
+      const arrayBuf = await imgResp.arrayBuffer();
+      return Buffer.from(arrayBuf);
+    }
+  }
+
+  throw new Error("API 返回数据中未找到图片");
+}
+
+async function generateImageGemini(prompt: string, apiKey: string, apiUrl: string): Promise<Buffer> {
+  const url = `${apiUrl}?key=${apiKey}`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      contents: [{
+        parts: [{ text: prompt }],
+      }],
+      generationConfig: {
+        responseModalities: ["TEXT", "IMAGE"],
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`API 请求失败 (${response.status})：${errorText}`);
+  }
+
+  const data = await response.json() as any;
+
+  const candidates = data.candidates;
+  if (candidates && candidates.length > 0) {
+    const parts = candidates[0].content?.parts;
+    if (parts) {
+      for (const part of parts) {
+        if (part.inlineData && part.inlineData.mimeType && part.inlineData.mimeType.startsWith("image/")) {
+          return Buffer.from(part.inlineData.data, "base64");
+        }
+      }
+    }
+  }
+
+  throw new Error("API 返回数据中未找到图片");
+}
+
 async function downloadWithRetry(url: string, retries: number = 3): Promise<Buffer> {
   for (let i = 0; i < retries; i++) {
     try {
@@ -194,7 +340,7 @@ function backupIfExists(filePath: string) {
   console.log(`已备份：${basename(backupPath)}`);
 }
 
-async function processBatch(tasks: SlideTask[], apiKey: string, size: string): Promise<{ success: number; failed: number }> {
+async function processBatch(tasks: SlideTask[], apiKey: string, size: string, backend: BackendType): Promise<{ success: number; failed: number }> {
   let success = 0;
   let failed = 0;
 
@@ -206,7 +352,7 @@ async function processBatch(tasks: SlideTask[], apiKey: string, size: string): P
 
     try {
       backupIfExists(task.outputFile);
-      const imageBuffer = await generateImage(prompt, apiKey, size);
+      const imageBuffer = await generateImage(prompt, apiKey, size, backend);
       writeFileSync(task.outputFile, imageBuffer);
       const sizeKB = Math.round(imageBuffer.length / 1024);
       console.log(`  ✓ 完成 (${sizeKB} KB)`);
@@ -221,17 +367,17 @@ async function processBatch(tasks: SlideTask[], apiKey: string, size: string): P
 }
 
 async function main() {
+  const { promptsDir, outputDir, size, batchSize, retry, backend } = parseArgs();
+  const config = BACKEND_CONFIG[backend];
+
   const env = loadEnv();
-  const apiKey = getApiKey(env);
+  const apiKey = getApiKey(env, backend);
 
   if (!apiKey) {
-    console.error("未找到豆包 API Key。");
-    console.error("请在 .env 文件中设置 ARK_API_KEY 或 DOUBAO_API_KEY，或通过环境变量传入。");
-    console.error("获取方式：https://console.volcengine.com/ark");
+    console.error(`未找到 ${config.label} API Key。`);
+    printApiKeyHint(backend);
     process.exit(1);
   }
-
-  const { promptsDir, outputDir, size, batchSize, retry } = parseArgs();
 
   if (!existsSync(outputDir)) {
     mkdirSync(outputDir, { recursive: true });
@@ -245,8 +391,11 @@ async function main() {
   }
 
   console.log(`找到 ${tasks.length} 张待生成的幻灯片`);
-  console.log(`模型：${MODEL}`);
-  console.log(`尺寸：${size}`);
+  console.log(`后端：${config.label} (${backend})`);
+  console.log(`模型：${config.model}`);
+  if (backend !== "gemini") {
+    console.log(`尺寸：${size}`);
+  }
   console.log("");
 
   let totalSuccess = 0;
@@ -256,7 +405,7 @@ async function main() {
     const batch = tasks.slice(i, i + batchSize);
     console.log(`--- 批次 ${Math.floor(i / batchSize) + 1}/${Math.ceil(tasks.length / batchSize)} ---`);
 
-    const result = await processBatch(batch, apiKey, size);
+    const result = await processBatch(batch, apiKey, size, backend);
     totalSuccess += result.success;
     totalFailed += result.failed;
   }

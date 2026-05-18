@@ -1,7 +1,7 @@
 ---
 name: pm-slide-deck
 description: 将内容转化为专业幻灯片图片。先生成带风格指令的大纲，再逐页生成幻灯片图片。当用户要求"生成幻灯片"、"制作演示文稿"、"生成 PPT"、"做 PPT"时触发。
-version: 1.57.0
+version: 1.58.0
 metadata:
   openclaw:
     requires:
@@ -26,42 +26,51 @@ metadata:
 
 ## 图片生成工具
 
-本 Skill 使用**豆包 Seedream** 生图模型生成幻灯片图片。
+本 Skill 支持三种图片生成后端，用户在生成图片前需选择使用哪个后端。
+
+### 后端选择（步骤 7 前必需）
+
+在步骤 7（生成图片）之前，通过 `AskUserQuestion` 询问用户选择图片生成后端：
+
+| 选项 | 后端名称 | 说明 |
+|------|----------|------|
+| 1 | **豆包 Seedream**（doubao） | 火山引擎方舟平台，支持 2K 高清，国内访问稳定 |
+| 2 | **GPT-image-2**（openai） | OpenAI 图片生成，文字渲染质量高 |
+| 3 | **Nano Banana**（gemini） | Google Gemini 2.0 Flash Image，免费额度充足 |
 
 ### API Key 检测与设置
 
-生成图片前，必须确保已配置豆包 API Key。按以下优先级检测：
+根据用户选择的后端，按以下优先级检测对应的 API Key：
 
-1. **环境变量** `ARK_API_KEY` 或 `DOUBAO_API_KEY`——如果已设置，直接使用。
-2. **`.env` 文件**——按以下顺序查找（先找到的优先）：
-   - 当前工作目录下的 `.env`
-   - 项目根目录下的 `.env`
-   - Skill 目录下的 `.env`
-3. **如果都未找到**，通过 `AskUserQuestion` 提示用户提供 API Key，并将用户提供的 Key 写入项目根目录的 `.env` 文件：
-   ```
-   ARK_API_KEY=<用户提供的密钥>
-   ```
-   获取方式：[火山引擎方舟平台](https://console.volcengine.com/ark)
+**豆包 Seedream（doubao）**：
+1. 环境变量 `ARK_API_KEY` 或 `DOUBAO_API_KEY`
+2. `.env` 文件（当前工作目录 / 项目根目录 / Skill 目录）
+3. 获取方式：[火山引擎方舟平台](https://console.volcengine.com/ark)
+4. 存储键名：`ARK_API_KEY`
 
-**⛔ 如果 API Key 不可用，不允许跳过此步骤。** 必须在获得有效 Key 后才能继续图片生成。
+**GPT-image-2（openai）**：
+1. 环境变量 `OPENAI_API_KEY`
+2. `.env` 文件（同上查找顺序）
+3. 获取方式：[OpenAI API Keys](https://platform.openai.com/api-keys)
+4. 存储键名：`OPENAI_API_KEY`
 
-### 图片生成后端
+**Nano Banana（gemini）**：
+1. 环境变量 `GEMINI_API_KEY` 或 `GOOGLE_API_KEY`
+2. `.env` 文件（同上查找顺序）
+3. 获取方式：[Google AI Studio](https://aistudio.google.com/apikey)
+4. 存储键名：`GEMINI_API_KEY`
 
-| 配置项 | 值 |
-|--------|-----|
-| API 端点 | `https://ark.cn-beijing.volces.com/api/v3/images/generations` |
-| 模型 | `doubao-seedream-5-0-260128` |
-| 默认尺寸 | `2K`（支持 `1024x1024`、`1280x720`、`2K` 等） |
-| 响应格式 | `b64_json`（Base64 编码） |
-| 水印 | 关闭 |
+**⛔ 如果所选后端的 API Key 不可用，不允许跳过此步骤。** 必须在获得有效 Key 后才能继续图片生成。如果用户提供的 Key 不在 `.env` 中，将其追加到项目根目录的 `.env` 文件。
 
-### 图片尺寸选项
+### 后端配置
 
-| `--size` 值 | 分辨率 | 说明 |
-|------------|--------|------|
-| `2K`（默认） | 2048 级别 | 高清，推荐用于最终输出 |
-| `1280x720` | 1280×720 | 16:9 标清 |
-| `1024x1024` | 1024×1024 | 1:1 方形 |
+| 配置项 | doubao | openai | gemini |
+|--------|--------|--------|--------|
+| API 端点 | `https://ark.cn-beijing.volces.com/api/v3/images/generations` | `https://api.openai.com/v1/images/generations` | `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent` |
+| 模型 | `doubao-seedream-5-0-260128` | `gpt-image-2` | `gemini-2.0-flash-exp` |
+| 响应格式 | `b64_json` | `b64_json` | `inlineData`（从 generateContent 响应中提取） |
+| 支持尺寸 | `2K`、`1280x720`、`1024x1024` 等 | `1024x1024`、`1536x1024`、`1024x1536`（不支持 2K，自动转为 1024x1024） | 不支持自定义尺寸 |
+| 水印 | 关闭 | 不适用 | 不适用 |
 
 **⛔ 禁止用 SVG、HTML、Canvas 或其他代码渲染替代光栅图片生成。** 如果 API 不可用，告知用户——不要静默输出 SVG、内联 `<svg>` 标记或 HTML/CSS 图形作为替代。
 
@@ -119,7 +128,8 @@ metadata:
 | `--slides <N>` | 目标幻灯片数量（建议 8-25，最多 30） |
 | `--ref <文件...>` | 参考图片，应用于每张幻灯片（风格/调色板/构图/主题） |
 | `--batch-size <n>` | 本次运行的图片生成批量大小。默认值：1。限制范围 1-8 |
-| `--size <尺寸>` | 图片尺寸：`2K`（默认）、`1280x720`、`1024x1024` 等 |
+| `--size <尺寸>` | 图片尺寸：`2K`（默认）、`1280x720`、`1024x1024` 等。注意：OpenAI 后端仅支持 `1024x1024`、`1536x1024`、`1024x1536`，不支持 2K；Gemini 后端不支持自定义尺寸 |
+| `--backend <名称>` | 图片生成后端：`doubao`（默认）、`openai`、`gemini` |
 | `--retry` | 仅重新生成缺失或失败的幻灯片图片 |
 | `--outline-only` | 生成大纲后停止 |
 | `--prompts-only` | 生成提示词后停止（跳过图片生成） |
@@ -279,7 +289,7 @@ slide-deck/{topic-slug}/
 
 **硬门控**：此步骤按[确认策略](#确认策略)强制执行——在用户在此确认（或在当前请求中明确选择跳过，如"直接生成"）之前，不能开始步骤 3 及后续步骤。
 
-**第一轮（始终执行）** —— 将五个问题合并为一次 `AskUserQuestion` 调用：风格、受众、幻灯片数、是否审阅大纲、是否审阅提示词。选项原文在 `references/confirmation.md` 中。
+**第一轮（始终执行）** —— 将六个问题合并为一次 `AskUserQuestion` 调用：风格、受众、幻灯片数、图片生成后端、是否审阅大纲、是否审阅提示词。选项原文在 `references/confirmation.md` 中。
 
 提问前显示摘要：
 - 内容类型 + 主题
@@ -320,13 +330,14 @@ slide-deck/{topic-slug}/
 
 ### 步骤 7：生成图片
 
-1. **检测 API Key**——按「图片生成工具 > API Key 检测与设置」章节的优先级查找 `ARK_API_KEY` 或 `DOUBAO_API_KEY`。如果未找到，通过 `AskUserQuestion` 提示用户提供 Key，并写入项目根目录的 `.env` 文件。
-2. 确认每个 `prompts/NN-slide-{slug}.md` 存在（强制要求；提示词文件是可复现记录）。
-3. 运行生成脚本：
+1. **选择后端**——如果步骤 2 中用户未指定后端，通过 `AskUserQuestion` 询问用户选择图片生成后端（豆包 Seedream / GPT-image-2 / Nano Banana）。
+2. **检测 API Key**——根据所选后端，按「图片生成工具 > API Key 检测与设置」章节的优先级查找对应的 API Key。如果未找到，通过 `AskUserQuestion` 提示用户提供 Key，并写入项目根目录的 `.env` 文件。
+3. 确认每个 `prompts/NN-slide-{slug}.md` 存在（强制要求；提示词文件是可复现记录）。
+4. 运行生成脚本：
    ```bash
-   ${BUN_X} {baseDir}/scripts/generate-slides.ts <prompts-dir> --output-dir <slide-deck-dir> [--size 2K] [--batch-size 1]
+   ${BUN_X} {baseDir}/scripts/generate-slides.ts <prompts-dir> --output-dir <slide-deck-dir> --backend <doubao|openai|gemini> [--size 2K] [--batch-size 1]
    ```
-4. 脚本会逐张调用豆包 API，报告进度为 `已生成 X/N`。已存在的 PNG 会自动备份。
+5. 脚本会逐张调用对应后端的 API，报告进度为 `已生成 X/N`。已存在的 PNG 会自动备份。
 
 `--regenerate N` 直接跳到此步骤，仅处理指定幻灯片。`--images-only` 从现有提示词开始。失败后可用 `--retry` 仅重新生成缺失的图片。
 
@@ -394,6 +405,7 @@ PDF：{topic-slug}.pdf
 - 每张幻灯片图片生成约需 10-30 秒；在幻灯片之间报告进度。
 - 对于敏感公众人物，优先使用风格化替代方案以避免肖像权问题。
 - API Key 存储在 `.env` 文件的 `ARK_API_KEY` 字段中，确保 `.env` 已加入 `.gitignore`。
+- 三种后端的图片质量和生成速度各有差异，根据实际需求选择。豆包 Seedream 支持 2K 高清输出，GPT-image-2 文字渲染质量较高，Nano Banana 免费额度充足。
 
 ## 修改偏好
 

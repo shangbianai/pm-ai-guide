@@ -171,7 +171,7 @@ skills/project-management-master/
 
 位置：`第6章_其他日常工作/06_AI生成PPT Skill/skills/pm-slide-deck/`
 
-将内容转化为专业幻灯片图片。通过豆包 Seedream 模型渲染图片，最终合并为 PPTX/PDF。
+将内容转化为专业幻灯片图片，支持三种图片生成后端：**豆包 Seedream**（火山引擎方舟）、**GPT-image-2**（OpenAI）、**Nano Banana**（Google Gemini 2.0 Flash Image），最终合并为 PPTX/PDF。生成前可自由选择后端，脚本自动检测对应 API Key。
 
 **4 个自定义维度**（5×7×5×3 = 525 种组合）：质感（clean / grid / organic / pixel / paper）、氛围（professional / warm / cool / vibrant / dark / neutral / macaron）、排版（geometric / humanist / handwritten / editorial / technical）、密度（minimal / balanced / dense）。
 
@@ -201,8 +201,9 @@ skills/project-management-master/
 skills/pm-slide-deck/
 ├── SKILL.md              # Skill 主指令文件（9 步工作流 + 确认门控）
 ├── scripts/
-│   ├── merge-to-pptx.ts  # 幻灯片合并为 PowerPoint
-│   └── merge-to-pdf.ts   # 幻灯片合并为 PDF
+│   ├── generate-slides.ts  # AI 图片生成（支持 doubao/openai/gemini 三后端）
+│   ├── merge-to-pptx.ts    # 幻灯片合并为 PowerPoint
+│   └── merge-to-pdf.ts     # 幻灯片合并为 PDF
 └── references/           # 参考文档
     ├── styles/           # 17 种预设风格详细规格
     ├── dimensions/       # 4 维度规格（质感/氛围/排版/密度）

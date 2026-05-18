@@ -24,8 +24,8 @@
 - Coze 实践：零代码做市场洞察 Agent
 
 ### 第 2 章：需求调研
-- 把用户声音（VoC）变成需求池
-- 竞品分析：用 AI Skills 找机会点和差异化
+- **需求整理 Skills**：把碎片化需求整理成结构化功能清单
+- **竞品分析 Skills**：用 AI Skills 找机会点和差异化
 - 用龙虾盯着竞品网站自动推送报告
 - 对接产品接口：洞察用户反馈一键转化需求
 
@@ -104,6 +104,30 @@ skills/brd-mrd-master/
 │   └── generate-report.py  # 支持 BRD/MRD 两种文档类型的报告生成器
 └── assets/
     └── report-template.html
+```
+
+### 📝 需求整理与管理 Skill（pm-requirements）
+
+位置：`第2章_需求调研/01_把用户声音VoC变成需求池/skills/pm-requirements/`
+
+将碎片化需求（聊天记录、会议纪要、老板口头需求、用户反馈）整理成结构化功能清单，支持增量更新和需求评分排序。
+
+```
+skills/pm-requirements/
+├── SKILL.md              # Skill 主指令文件（初始化模式 + 增量更新模式）
+└── references/
+    └── scoring-rules.md  # 需求评分规则
+```
+
+### 🔍 竞品分析 Skill（pm-compete）
+
+位置：`第2章_需求调研/02_竞品分析1：用AI Skills帮你找机会点和差异化/skills/pm-compete/`
+
+横向对比竞品，输出功能对比矩阵、用户口碑对比、定位图、价值曲线（含 ERRC 行动框架）和机会点建议。
+
+```
+skills/pm-compete/
+└── SKILL.md              # Skill 主指令文件（初始化分析 + 增量更新）
 ```
 
 ### 📊 运营数据复盘 Skill（ops-data-review）

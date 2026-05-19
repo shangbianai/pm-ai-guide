@@ -2,7 +2,7 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync, copyFileSync } from "fs";
 import { join, basename, resolve } from "path";
 
-type BackendType = "doubao" | "openai" | "gemini";
+type BackendType = "doubao" | "openai" | "gemini" | "grsai";
 
 const BACKEND_CONFIG: Record<BackendType, { apiUrl: string; model: string; label: string }> = {
   doubao: {
@@ -20,9 +20,16 @@ const BACKEND_CONFIG: Record<BackendType, { apiUrl: string; model: string; label
     model: "gemini-2.0-flash-exp",
     label: "Gemini 2.0 Flash Exp",
   },
+  grsai: {
+    apiUrl: "https://grsai.dakka.com.cn/v1/api/generate",
+    model: "gpt-image-2",
+    label: "Grsai GPT-image-2（国内节点）",
+  },
 };
 
 const OPENAI_SUPPORTED_SIZES = ["1024x1024", "1536x1024", "1024x1536"];
+const DEFAULT_SIZE = "1672x941";
+const FALLBACK_SIZE = "1536x1024";
 
 interface SlideTask {
   promptFile: string;
@@ -73,6 +80,8 @@ function getApiKey(env: Record<string, string>, backend: BackendType): string | 
       return env.OPENAI_API_KEY || null;
     case "gemini":
       return env.GEMINI_API_KEY || env.GOOGLE_API_KEY || null;
+    case "grsai":
+      return env.GRSAI_API_KEY || null;
   }
 }
 
@@ -88,6 +97,9 @@ function printApiKeyHint(backend: BackendType): void {
     case "gemini":
       console.error("请设置 GEMINI_API_KEY 或 GOOGLE_API_KEY，获取方式：https://aistudio.google.com/apikey");
       break;
+    case "grsai":
+      console.error("请设置 GRSAI_API_KEY，获取方式：联系 Grsai 平台获取 API Key");
+      break;
   }
 }
 
@@ -95,7 +107,7 @@ function parseArgs(): { promptsDir: string; outputDir: string; size: string; bat
   const args = process.argv.slice(2);
   let promptsDir = "";
   let outputDir = "";
-  let size = "2K";
+  let size = DEFAULT_SIZE;
   let batchSize = 1;
   let retry = false;
   let backend: BackendType = "doubao";
@@ -111,8 +123,8 @@ function parseArgs(): { promptsDir: string; outputDir: string; size: string; bat
       retry = true;
     } else if (args[i] === "--backend" && args[i + 1]) {
       const val = args[++i] as BackendType;
-      if (val !== "doubao" && val !== "openai" && val !== "gemini") {
-        console.error(`不支持的后端：${val}，可选值：doubao, openai, gemini`);
+      if (val !== "doubao" && val !== "openai" && val !== "gemini" && val !== "grsai") {
+        console.error(`不支持的后端：${val}，可选值：doubao, openai, gemini, grsai`);
         process.exit(1);
       }
       backend = val;
@@ -122,7 +134,7 @@ function parseArgs(): { promptsDir: string; outputDir: string; size: string; bat
   }
 
   if (!promptsDir) {
-    console.error("用法：bun generate-slides.ts <提示词目录> [--output-dir 输出目录] [--size 尺寸] [--batch-size N] [--retry] [--backend doubao|openai|gemini]");
+    console.error("用法：bun generate-slides.ts <提示词目录> [--output-dir 输出目录] [--size 尺寸] [--batch-size N] [--retry] [--backend doubao|openai|gemini|grsai]");
     process.exit(1);
   }
 
@@ -186,6 +198,8 @@ async function generateImage(prompt: string, apiKey: string, size: string, backe
       return generateImageOpenai(prompt, apiKey, size, config.apiUrl, config.model);
     case "gemini":
       return generateImageGemini(prompt, apiKey, config.apiUrl);
+    case "grsai":
+      return generateImageGrsai(prompt, apiKey, size, config.apiUrl, config.model);
   }
 }
 
@@ -231,7 +245,7 @@ async function generateImageDoubao(prompt: string, apiKey: string, size: string,
 }
 
 async function generateImageOpenai(prompt: string, apiKey: string, size: string, apiUrl: string, model: string): Promise<Buffer> {
-  const actualSize = OPENAI_SUPPORTED_SIZES.includes(size) ? size : "1024x1024";
+  const actualSize = OPENAI_SUPPORTED_SIZES.includes(size) ? size : FALLBACK_SIZE;
   if (size !== actualSize) {
     console.log(`  OpenAI 不支持尺寸 ${size}，已自动转为 ${actualSize}`);
   }
@@ -312,6 +326,44 @@ async function generateImageGemini(prompt: string, apiKey: string, apiUrl: strin
   }
 
   throw new Error("API 返回数据中未找到图片");
+}
+
+async function generateImageGrsai(prompt: string, apiKey: string, size: string, apiUrl: string, model: string): Promise<Buffer> {
+  const actualSize = OPENAI_SUPPORTED_SIZES.includes(size) ? size : FALLBACK_SIZE;
+  if (size !== actualSize) {
+    console.log(`  Grsai 不支持尺寸 ${size}，已自动转为 ${actualSize}`);
+  }
+
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      prompt,
+      images: [],
+      aspectRatio: actualSize,
+      replyType: "json",
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`API 请求失败 (${response.status})：${errorText}`);
+  }
+
+  const data = await response.json() as any;
+
+  if (data.status === "succeeded" && data.results && data.results.length > 0) {
+    const url = data.results[0].url;
+    if (url) {
+      return downloadWithRetry(url);
+    }
+  }
+
+  throw new Error(`API 返回数据中未找到图片，状态：${data.status || "unknown"}`);
 }
 
 async function downloadWithRetry(url: string, retries: number = 3): Promise<Buffer> {

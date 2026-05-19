@@ -1,11 +1,12 @@
 ---
 name: pm-slide-deck
 description: 将内容转化为专业幻灯片图片。先生成带风格指令的大纲，再逐页生成幻灯片图片。当用户要求"生成幻灯片"、"制作演示文稿"、"生成 PPT"、"做 PPT"时触发。
-version: 1.58.0
+version: 1.59.0
 metadata:
   openclaw:
     requires:
       anyBins:
+        - python3
         - bun
         - npx
 ---
@@ -26,7 +27,7 @@ metadata:
 
 ## 图片生成工具
 
-本 Skill 支持三种图片生成后端，用户在生成图片前需选择使用哪个后端。
+本 Skill 支持四种图片生成后端，用户在生成图片前需选择使用哪个后端。
 
 ### 后端选择（步骤 7 前必需）
 
@@ -34,9 +35,10 @@ metadata:
 
 | 选项 | 后端名称 | 说明 |
 |------|----------|------|
-| 1 | **豆包 Seedream**（doubao） | 火山引擎方舟平台，支持 2K 高清，国内访问稳定 |
+| 1 | **豆包 Seedream**（doubao） | 火山引擎方舟平台，支持 16:9 高清，国内访问稳定 |
 | 2 | **GPT-image-2**（openai） | OpenAI 图片生成，文字渲染质量高 |
 | 3 | **Nano Banana**（gemini） | Google Gemini 2.0 Flash Image，免费额度充足 |
+| 4 | **Grsai GPT-image-2**（grsai） | Grsai 平台国内节点，使用 GPT-image-2 模型，国内访问稳定 |
 
 ### API Key 检测与设置
 
@@ -60,17 +62,23 @@ metadata:
 3. 获取方式：[Google AI Studio](https://aistudio.google.com/apikey)
 4. 存储键名：`GEMINI_API_KEY`
 
+**Grsai GPT-image-2（grsai）**：
+1. 环境变量 `GRSAI_API_KEY`
+2. `.env` 文件（同上查找顺序）
+3. 获取方式：联系 Grsai 平台获取 API Key
+4. 存储键名：`GRSAI_API_KEY`
+
 **⛔ 如果所选后端的 API Key 不可用，不允许跳过此步骤。** 必须在获得有效 Key 后才能继续图片生成。如果用户提供的 Key 不在 `.env` 中，将其追加到项目根目录的 `.env` 文件。
 
 ### 后端配置
 
-| 配置项 | doubao | openai | gemini |
-|--------|--------|--------|--------|
-| API 端点 | `https://ark.cn-beijing.volces.com/api/v3/images/generations` | `https://api.openai.com/v1/images/generations` | `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent` |
-| 模型 | `doubao-seedream-5-0-260128` | `gpt-image-2` | `gemini-2.0-flash-exp` |
-| 响应格式 | `b64_json` | `b64_json` | `inlineData`（从 generateContent 响应中提取） |
-| 支持尺寸 | `2K`、`1280x720`、`1024x1024` 等 | `1024x1024`、`1536x1024`、`1024x1536`（不支持 2K，自动转为 1024x1024） | 不支持自定义尺寸 |
-| 水印 | 关闭 | 不适用 | 不适用 |
+| 配置项 | doubao | openai | gemini | grsai |
+|--------|--------|--------|--------|-------|
+| API 端点 | `https://ark.cn-beijing.volces.com/api/v3/images/generations` | `https://api.openai.com/v1/images/generations` | `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent` | `https://grsai.dakka.com.cn/v1/api/generate` |
+| 模型 | `doubao-seedream-5-0-260128` | `gpt-image-2` | `gemini-2.0-flash-exp` | `gpt-image-2` |
+| 响应格式 | `b64_json` | `b64_json` | `inlineData`（从 generateContent 响应中提取） | `json`（返回图片 URL） |
+| 支持尺寸 | `1672x941`（默认 16:9）、`1280x720`、`1024x1024` 等 | `1024x1024`、`1536x1024`、`1024x1536`（默认 1672x941 自动转为 1536x1024） | 不支持自定义尺寸 | `1024x1024`、`1536x1024`、`1024x1536`（默认 1672x941 自动转为 1536x1024） |
+| 水印 | 关闭 | 不适用 | 不适用 | 不适用 |
 
 **⛔ 禁止用 SVG、HTML、Canvas 或其他代码渲染替代光栅图片生成。** 如果 API 不可用，告知用户——不要静默输出 SVG、内联 `<svg>` 标记或 HTML/CSS 图形作为替代。
 
@@ -80,7 +88,7 @@ metadata:
 
 ## 批量生成策略
 
-所有提示词文件保存并验证后，通过 `scripts/generate-slides.ts` 脚本批量调用豆包 API 生成幻灯片图片。
+所有提示词文件保存并验证后，通过 `scripts/generate-slides.py` 脚本批量调用图片生成 API 生成幻灯片图片。优先使用 `python3` 运行 `.py` 脚本；如 Python 不可用，降级为 `bun` 运行 `.ts` 脚本。
 
 脚本自动处理：
 - 检测 `ARK_API_KEY` / `DOUBAO_API_KEY`（环境变量或 `.env` 文件）
@@ -110,13 +118,16 @@ metadata:
 
 ## 脚本目录
 
-`{baseDir}` = 本 SKILL.md 所在目录。解析 `${BUN_X}`：优先 `bun`；其次 `npx -y bun`；否则建议 `brew install oven-sh/bun/bun`。
+`{baseDir}` = 本 SKILL.md 所在目录。脚本运行优先级：`python3`（运行 `.py` 脚本）> `bun`（运行 `.ts` 脚本）> `npx -y bun`。
 
 | 脚本 | 用途 |
 |------|------|
-| `scripts/generate-slides.ts` | 调用豆包 API 逐张生成幻灯片图片 |
-| `scripts/merge-to-pptx.ts` | 将幻灯片合并为 PowerPoint |
-| `scripts/merge-to-pdf.ts` | 将幻灯片合并为 PDF |
+| `scripts/generate-slides.py` | 调用图片生成 API 逐张生成幻灯片图片（Python 版，**优先使用**） |
+| `scripts/merge-to-pptx.py` | 将幻灯片合并为 PowerPoint（Python 版，**优先使用**） |
+| `scripts/merge-to-pdf.py` | 将幻灯片合并为 PDF（Python 版，**优先使用**） |
+| `scripts/generate-slides.ts` | 调用图片生成 API 逐张生成幻灯片图片（TypeScript 版，需 bun） |
+| `scripts/merge-to-pptx.ts` | 将幻灯片合并为 PowerPoint（TypeScript 版，需 bun） |
+| `scripts/merge-to-pdf.ts` | 将幻灯片合并为 PDF（TypeScript 版，需 bun） |
 
 ## 选项
 
@@ -128,8 +139,8 @@ metadata:
 | `--slides <N>` | 目标幻灯片数量（建议 8-25，最多 30） |
 | `--ref <文件...>` | 参考图片，应用于每张幻灯片（风格/调色板/构图/主题） |
 | `--batch-size <n>` | 本次运行的图片生成批量大小。默认值：1。限制范围 1-8 |
-| `--size <尺寸>` | 图片尺寸：`2K`（默认）、`1280x720`、`1024x1024` 等。注意：OpenAI 后端仅支持 `1024x1024`、`1536x1024`、`1024x1536`，不支持 2K；Gemini 后端不支持自定义尺寸 |
-| `--backend <名称>` | 图片生成后端：`doubao`（默认）、`openai`、`gemini` |
+| `--size <尺寸>` | 图片尺寸：`1672x941`（默认，16:9）、`1280x720`、`1024x1024` 等。注意：OpenAI/Grsai 后端仅支持 `1024x1024`、`1536x1024`、`1024x1536`，默认尺寸自动转为最接近的 `1536x1024`；Gemini 后端不支持自定义尺寸 |
+| `--backend <名称>` | 图片生成后端：`doubao`（默认）、`openai`、`gemini`、`grsai` |
 | `--retry` | 仅重新生成缺失或失败的幻灯片图片 |
 | `--outline-only` | 生成大纲后停止 |
 | `--prompts-only` | 生成提示词后停止（跳过图片生成） |
@@ -330,12 +341,16 @@ slide-deck/{topic-slug}/
 
 ### 步骤 7：生成图片
 
-1. **选择后端**——如果步骤 2 中用户未指定后端，通过 `AskUserQuestion` 询问用户选择图片生成后端（豆包 Seedream / GPT-image-2 / Nano Banana）。
+1. **选择后端**——如果步骤 2 中用户未指定后端，通过 `AskUserQuestion` 询问用户选择图片生成后端（豆包 Seedream / GPT-image-2 / Nano Banana / Grsai GPT-image-2）。
 2. **检测 API Key**——根据所选后端，按「图片生成工具 > API Key 检测与设置」章节的优先级查找对应的 API Key。如果未找到，通过 `AskUserQuestion` 提示用户提供 Key，并写入项目根目录的 `.env` 文件。
 3. 确认每个 `prompts/NN-slide-{slug}.md` 存在（强制要求；提示词文件是可复现记录）。
-4. 运行生成脚本：
+4. 运行生成脚本（优先 Python，降级 bun）：
    ```bash
-   ${BUN_X} {baseDir}/scripts/generate-slides.ts <prompts-dir> --output-dir <slide-deck-dir> --backend <doubao|openai|gemini> [--size 2K] [--batch-size 1]
+   # 优先：Python 版（无需额外依赖）
+   python3 {baseDir}/scripts/generate-slides.py <prompts-dir> --output-dir <slide-deck-dir> --backend <doubao|openai|gemini|grsai> [--size 1672x941] [--batch-size 1]
+   
+   # 降级：bun 版（需要 bun 已安装）
+   ${BUN_X} {baseDir}/scripts/generate-slides.ts <prompts-dir> --output-dir <slide-deck-dir> --backend <doubao|openai|gemini|grsai> [--size 1672x941] [--batch-size 1]
    ```
 5. 脚本会逐张调用对应后端的 API，报告进度为 `已生成 X/N`。已存在的 PNG 会自动备份。
 
@@ -344,8 +359,13 @@ slide-deck/{topic-slug}/
 ### 步骤 8：合并
 
 ```bash
-${BUN_X} {baseDir}/scripts/merge-to-pptx.ts <slide-deck-dir>
-${BUN_X} {baseDir}/scripts/merge-to-pdf.ts <slide-deck-dir>
+# 优先：Python 版
+python3 {baseDir}/scripts/merge-to-pptx.py <slide-deck-dir>
+python3 {baseDir}/scripts/merge-to-pdf.py <slide-deck-dir>
+
+# 降级：bun 版
+# ${BUN_X} {baseDir}/scripts/merge-to-pptx.ts <slide-deck-dir>
+# ${BUN_X} {baseDir}/scripts/merge-to-pdf.ts <slide-deck-dir>
 ```
 
 ### 步骤 9：摘要
@@ -405,7 +425,7 @@ PDF：{topic-slug}.pdf
 - 每张幻灯片图片生成约需 10-30 秒；在幻灯片之间报告进度。
 - 对于敏感公众人物，优先使用风格化替代方案以避免肖像权问题。
 - API Key 存储在 `.env` 文件的 `ARK_API_KEY` 字段中，确保 `.env` 已加入 `.gitignore`。
-- 三种后端的图片质量和生成速度各有差异，根据实际需求选择。豆包 Seedream 支持 2K 高清输出，GPT-image-2 文字渲染质量较高，Nano Banana 免费额度充足。
+- 三种后端的图片质量和生成速度各有差异，根据实际需求选择。豆包 Seedream 支持 16:9 高清输出（1672x941），GPT-image-2 文字渲染质量较高，Nano Banana 免费额度充足，Grsai 使用国内节点访问稳定。
 
 ## 修改偏好
 

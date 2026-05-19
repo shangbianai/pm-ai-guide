@@ -12,7 +12,7 @@ style: blueprint              # 预设名称或 "custom"
 audience: general             # beginners | intermediate | experts | executives | general
 language: auto                # auto | en | zh | ja | 等
 review: true                  # true = 生成前审查大纲
-image_size: 2K                # 2K | 1280x720 | 1024x1024
+image_size: 1672x941           # 1672x941 (16:9) | 1280x720 | 1024x1024
 generation_batch_size: 1      # 1-8，每批次调用豆包 API 的幻灯片数量
 
 ## 自定义维度（仅当 style: custom 时生效）
@@ -42,7 +42,7 @@ custom_styles:
 | `audience` | string | `general` | 默认目标受众 |
 | `language` | string | `auto` | 输出语言（auto = 根据输入自动检测） |
 | `review` | boolean | `true` | 生成前展示大纲审查 |
-| `image_size` | string | `2K` | 豆包 API 图片尺寸。`2K` = 高清，`1280x720` = 16:9 标清，`1024x1024` = 1:1 方形 |
+| `image_size` | string | `1672x941` | 图片尺寸。`1672x941` = 16:9 高清（默认），`1280x720` = 16:9 标清，`1024x1024` = 1:1 方形 |
 | `generation_batch_size` | int | 1 | 每批次调用豆包 API 的幻灯片图片数量。无效值自动限制在 1-8 范围内。用户当前请求可覆盖此值。 |
 
 ### API Key

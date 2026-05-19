@@ -1,420 +1,510 @@
 # 幻灯片大纲
 
-**主题**: 产品经理 AI 提效超级实用指南
-**风格**: sketch-notes
-**维度**: organic + warm + handwritten + balanced
+**主题**: 产品经理 AI 提效超级实用指南 — 课程体系全景
+**风格**: bold-editorial
+**维度**: clean + vibrant + editorial + balanced
 **受众**: 大众读者
 **语言**: zh
-**页数**: 15 页
-**生成时间**: 2026-05-18 20:00
+**页数**: 18 页
+**生成时间**: 2026-05-19 14:00
 
 ---
 
 <STYLE_INSTRUCTIONS>
-设计美学: 柔和手绘插画风格，清新精致的极简编辑美学。插画或手绘感，柔和放松的笔触，强调精准、清晰和知性优雅，同时优先考虑温暖、亲和力和友好感。
+设计美学: 杂志封面级别的强烈视觉冲击。大胆的字体排印和戏剧性的对比。全出血图像和大色块创造引人注目的存在感。每一页幻灯片都像一张高端出版物的封面。
 
 背景:
-  质感: 微妙的纸张纹理，略暖色调，手绘质感
-  基础色: 暖米白 (#FAF8F0)
+  质感: 纯色背景，无纹理，边缘锐利清晰，数码精度与清晰度
+  基础色: 纯白 (#FFFFFF) 或深黑 (#0A0A0A) 为主，配合大胆色块
 
 排版:
-  标题: 粗体手写马克笔风格，略微不均匀的基线增加有机感，粗笔画搭配柔和边缘
-  正文: 清晰的手写圆体或硬笔风格，模拟日常笔记，可读但不机械
+  标题: 戏剧性的高对比度衬线体，笔画粗细变化明显，杂志封面风格，超大标题主导幻灯片
+  正文: 优雅经典衬线体，适合长文阅读，精致字形
 
 色彩方案:
-  主文字: 深炭色 (#2C3E50) - 标题、正文
-  背景: 暖米白 (#FAF8F0) - 主背景
-  强调色 1: 柔和橙 (#F4A261) - 高亮、强调
-  强调色 2: 芥末黄 (#E9C46A) - 次要高亮
-  强调色 3: 鼠尾草绿 (#87A96B) - 自然、增长概念
-  强调色 4: 浅蓝 (#7EC8E3) - 科技、AI元素
-  强调色 5: 红棕色 (#A0522D) - 基础设施
+  主文字: 纯白 (#FFFFFF) - 深色背景上的文字
+  背景: 深黑 (#0A0A0A) - 主深色背景
+  强调色 1: 珊瑚红 (#E94560) - 主要高亮，活力、紧迫感
+  强调色 2: 深蓝 (#0F3460) - 辅助色，深度与稳重
+  强调色 3: 蓝绿 (#16C79A) - 成功、增长
+  强调色 4: 金黄 (#F9B208) - 能量、关注
 
 视觉元素:
-  - 连接线具有手绘波浪感，不是完美的直线
-  - 概念性抽象图标，表达想法而非写实场景
-  - 带圆角的简单几何形状
-  - 箭头和指示器采用素描式、非正式风格
-  - 涂鸦风格装饰元素：星星、螺旋、下划线
+  - 强烈的字体排印本身就是视觉元素
+  - 几何形状和大胆色块
+  - 全出血背景或纯色背景
+  - 高对比度渐变（微妙而非刺眼）
+  - 动态的对角线和角度
+  - 文字上的戏剧性光照效果
 
 密度指南:
-  - 每页内容量: 2-3 个要点，balanced 密度
-  - 留白: 保持布局开放且结构清晰
+  - 每页内容量: 2-3 个要点
+  - 留白: 标准边距（距边缘 10%）
+  - 文字/视觉均衡比例
+  - 清晰的层级与支撑细节
 
 样式规则:
-  宜: 保持布局开放且结构清晰，强调信息层级和可读性，所有元素使用手绘品质，允许不完美——轻微的抖动增添个性，元素之间微妙的层叠重叠
-  忌: 使用完美的几何形状，创建照片写实元素，元素过于拥挤，使用纯白背景，添加幻灯片编号、页脚或徽标
+  宜: 使用极端的比例对比（超大标题、小号正文），创建大胆的色块构图，用负空间创造张力，使用全出血背景，让每一页都像杂志封面
+  忌: 使用柔和或灰暗的颜色，添加不必要的装饰元素，创建繁忙杂乱的布局，使用纤细或精致的字体，添加幻灯片编号、页脚或徽标
 </STYLE_INSTRUCTIONS>
 
 ---
 
-## Slide 1 of 15
+## Slide 1 of 18
 
 **Type**: Cover
 **Filename**: 01-slide-cover.png
 
 // NARRATIVE GOAL
-建立第一印象：这是一门帮产品经理用 AI 换掉传统工作流的实战课程。
+用强烈的视觉冲击力建立课程的第一印象——这是一场工作流革命，不是又一个工具教程。
+
+// KEY CONTENT
+Headline: 产品经理 AI 提效超级实用指南
+Sub-headline: 不是学工具，是换工作流
+
+// VISUAL
+深黑背景，超大白色衬线体标题占据画面 60%，标题文字具有戏剧性的粗细笔画对比。珊瑚红色块从左下角斜切至画面中部，金色副标题嵌在红色色块上。背景有微妙的深蓝渐变光晕。
+
+// LAYOUT
+Layout: title-hero
+超大标题居中偏上，副标题位于画面下方三分之一处，红色斜切色块创造视觉张力。
+
+---
+
+## Slide 2 of 18
+
+**Type**: Content
+**Filename**: 02-slide-core-idea.png
+
+// NARRATIVE GOAL
+用一句话点醒听众：课程的本质不是教你用 AI 工具，而是用 AI 重构整个工作流。
 
 // KEY CONTENT
 Headline: 不是学工具，是换工作流
-Sub-headline: 产品经理 AI 提效超级实用指南 · 从传统 PM 到 AI 增强型 PM
-
-// VISUAL
-暖米白纸张纹理背景。画面中央一个手绘风格的大灯泡图标（柔和橙色），灯泡内部有一个小人从传统桌面走向数字屏幕的剪影。标题用手写马克笔粗体风格写在灯泡上方。副标题用手写圆体写在灯泡下方。散落几颗手绘星星和箭头作为装饰。
-
-// LAYOUT
-Layout: title-hero
-居中构图，灯泡图标作为视觉焦点，标题在上方 1/3，副标题在下方 1/3。
-
----
-
-## Slide 2 of 15
-
-**Type**: Content
-**Filename**: 02-slide-gap.png
-
-// NARRATIVE GOAL
-用真实场景制造痛点共鸣——普通 PM 和 AI 增强型 PM 的差距有多大？
-
-// KEY CONTENT
-Headline: 同一份工作，两种截然不同的效率
-Sub-headline: 8 个真实场景的对比
+Sub-headline: 课程核心理念
 Body:
-- 市场调研：传统方式花 3 天翻报告，AI 增强型 PM 用 Skills 30 分钟出洞察
-- 竞品分析：手动截图对比 vs AI 自动推送变化并生成对比矩阵
-- 需求文档：从零写到凌晨两点 vs AI 辅助结构化输出 PRD
+- 3-5 年产品经理的传统工作流升级
+- 通过 Claude Code Skills、Cursor、Gemini 等 AI 工具
+- 将市场洞察、需求调研、产品设计、项目管理效率提升数倍
 
 // VISUAL
-左右对比布局。左侧标注「传统 PM」配灰暗色调的手绘人物伏案工作，表情疲惫；右侧标注「AI 增强型 PM」配柔和橙色和浅蓝色，人物轻松面对屏幕。中间用手绘闪电符号分隔。三个对比点用波浪线连接两侧。
-
-// LAYOUT
-Layout: binary-comparison
-左右分屏对比，中间分隔线用手绘风格。
-
----
-
-## Slide 3 of 15
-
-**Type**: Content
-**Filename**: 03-slide-who.png
-
-// NARRATIVE GOAL
-明确目标受众——谁适合学、学了能获得什么。
-
-// KEY CONTENT
-Headline: 专为 3-5 年产品经理量身打造
-Sub-headline: 不是从零学 AI，是给现有工作流装上加速器
-Body:
-- 你已有产品思维和方法论，只需要学会借力 AI
-- 课程交付物：6 个即用型 AI Skills + 完整实战方法论
-- 课前准备：安装 Claude Code / Cursor / Gemini 即可开始
-
-// VISUAL
-画面中央一个手绘的人物剪影站在台阶上，向上迈步。台阶上标注「传统 PM → AI 工具配置 → AI 增强型 PM」。周围用鼠尾草绿色手绘箭头指向上方。右侧放三个手绘工具图标：终端界面、编辑器、对话气泡。
-
-// LAYOUT
-Layout: linear-progression
-从左到右的台阶式递进，展示成长路径。
-
----
-
-## Slide 4 of 15
-
-**Type**: Content
-**Filename**: 04-slide-skills-architecture.png
-
-// NARRATIVE GOAL
-揭示核心架构——所有 Skill 的统一工作原理。
-
-// KEY CONTENT
-Headline: 一个架构，六套 Skills
-Sub-headline: JSON 数据 + Python 脚本 + HTML 模板 = 精美报告
-Body:
-- AI 分析业务数据 → 整理为结构化 JSON
-- Python 脚本读取 JSON → 基于模板渲染
-- 一键输出专业级 HTML 报告，可直接分享和汇报
-
-// VISUAL
-手绘流程图，三个方框从左到右排列，用波浪箭头连接。第一个方框标注「JSON 数据」里面画一些代码符号，第二个方框标注「Python 渲染」里面画齿轮图标，第三个方框标注「HTML 报告」里面画文档图标。每个方框用不同的强调色填充（浅蓝、芥末黄、柔和橙）。
-
-// LAYOUT
-Layout: linear-progression
-水平三步流程图，清晰展示数据流转。
-
----
-
-## Slide 5 of 15
-
-**Type**: Content
-**Filename**: 05-slide-chapter1.png
-
-// NARRATIVE GOAL
-展示第 1 章市场洞察的技能树——AI 如何重构市场分析工作流。
-
-// KEY CONTENT
-Headline: 第 1 章：市场洞察，从 3 天到 30 分钟
-Sub-headline: SWOT / PESTEL / KANO 内置方法论
-Body:
-- Gemini Gem：业务资料一键变问题清单
-- 市场洞察 Skill：输入行业信息，输出叙事驱动 HTML 报告
-- BRD/MRD 大师：超强提示词一键输出商业文档
-- Coze 实践：零代码搭建市场洞察 Agent
-
-// VISUAL
-画面上方用手绘大号「01」章节标号（柔和橙色）。下方是一个中心辐射图，中心写「市场洞察」，四个方向分别延伸出四个技能节点，每个节点用不同颜色的小图标表示。波浪线连接各节点。
-
-// LAYOUT
-Layout: hub-spoke
-中心辐射结构，四个技能围绕核心主题展开。
-
----
-
-## Slide 6 of 15
-
-**Type**: Content
-**Filename**: 06-slide-chapter2.png
-
-// NARRATIVE GOAL
-展示第 2 章需求调研的技能树——把碎片化需求变成结构化资产。
-
-// KEY CONTENT
-Headline: 第 2 章：需求调研，碎片化变结构化
-Sub-headline: 让每一条用户声音都不被浪费
-Body:
-- 需求整理 Skill：聊天记录、会议纪要、用户反馈 → 结构化功能清单
-- 竞品分析 Skill：功能矩阵 + 口碑对比 + 机会点挖掘
-- 自动监控竞品变化，AI 推送分析报告
-
-// VISUAL
-画面上方用手绘大号「02」章节标号（鼠尾草绿色）。左侧画一堆散乱的手绘便签纸和聊天气泡（代表碎片化需求），右侧画整齐排列的卡片网格（代表结构化清单），中间用一条手绘箭头连接，箭头上标注「AI 整理」。
-
-// LAYOUT
-Layout: binary-comparison
-左乱右整的对比，突出 Skill 的价值。
-
----
-
-## Slide 7 of 15
-
-**Type**: Content
-**Filename**: 07-slide-chapter3.png
-
-// NARRATIVE GOAL
-展示第 3 章产品设计的技能树——AI 辅助设计全流程。
-
-// KEY CONTENT
-Headline: 第 3 章：产品设计，从架构图到需求评审
-Sub-headline: AI 工具覆盖设计全链路
-Body:
-- 产品架构图：AI 工具自动生成可视化架构
-- 原型设计：Cursor 实战 Web/移动端原型
-- 业务流程图：Mermaid 语法一键出图
-- 需求评审大师：AI 辅助 PRD 撰写和评审
-
-// VISUAL
-画面上方用手绘大号「03」章节标号（芥末黄色）。中间画一个手绘的漏斗形状，从上到下依次标注「架构图 → 原型 → 流程图 → PRD」，每层用不同颜色的小图标点缀。漏斗右侧画一个评审会议的手绘场景。
-
-// LAYOUT
-Layout: funnel
-漏斗式布局，展示设计流程的层层推进。
-
----
-
-## Slide 8 of 15
-
-**Type**: Content
-**Filename**: 08-slide-chapter4.png
-
-// NARRATIVE GOAL
-展示第 4 章产品运营与管理的技能树——数据驱动决策。
-
-// KEY CONTENT
-Headline: 第 4 章：运营与管理，数据说话
-Sub-headline: AARRR + HEART 框架，让复盘不再拍脑袋
-Body:
-- 运营数据复盘 Skill：全链路漏斗 + 留存分析 + 商业化诊断
-- AI Agent 自动化验收测试
-- 向上管理 Skill：让领导看懂你的成果
-
-// VISUAL
-画面上方用手绘大号「04」章节标号（浅蓝色）。中间画一个手绘仪表盘，上面有几个数据指标（箭头向上的曲线、饼图轮廓、柱状图轮廓）。仪表盘下方用手绘便签纸列出三个 Skill 名称。
-
-// LAYOUT
-Layout: dashboard
-仪表盘风格，突出数据驱动的主题。
-
----
-
-## Slide 9 of 15
-
-**Type**: Content
-**Filename**: 09-slide-chapter5.png
-
-// NARRATIVE GOAL
-展示第 5 章项目管理的技能树——PMBOK 蒸馏成实用 Skills。
-
-// KEY CONTENT
-Headline: 第 5 章：项目管理，PMBOK 变成可执行动作
-Sub-headline: 不是理论课，是实战工具箱
-Body:
-- WBS 任务分解 + 里程碑规划 + 资源分配
-- 风险管理 + 质量保障 + 沟通管理
-- Claude Code 一键生成工单报表和项目复盘
-
-// VISUAL
-画面上方用手绘大号「05」章节标号（红棕色）。中间画一个手绘甘特图（几条横向的波浪线条代表任务条），旁边画一个手绘的风险警示三角。下方画一个小人站在项目里程碑标记旁边。
-
-// LAYOUT
-Layout: icon-grid
-项目管理三大模块用图标网格展示。
-
----
-
-## Slide 10 of 15
-
-**Type**: Content
-**Filename**: 10-slide-chapter6.png
-
-// NARRATIVE GOAL
-展示第 6 章日常提效——那些被忽略的琐碎工作，AI 全包了。
-
-// KEY CONTENT
-Headline: 第 6 章：日常杂活，AI 全接
-Sub-headline: 把时间还给真正重要的产品思考
-Body:
-- 文件管理：Claude Code 一键整理
-- 会议纪要：Gemini Gem 自动生成 PRD
-- 日报助手：2 种自动化方法
-- PPT 生成：AI Skill 一键出幻灯片
-
-// VISUAL
-画面上方用手绘大号「06」章节标号（柔和橙色）。中间画一个手绘的机器人管家形象，手里拿着文件、日历、PPT 图标。周围环绕四个小图标代表四项日常任务。机器人用浅蓝色涂色。
-
-// LAYOUT
-Layout: hub-spoke
-中心机器人管家向外辐射四项任务。
-
----
-
-## Slide 11 of 15
-
-**Type**: Content
-**Filename**: 11-slide-chapter7.png
-
-// NARRATIVE GOAL
-展示第 7 章新天地——课程结束后的持续成长路径。
-
-// KEY CONTENT
-Headline: 第 7 章：新天地，新的可能性
-Sub-headline: 课程只是起点，不是终点
-Body:
-- 新认知：任何事都先考虑能否用 AI 替代或辅助
-- 新兴趣：Vibe Coding——用自然语言写产品
-- 新链接：AI 工具库 + 书籍 + KOL + 社群
-
-// VISUAL
-画面上方用手绘大号「07」章节标号（鼠尾草绿色）。画面中心画一扇打开的门，门外是一片手绘的星空和道路。门框上标注「新认知」「新兴趣」「新链接」三个关键词。道路尽头画一个小人挥手。
-
-// LAYOUT
-Layout: image-caption
-开门意象作为主视觉，文字叠加在下方。
-
----
-
-## Slide 12 of 15
-
-**Type**: Content
-**Filename**: 12-slide-skills-showcase.png
-
-// NARRATIVE GOAL
-展示已完成的 6 个 Skills 全景——交付物一目了然。
-
-// KEY CONTENT
-Headline: 6 个即插即用的 AI Skills
-Sub-headline: 每个都经过实战验证，拿来就用
-Body:
-- 市场洞察 Skill — SWOT/PESTEL/KANO 全覆盖
-- BRD/MRD 大师 — 一键输出商业文档
-- 需求整理 Skill — 碎片化 → 结构化功能清单
-- 竞品分析 Skill — 对比矩阵 + 机会点挖掘
-- 运营数据复盘 — AARRR + HEART 双框架
-- 综合项目管理 — WBS 到复盘全流程
-
-// VISUAL
-暖米白背景上，六个手绘卡片以 2×3 网格排列。每个卡片有不同颜色的边框（柔和橙、芥末黄、鼠尾草绿、浅蓝、红棕色），卡片内画一个代表性小图标（放大镜、文档、清单、靶心、图表、齿轮）和 Skill 名称。
-
-// LAYOUT
-Layout: icon-grid
-2×3 网格，每个 Skill 一张卡片。
-
----
-
-## Slide 13 of 15
-
-**Type**: Content
-**Filename**: 13-slide-how-to-use.png
-
-// NARRATIVE GOAL
-展示 Skill 的使用方式——三步即可产出。
-
-// KEY CONTENT
-Headline: 三步启动你的 AI 增强工作流
-Sub-headline: 从激活到产出，全流程演示
-Body:
-- Step 1：在 Claude Code / Cursor 中激活对应 Skill
-- Step 2：提供产品信息和业务背景
-- Step 3：AI 自动分析 → JSON → 精美 HTML 报告
-
-// VISUAL
-三个手绘的台阶从左下到右上排列，每个台阶上标注一个步骤。台阶用递进的颜色（浅蓝 → 芥末黄 → 柔和橙）填充。每个台阶上画对应的小图标：终端窗口、对话气泡、HTML 文档。右上角画一个发光的完成标记。
-
-// LAYOUT
-Layout: linear-progression
-三步台阶式递进，视觉上传达「简单三步」。
-
----
-
-## Slide 14 of 15
-
-**Type**: Content
-**Filename**: 14-slide-mindset.png
-
-// NARRATIVE GOAL
-传递核心理念——思维转变比工具更重要。
-
-// KEY CONTENT
-Headline: 最重要的不是工具，是思维
-Sub-headline: 「任何事都先想想能不能用 AI」
-Body:
-- 传统思维：这个活我要怎么干？
-- AI 思维：这个活能不能让 AI 先干一遍？
-- 课程目标不是教会你某个工具，而是帮你建立 AI-First 的工作习惯
-
-// VISUAL
-画面中央画一个大的手绘思维气泡。气泡内左侧画传统思维（人物在白板前苦想），右侧画 AI 思维（人物对着屏幕下指令，AI 在干活）。中间用手绘的闪电符号分隔。气泡外部散落几个手绘问号和感叹号。
+纯白背景左侧 40%，深黑背景右侧 60%。左侧用小号灰色文字列出传统方式（手动调研、手动写文档、手动做PPT），右侧用大号珊瑚红粗体文字展示 AI 增强方式（一键洞察、自动生成、智能分析）。中间用一条金色竖线分隔。
 
 // LAYOUT
 Layout: split-screen
-气泡内左右对比，突出思维转变。
+左右分割对比，右重左轻的不对称构图。
 
 ---
 
-## Slide 15 of 15
+## Slide 3 of 18
 
-**Type**: Back Cover
-**Filename**: 15-slide-back-cover.png
+**Type**: Content
+**Filename**: 03-slide-course-map.png
 
 // NARRATIVE GOAL
-用行动号召收尾——鼓励读者立即开始。
+展示课程全景地图，让听众一眼看清从序章到第 7 章的完整学习路径。
 
 // KEY CONTENT
-Headline: 打开 Claude Code，激活第一个 Skill
-Body: 不是学工具，是换工作流。你的 AI 增强之路，从今天开始。
+Headline: 七大章节，系统实战
+Sub-headline: 从认知升级到 Vibe Coding 的完整学习路径
+Body:
+- 序章：认知升级 → 第 1 章：市场洞察
+- 第 2 章：需求调研 → 第 3 章：产品设计
+- 第 4 章：产品运营 → 第 5 章：项目管理
+- 第 6 章：日常工作 → 第 7 章：新天地
 
 // VISUAL
-暖米白背景。画面中央一个大的手绘箭头指向右方（柔和橙色），箭头上方写标题。箭头旁边画一个打开的终端窗口轮廓，里面有几行代码。底部用手写体写副标题。散落几颗手绘星星和螺旋线装饰。
+深黑背景，从左到右的横向路径图。8 个节点用圆角矩形表示，序章用金色高亮，其余章节交替使用珊瑚红和蓝绿色。节点间用细白线连接，形成蛇形路径。每个节点内有章节编号。
 
 // LAYOUT
-Layout: title-hero
-简洁有力的居中构图，箭头作为视觉焦点引导行动。
+Layout: linear-progression
+蛇形路径从左上到右下，两行排列。
+
+---
+
+## Slide 4 of 18
+
+**Type**: Content
+**Filename**: 04-slide-prologue.png
+
+// NARRATIVE GOAL
+制造紧迫感——普通 PM 和 AI 增强型 PM 的差距正在迅速拉大。
+
+// KEY CONTENT
+Headline: 序章：认知升级
+Sub-headline: 8 个真实场景的差距
+Body:
+- 普通 PM vs AI 增强型 PM 的 8 个真实场景对比
+- 传统产品经理为何需要学 AI
+- 谁适合学？课程交付物总览
+- 课前准备：安装并配置 AI 工具
+
+// VISUAL
+深黑背景，画面被一条对角金线分为两个三角区域。左上三角区域用小号灰色字写"普通 PM"，右下三角用大号珊瑚红字写"AI 增强型 PM"。四个要点以白色文字排列在右下区域。
+
+// LAYOUT
+Layout: binary-comparison
+对角线分割，视觉重心在右下方。
+
+---
+
+## Slide 5 of 18
+
+**Type**: Content
+**Filename**: 05-slide-market-insight.png
+
+// NARRATIVE GOAL
+展示第 1 章市场洞察的四大武器，突出 SWOT/PESTEL/KANO 方法论的一键调用能力。
+
+// KEY CONTENT
+Headline: 第 1 章：市场洞察
+Sub-headline: 一键输出专业分析报告
+Body:
+- Gemini Gem：业务资料一键变问题清单
+- 市场洞察 Skills：内置 SWOT / PESTEL / KANO
+- 超强提示词 + PPT Skills：一键输出 BRD/MRD
+- Coze 实践：零代码做市场洞察 Agent
+
+// VISUAL
+深黑背景，四个大色块以 2×2 网格排列。左上珊瑚红块内白色大字"SWOT"，右上蓝绿块内"PESTEL"，左下金色块内"KANO"，右下深蓝块内"BRD/MRD"。每个色块底部有小号白色说明文字。
+
+// LAYOUT
+Layout: bento-grid
+2×2 大色块网格，每个色块承载一个核心能力。
+
+---
+
+## Slide 6 of 18
+
+**Type**: Content
+**Filename**: 06-slide-requirements.png
+
+// NARRATIVE GOAL
+展示需求调研的 AI 能力——从碎片化信息到结构化功能清单。
+
+// KEY CONTENT
+Headline: 第 2 章：需求调研
+Sub-headline: 碎片信息 → 结构化需求
+Body:
+- 需求整理 Skills：聊天记录/会议纪要一键变功能清单
+- 竞品分析 Skills：AI 找机会点和差异化
+- 龙虾自动监控竞品网站推送报告
+- 用户反馈一键转化为产品需求
+
+// VISUAL
+深黑背景，左侧是一个散乱的文字云（小号灰色字：聊天记录、老板口头、用户反馈、会议纪要），右侧是一个整齐的金色边框功能清单卡片，中间用一条从左到右逐渐变亮的蓝绿色箭头连接，象征从混乱到有序的转变。
+
+// LAYOUT
+Layout: split-screen
+左乱右整的视觉对比，中间有连接元素。
+
+---
+
+## Slide 7 of 18
+
+**Type**: Content
+**Filename**: 07-slide-product-design.png
+
+// NARRATIVE GOAL
+展示产品设计环节的 AI 工具矩阵，覆盖从架构图到需求评审的全流程。
+
+// KEY CONTENT
+Headline: 第 3 章：产品设计
+Sub-headline: 从架构图到需求评审的 AI 全流程
+Body:
+- 产品架构图工具盘点
+- AI 原型设计：移动端 + Web 端（Cursor 实战）
+- 业务流程图：Mermaid 可视化
+- 需求文档 PRD + 需求评审大师
+
+// VISUAL
+深黑背景，画面中央是一个产品设计的简化流程图（架构图 → 原型 → 流程图 → PRD），每个节点用不同颜色的圆形图标表示，连接线为金色。流程图下方用白色小字列出对应的 AI 工具名称。
+
+// LAYOUT
+Layout: linear-progression
+水平四步流程，每步用彩色圆形图标标识。
+
+---
+
+## Slide 8 of 18
+
+**Type**: Content
+**Filename**: 08-slide-ops-management.png
+
+// NARRATIVE GOAL
+展示运营与管理的 AI 自动化能力，突出数据驱动决策。
+
+// KEY CONTENT
+Headline: 第 4 章：产品运营与管理
+Sub-headline: AI 驱动的运营自动化
+Body:
+- 产品命名 Skills
+- 验收测试：AI Agent 自动化测试
+- 向上管理 / 向领导汇报 Skills
+- 运营数据复盘 Skills
+
+// VISUAL
+深黑背景，画面分为四个垂直色带。从左到右分别是珊瑚红、蓝绿、金色、深蓝窄条。每个色带内用白色大号字竖排显示一个关键词：命名、测试、汇报、复盘。色带间有细白线分隔。
+
+// LAYOUT
+Layout: four-columns
+四个等宽垂直色带，每个承载一个核心能力。
+
+---
+
+## Slide 9 of 18
+
+**Type**: Content
+**Filename**: 09-slide-project-mgmt.png
+
+// NARRATIVE GOAL
+展示项目管理的 AI 全景，从 PMBOK 理论到实战 Skill 的蒸馏。
+
+// KEY CONTENT
+Headline: 第 5 章：项目管理
+Sub-headline: PMBOK 蒸馏成 Skill，实战即用
+Body:
+- AI 项目导师：PMBOK 蒸馏成 Skill
+- 综合项目管理 Skills：WBS / 里程碑 / 风险管理
+- 进度管理：甘特图和进度表格
+- Claude Code 一键生成工单报表
+
+// VISUAL
+深黑背景，画面中央是一个简化的甘特图，用珊瑚红和蓝绿色条形表示不同项目阶段。甘特图左侧是金色大字标题。背景有微妙的深蓝网格线。
+
+// LAYOUT
+Layout: dashboard
+甘特图风格的数据展示，标题在左侧。
+
+---
+
+## Slide 10 of 18
+
+**Type**: Content
+**Filename**: 10-slide-daily-work.png
+
+// NARRATIVE GOAL
+展示日常工作中的 AI 提效场景，让听众感受到「处处可用 AI」。
+
+// KEY CONTENT
+Headline: 第 6 章：日常工作 AI 化
+Sub-headline: 文件管理、会议纪要、日报、PPT 一键搞定
+Body:
+- Claude Code 高效文件管理
+- 龙虾 + 飞书：一句话新增需求
+- 会议纪要 → PRD 一键转化
+- 日报自动化 + Markdown 转 Word/PDF
+- PPT 生成 Skills：AI 一键出幻灯片
+
+// VISUAL
+深黑背景，五个彩色圆形图标排成弧形（从左上到右下），每个图标内是不同的工具图标（文件、聊天气泡、文档、日历、幻灯片），图标下方用小号白色字标注功能。弧线上方是金色大标题。
+
+// LAYOUT
+Layout: icon-grid
+弧形排列的图标网格，标题在上方。
+
+---
+
+## Slide 11 of 18
+
+**Type**: Content
+**Filename**: 11-slide-new-horizon.png
+
+// NARRATIVE GOAL
+展示课程终点——不只是学技能，而是获得新的认知、兴趣和社群。
+
+// KEY CONTENT
+Headline: 第 7 章：新天地
+Sub-headline: 新认知 · 新兴趣 · 新链接
+Body:
+- 新认知：任何事都先考虑能否用 AI 替代或辅助
+- 新兴趣：Vibe Coding 分享 N 个产品项目
+- 新链接：常用 AI 工具 + 书籍 + KOL + 社群
+
+// VISUAL
+深黑背景，三个大号彩色圆形从画面中向外扩散。珊瑚红圆内写"新认知"，蓝绿圆内写"新兴趣"，金色圆内写"新链接"。圆形之间有细白线连接，形成三角关系。背景有微妙的光晕效果。
+
+// LAYOUT
+Layout: hub-spoke
+三节点辐射结构，从中心向外扩散。
+
+---
+
+## Slide 12 of 18
+
+**Type**: Content
+**Filename**: 12-slide-skills-architecture.png
+
+// NARRATIVE GOAL
+展示 Skills 的统一技术架构，体现工程化的设计理念。
+
+// KEY CONTENT
+Headline: 统一架构：JSON + Python + HTML
+Sub-headline: 所有 Skill 共享同一套工程架构
+Body:
+- AI 分析结果 → JSON 数据
+- generate-report.py 基于模板渲染
+- 同时输出 HTML 报告和 Markdown 文档
+- 一致的 CLI 入口和文件规范
+
+// VISUAL
+深黑背景，画面中央是一个从左到右的三步流程：左侧珊瑚红色块内写"JSON 数据"，中间金色箭头，右侧蓝绿色块内写"HTML 报告"。箭头上方写"Python 渲染"，下方写"Markdown 同步"。流程简洁有力。
+
+// LAYOUT
+Layout: linear-progression
+三步水平流程，中间连接元素承载关键信息。
+
+---
+
+## Slide 13 of 18
+
+**Type**: Content
+**Filename**: 13-slide-skill-market.png
+
+// NARRATIVE GOAL
+重点展示市场洞察 Skill 的能力边界——五大分析维度。
+
+// KEY CONTENT
+Headline: 🏪 市场洞察 Skill
+Sub-headline: SWOT / PESTEL / KANO 一键调用
+Body:
+- 市场全景分析
+- 外部环境扫描（PESTEL 六维度）
+- 内部能力评估（SWOT 四象限）
+- 用户需求分类（KANO 模型）
+- 业务判断与决策建议
+
+// VISUAL
+深黑背景，五个横向色带从上到下排列，每个色带颜色渐变（珊瑚红→深蓝→蓝绿→金色→白色）。色带内用深色大号字标注分析维度名称。左侧用金色竖线统一连接。
+
+// LAYOUT
+Layout: hierarchical-layers
+五层横向色带，形成层级结构。
+
+---
+
+## Slide 14 of 18
+
+**Type**: Content
+**Filename**: 14-slide-skill-brd-mrd.png
+
+// NARRATIVE GOAL
+展示 BRD/MRD 一键输出能力，强调双文档同时生成的独特性。
+
+// KEY CONTENT
+Headline: 📋 BRD/MRD 一键输出大师
+Sub-headline: 双文档同时生成，HTML + Markdown 双格式
+Body:
+- BRD：10 章完整结构（执行摘要→成功指标）
+- MRD：7 章完整结构（市场机会→数据支撑）
+- 行业分析框架：TAM/SAM/SOM、波特五力
+- 同时输出 HTML + Markdown 双格式
+
+// VISUAL
+深黑背景，画面被一条垂直金线分为左右两栏。左栏顶部用大号珊瑚红字写"BRD"，下方列出 10 章缩略名；右栏顶部用大号蓝绿字写"MRD"，下方列出 7 章缩略名。两栏底部各有一个小标签"HTML"和"MD"。
+
+// LAYOUT
+Layout: two-columns
+双栏均衡展示，中间金色分隔线。
+
+---
+
+## Slide 15 of 18
+
+**Type**: Content
+**Filename**: 15-slide-skill-ops-pm.png
+
+// NARRATIVE GOAL
+展示运营复盘和项目管理两个 Skill 的核心框架。
+
+// KEY CONTENT
+Headline: 📊 运营复盘 × 📐 项目管理
+Sub-headline: AARRR + HEART × WBS + 甘特图
+Body:
+- 运营数据复盘：AARRR 全链路 + HEART 体验框架
+- 漏斗分析、留存分析、商业化分析
+- 综合项目管理：WBS 分解、里程碑、资源分配
+- 敏捷框架 + 干系人管理
+
+// VISUAL
+深黑背景，画面被对角线分为上下两个三角。上三角用珊瑚红底白色大字展示"AARRR"和"HEART"，下三角用蓝绿底白色大字展示"WBS"和"敏捷"。对角线上用金色字标注"AI 驱动"。
+
+// LAYOUT
+Layout: binary-comparison
+对角线分割，上下两个主题域。
+
+---
+
+## Slide 16 of 18
+
+**Type**: Content
+**Filename**: 16-slide-skill-ppt.png
+
+// NARRATIVE GOAL
+展示 PPT 生成 Skill 的强大——17 种预设风格，三种图片后端。
+
+// KEY CONTENT
+Headline: 🎨 PPT 生成 Skill
+Sub-headline: 17 种预设风格，525 种自定义组合
+Body:
+- 4 个维度自由组合：质感 × 氛围 × 排版 × 密度
+- 3 种图片后端：豆包 Seedream / GPT-image-2 / Gemini
+- 从大纲到 PPTX/PDF 全流程自动化
+- 每张幻灯片独立提示词，可复现可修改
+
+// VISUAL
+深黑背景，画面中央是一个 4×4 的彩色网格，每个格子代表一种预设风格，用不同的颜色填充（珊瑚红、蓝绿、金色、深蓝等）。网格上方是金色大标题，下方是三个后端 logo 样式的色块标签。
+
+// LAYOUT
+Layout: bento-grid
+彩色网格展示多样性，下方后端选项。
+
+---
+
+## Slide 17 of 18
+
+**Type**: Content
+**Filename**: 17-slide-all-skills.png
+
+// NARRATIVE GOAL
+展示全部 7 个已完成 Skill 的完整矩阵，形成产品力的整体印象。
+
+// KEY CONTENT
+Headline: 七大 Skill 全景
+Sub-headline: 覆盖 PM 全工作流的 AI 能力矩阵
+Body:
+- 🏪 市场洞察（SWOT/PESTEL/KANO）
+- 📋 BRD/MRD 一键输出
+- 📝 需求整理与管理
+- 🔍 竞品分析
+- 📊 运营数据复盘
+- 📐 综合项目管理
+- 🎨 PPT 生成
+
+// VISUAL
+深黑背景，七个彩色圆角矩形卡片以蜂巢状排列（3-3-1），每个卡片用不同颜色（珊瑚红、蓝绿、金色、深蓝、紫罗兰、橙色、品红）标识。卡片内有大号 emoji 和 Skill 名称。整体形成视觉冲击力强的矩阵。
+
+// LAYOUT
+Layout: icon-grid
+蜂巢状排列的卡片网格。
+
+---
+
+## Slide 18 of 18
+
+**Type**: Back Cover
+**Filename**: 18-slide-back-cover.png
+
+// NARRATIVE GOAL
+用一句有力的行动号召收尾，激发听众立刻开始行动。
+
+// KEY CONTENT
+Headline: 不是学工具，是换工作流
+Body: 从今天开始，让 AI 成为你最强的产品搭档
+
+// VISUAL
+深黑背景，画面中央偏上是一个巨大的金色衬线体引号标记。下方是白色大号衬线体标题文字。最底部用珊瑚红小号字写行动号召。背景有从中心向外扩散的微妙深蓝光晕。
+
+// LAYOUT
+Layout: quote-callout
+居中引言式构图，大量留白，文字即主角。

@@ -57,7 +57,7 @@
 - 会议纪要：Gemini Gem 一键生成 PRD 等
 - 日报助手：日报自动化的 2 个 AI 方法
 - AI 效率工具实战：Markdown 转 Word/PDF
-- AI 生成 PPT Skill
+- **PPT 生成 Skills**：AI 一键生成幻灯片图片并合并为 PPTX/PDF
 
 ### 第 7 章：新天地
 - 课程资料分享：内部资料与知识库
@@ -67,22 +67,12 @@
 
 ## 已完成的 Skills
 
-所有 Skill 统一采用 **JSON 数据 + Python 脚本 + HTML 模板** 架构：AI 分析结果整理为 JSON → `generate-report.py` 基于模板渲染 → 输出精美 HTML 报告。
+所有 Skill 统一采用 **JSON 数据 + Python 脚本 + HTML 模板** 架构。
 
-### 市场洞察 Skill（market-insight）
-内置 SWOT / PESTEL / KANO 等分析框架，覆盖市场全景、外部环境、内部能力、用户需求、业务判断五大维度，输出叙事驱动的 HTML 报告。
-
-### BRD/MRD 一键输出大师（brd-mrd-master）
-一键输出专业级 BRD（商业需求文档）和/或 MRD（市场需求文档）HTML 报告。
-
-### 需求整理与管理 Skill（pm-requirements）
-将碎片化需求整理成结构化功能清单，支持增量更新和需求评分排序。
-
-### 竞品分析 Skill（pm-compete）
-横向对比竞品，输出功能对比矩阵、用户口碑对比、定位图、价值曲线和机会点建议。
-
-### 运营数据复盘 Skill（ops-data-review）
-基于产品运营数据，运用 AARRR 全链路与 HEART 体验框架，输出结构化复盘报告。
-
-### 综合项目管理 Skill（project-management-master）
-实战型项目管理 Skill，覆盖 WBS 任务分解、里程碑规划、资源分配、风险管理、质量保障、沟通管理全流程。
+- 🏪 市场洞察 Skill（market-insight）
+- 📋 BRD/MRD 一键输出大师（brd-mrd-master）
+- 📝 需求整理与管理 Skill（pm-requirements）
+- 🔍 竞品分析 Skill（pm-compete）
+- 📊 运营数据复盘 Skill（ops-data-review）
+- 📐 综合项目管理 Skill（project-management-master）
+- 🎨 PPT 生成 Skill（pm-slide-deck）

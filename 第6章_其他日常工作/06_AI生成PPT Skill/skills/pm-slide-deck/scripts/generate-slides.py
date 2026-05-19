@@ -51,6 +51,8 @@ BACKEND_CONFIG = {
 OPENAI_SUPPORTED_SIZES = ["1024x1024", "1536x1024", "1024x1536"]
 DEFAULT_SIZE = "1672x941"
 FALLBACK_SIZE = "1536x1024"
+DOUBAO_MIN_PIXELS = 3686400
+DOUBAO_SIZE = "2560x1440"
 
 
 def load_env():
@@ -209,6 +211,10 @@ def generate_image_grsai(prompt, api_key, size, config):
 def generate_image(prompt, api_key, size, backend):
     config = BACKEND_CONFIG[backend]
     if backend == "doubao":
+        w, h = int(size.split("x")[0]), int(size.split("x")[1])
+        if w * h < DOUBAO_MIN_PIXELS:
+            print(f"  豆包 API 要求最少 {DOUBAO_MIN_PIXELS} 像素，已自动升档为 {DOUBAO_SIZE}")
+            size = DOUBAO_SIZE
         return generate_image_doubao(prompt, api_key, size, config)
     if backend == "openai":
         return generate_image_openai(prompt, api_key, size, config)

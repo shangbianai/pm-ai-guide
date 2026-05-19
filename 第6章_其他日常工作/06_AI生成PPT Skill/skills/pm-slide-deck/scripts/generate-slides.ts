@@ -30,6 +30,8 @@ const BACKEND_CONFIG: Record<BackendType, { apiUrl: string; model: string; label
 const OPENAI_SUPPORTED_SIZES = ["1024x1024", "1536x1024", "1024x1536"];
 const DEFAULT_SIZE = "1672x941";
 const FALLBACK_SIZE = "1536x1024";
+const DOUBAO_MIN_PIXELS = 3686400;
+const DOUBAO_SIZE = "2560x1440";
 
 interface SlideTask {
   promptFile: string;
@@ -190,16 +192,25 @@ function readPrompt(filePath: string): string {
 
 async function generateImage(prompt: string, apiKey: string, size: string, backend: BackendType): Promise<Buffer> {
   const config = BACKEND_CONFIG[backend];
+  let actualSize = size;
+
+  if (backend === "doubao") {
+    const [w, h] = size.split("x").map(Number);
+    if (w * h < DOUBAO_MIN_PIXELS) {
+      console.log(`  豆包 API 要求最少 ${DOUBAO_MIN_PIXELS} 像素，已自动升档为 ${DOUBAO_SIZE}`);
+      actualSize = DOUBAO_SIZE;
+    }
+  }
 
   switch (backend) {
     case "doubao":
-      return generateImageDoubao(prompt, apiKey, size, config.apiUrl, config.model);
+      return generateImageDoubao(prompt, apiKey, actualSize, config.apiUrl, config.model);
     case "openai":
-      return generateImageOpenai(prompt, apiKey, size, config.apiUrl, config.model);
+      return generateImageOpenai(prompt, apiKey, actualSize, config.apiUrl, config.model);
     case "gemini":
       return generateImageGemini(prompt, apiKey, config.apiUrl);
     case "grsai":
-      return generateImageGrsai(prompt, apiKey, size, config.apiUrl, config.model);
+      return generateImageGrsai(prompt, apiKey, actualSize, config.apiUrl, config.model);
   }
 }
 

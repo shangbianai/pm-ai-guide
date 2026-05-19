@@ -214,7 +214,7 @@ description: "一键输出专业级 BRD（商业需求文档）和/或 MRD（市
 - NOT TO DO 清单（2-3条 + 原因）
 - 关键里程碑时间线
 
-### 第 6 步：生成 HTML 报告（⚠️ 必须严格按以下流程执行）
+### 第 6 步：生成 HTML + Markdown 报告（⚠️ 必须严格按以下流程执行）
 
 **绝对不要自己手写 HTML！必须通过模板引擎生成报告。**
 
@@ -444,9 +444,11 @@ description: "一键输出专业级 BRD（商业需求文档）和/或 MRD（市
 }
 ```
 
-**BOTH 类型**：分别生成 BRD 和 MRD 两份 JSON 文件，分别命名为 `{产品名称}-brd-data.json` 和 `{产品名称}-mrd-data.json`，分别执行生成脚本输出两个 HTML 文件。
+**BOTH 类型**：分别生成 BRD 和 MRD 两份 JSON 文件，分别命名为 `{产品名称}-brd-data.json` 和 `{产品名称}-mrd-data.json`，分别执行生成脚本输出 HTML 和 MD 文件。
 
 2. **执行生成脚本**（使用 Bash 工具运行命令）：
+
+脚本同时生成 `.html` 和 `.md` 两个文件。输出文件命名格式：`{BRD/MRD}报告_{产品名称}_{日期}.html` 和 `{BRD/MRD}报告_{产品名称}_{日期}.md`。
 
 ```bash
 python3 {本Skill的绝对路径}/scripts/generate-report.py {产品名称}-data.json BRD报告_{产品名称}_{日期}.html
@@ -457,7 +459,7 @@ MRD 同理：
 python3 {本Skill的绝对路径}/scripts/generate-report.py {产品名称}-mrd-data.json MRD报告_{产品名称}_{日期}.html
 ```
 
-3. 报告文件保存到当前工作目录下
+3. 报告文件（HTML + Markdown）保存到当前工作目录下
 
 ## ⛔ 关键约束
 

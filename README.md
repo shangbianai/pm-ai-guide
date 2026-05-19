@@ -67,7 +67,7 @@
 
 ## 已完成的 Skills
 
-所有 Skill 统一采用 **JSON 数据 + Python 脚本 + HTML 模板** 架构：AI 分析结果整理为 JSON → `generate-report.py` 基于模板渲染 → 输出精美 HTML 报告。
+所有 Skill 统一采用 **JSON 数据 + Python 脚本 + HTML 模板** 架构：AI 分析结果整理为 JSON → `generate-report.py` 基于模板渲染 → 同时输出 HTML 报告和 Markdown 文档。
 
 ### 🏪 市场洞察 Skill（market-insight）
 
@@ -92,7 +92,7 @@ skills/market-insight/
 
 位置：`第1章_市场洞察/03_超强提示词+PPT Skills：一键输出BRD-MRD文档/skills/brd-mrd-master/`
 
-一键输出专业级 BRD（商业需求文档）和/或 MRD（市场需求文档）HTML 报告。BRD 覆盖 10 章（执行摘要→成功指标），MRD 覆盖 7 章（市场机会→数据支撑），支持同时生成两份。
+一键输出专业级 BRD（商业需求文档）和/或 MRD（市场需求文档），**同时生成 HTML + Markdown 双格式报告**。BRD 覆盖 10 章（执行摘要→成功指标），MRD 覆盖 7 章（市场机会→数据支撑），支持同时生成两份。
 
 ```
 skills/brd-mrd-master/
@@ -102,7 +102,7 @@ skills/brd-mrd-master/
 │   ├── mrd-guide.md              # MRD 编写方法论指南
 │   └── industry-analysis-framework.md  # 行业分析框架（TAM/SAM/SOM、波特五力等）
 ├── scripts/
-│   └── generate-report.py  # 支持 BRD/MRD 两种文档类型的报告生成器
+│   └── generate-report.py  # 支持 BRD/MRD 双格式报告生成器（HTML + Markdown）
 └── assets/
     └── report-template.html
 ```
@@ -223,7 +223,7 @@ skills/pm-slide-deck/
 1. 在 Claude Code / Cursor 中激活对应 Skill
 2. 提供产品/项目信息及业务背景
 3. AI 自动完成框架分析，整理结果为 JSON 数据
-4. 通过 `python3 generate-report.py data.json output.html` 生成 HTML 报告
+4. 通过 `python3 generate-report.py data.json output.html` 生成 HTML 报告（自动同时生成同名 `.md` 文件）
 
 ## 参考资源
 
@@ -232,5 +232,5 @@ skills/pm-slide-deck/
 ## 仓库信息
 
 - **组织**：shangbianai
-- **可见性**：私有
+- **可见性**：公开
 - **用途**：课程内部资料，请勿外传

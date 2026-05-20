@@ -208,7 +208,16 @@ _pm_context/requirements/feature-list.md
 - 如果 `docx` 出现在当前可用 skill 列表中 → 调用 docx skill，文件名：`功能清单_v1.0.docx`，保存至 `_pm_context/requirements/`
 - 如果 docx skill 不可用 → 用 Python 脚本生成（python-docx 库；未安装则执行 `pip install python-docx`）；若库也无法安装，告知用户直接使用 feature-list.md，内容完全一致
 
-字体要求：正文宋体 10.5pt，H1 黑体 16pt 加粗，H2 黑体 14pt 加粗，表格 9pt，页眉/页码 9pt。
+字体要求（必须严格执行，docx skill 默认 Arial 会被此处指令覆盖）：
+- 正文：宋体 10.5pt，英文部分用 Times New Roman
+- H1：黑体 16pt 加粗
+- H2：黑体 14pt 加粗
+- 表格内容：宋体 9pt
+- 页眉/页码：宋体 9pt
+- **禁止使用 Arial 或 Microsoft YaHei 作为中文字体**
+
+行间距要求：正文段落 1.3 倍行距，标题段落 1.15 倍行距，表格单元格 1.15 倍行距。
+
 结构：封面 → 变更记录 → 产品定位 → 功能概览表 → 各功能详细说明 → 暂不考虑 → 待确认事项。
 
 **生成 Excel 表格：**

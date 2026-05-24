@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>需求评审报告 — {{产品名}}</title>
+<style>
+  /*
+   * pm-review HTML 模板
+   * CSS 和交互逻辑固定，内容通过占位符填入
+   * 占位符：{{产品名}} {{评审日期}} {{输入类型}} {{版本}}
+   *
+   * 颜色规范：🔴 #e74c3c / 🟡 #f39c12 / 🟢 #27ae60 / 主色 #2c3e50
+   */
+
+  :root {
+    --red: #e74c3c;       --red-bg: #fdf0ef;    --red-border: #f5c6cb;
+    --yellow: #f39c12;    --yellow-bg: #fef9e7; --yellow-border: #f9e79f;
+    --green: #27ae60;     --green-bg: #eafaf1;  --green-border: #a9dfbf;
+    --primary: #2c3e50;   --text: #333;         --text-secondary: #666;
+    --text-muted: #999;   --bg: #f5f6fa;        --card-bg: #fff;
+    --border: #e8e8e8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: #fff; padding: 40px 0; margin-bottom: 32px;
+  }
+  .header .container { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 24px; }
+  .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .header .subtitle { font-size: 14px; opacity: 0.75; }
+  .header .meta { display: flex; gap: 24px; font-size: 13px; opacity: 0.85; flex-wrap: wrap; }
+
+  /* Dashboard Cards */
+  .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card {
+    background: var(--card-bg); border-radius: 12px; padding: 20px 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid var(--border);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .stat-card .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+  .stat-card .value { font-size: 36px; font-weight: 700; }
+  .stat-card .sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .stat-card.red .value { color: var(--red); }
+  .stat-card.yellow .value { color: var(--yellow); }
+  .stat-card.green .value { color: var(--green); }
+
+  /* Filters */
+  .filters { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
+  .filters .label { font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+  .filter-btn {
+    padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--card-bg); cursor: pointer; font-size: 13px;
+    transition: all 0.15s; color: var(--text-secondary);
+  }
+  .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .filter-btn.severity-red.active { background: var(--red); border-color: var(--red); }
+  .filter-btn.severity-yellow.active { background: var(--yellow); border-color: var(--yellow); color: #fff; }
+  .filter-btn.severity-green.active { background: var(--green); border-color: var(--green); }
+
+  .role-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  .role-tag {
+    padding: 5px 14px; border-radius: 6px; font-size: 12px;
+    border: 1px solid var(--border); background: var(--card-bg);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .role-tag:hover { border-color: var(--primary); }
+  .role-tag.active { background: #eaf2f8; border-color: #5b9bd5; color: #2c5f8a; font-weight: 600; }
+
+  /* Section */
+  .section {
+    background: var(--card-bg); border-radius: 12px; padding: 28px 32px;
+    margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid var(--border);
+  }
+  .section h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; padding-bottom: 12px; border-bottom: 2px solid #f0f0f0; }
+  .section h3 { font-size: 16px; font-weight: 600; margin: 20px 0 12px; }
+
+  /* Question Card */
+  .q-card {
+    border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px;
+    margin-bottom: 16px; transition: box-shadow 0.15s;
+  }
+  .q-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .q-card.severity-red { border-left: 4px solid var(--red); }
+  .q-card.severity-yellow { border-left: 4px solid var(--yellow); }
+  .q-card.severity-green { border-left: 4px solid var(--green); }
+
+  .q-card .q-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+  .q-card .q-id { font-weight: 700; font-size: 14px; color: var(--primary); }
+  .q-card .q-title { font-size: 16px; font-weight: 600; flex: 1; min-width: 200px; }
+  .q-card .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge-role { background: #eaf2f8; color: #2c5f8a; }
+  .badge-feature { background: #f4ecf7; color: #7d3c98; }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+  .badge-yellow { background: var(--yellow-bg); color: #b8730a; }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+
+  .q-card .q-body { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.7; }
+
+  .q-card .q-section-title { font-size: 13px; font-weight: 700; color: var(--primary); margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .q-card .solution-list { list-style: none; padding: 0; }
+  .q-card .solution-list li { padding: 6px 0 6px 20px; position: relative; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .q-card .solution-list li::before { content: ''; position: absolute; left: 0; top: 12px; width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+  .q-card .script-box {
+    background: #f8f9fa; border-radius: 8px; padding: 14px 18px; margin-top: 8px;
+    font-size: 13px; color: var(--text-secondary); border-left: 3px solid var(--primary);
+    line-height: 1.7; font-style: italic;
+  }
+
+  /* Expand toggle */
+  .expand-toggle { color: var(--primary); font-size: 13px; cursor: pointer; font-weight: 600; margin-top: 12px; display: inline-block; user-select: none; }
+  .expand-toggle:hover { text-decoration: underline; }
+  .q-detail { display: none; }
+  .q-detail.open { display: block; }
+
+  /* Tables */
+  .summary-table, .improve-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .summary-table th, .improve-table th { background: #f8f9fa; padding: 10px 14px; text-align: left; font-weight: 600; border-bottom: 2px solid #e0e0e0; font-size: 12px; color: var(--text-secondary); }
+  .summary-table td, .improve-table td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .improve-table .priority-p0 { color: var(--red); font-weight: 700; }
+  .improve-table .priority-p1 { color: var(--yellow); font-weight: 700; }
+
+  /* Status coverage */
+  .coverage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .coverage-item { border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: #fafafa; }
+  .coverage-item .page-name { font-weight: 600; font-size: 14px; margin-bottom: 10px; }
+  .coverage-dots { display: flex; gap: 10px; flex-wrap: wrap; }
+  .coverage-dot { font-size: 12px; display: flex; align-items: center; gap: 4px; }
+  .coverage-dot.pass { color: var(--green); }
+  .coverage-dot.warn { color: var(--yellow); }
+  .coverage-dot.fail { color: var(--red); }
+
+  /* Script cards */
+  .script-card { border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; margin-bottom: 14px; background: #fafafa; }
+  .script-card .scene { font-weight: 700; font-size: 14px; margin-bottom: 10px; color: var(--primary); }
+  .script-card .script-text { font-size: 13px; color: var(--text-secondary); line-height: 1.8; padding: 12px 18px; background: #fff; border-radius: 8px; border: 1px solid #eee; font-style: italic; }
+
+  /* Print */
+  @media print {
+    body { background: #fff; }
+    .header { background: #2c3e50 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .section { box-shadow: none; break-inside: avoid; }
+    .q-card { break-inside: avoid; }
+    .filters { display: none; }
+    .q-detail { display: block !important; }
+    .container { max-width: 100%; }
+  }
+
+  @media (max-width: 768px) {
+    .dashboard { grid-template-columns: repeat(2, 1fr); }
+    .header .container { flex-direction: column; }
+    .section { padding: 20px; }
+    .q-card { padding: 16px; }
+    .filters { flex-direction: column; align-items: flex-start; }
+  }
+
+  .results-count { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<!-- ====== Header ====== -->
+<div class="header">
+  <div class="container">
+    <div>
+      <h1>需求评审报告</h1>
+      <p class="subtitle">AI 模拟多角色评审 · pm-review Skill</p>
+    </div>
+    <div class="meta">
+      <span>产品：{{产品名}}</span>
+      <span>评审日期：{{评审日期}}</span>
+      <span>输入类型：{{输入类型}}</span>
+      <span>版本：{{版本}}</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ====== Dashboard ====== -->
+  <div class="dashboard">
+    <div class="stat-card">
+      <div class="label">发现问题总数</div>
+      <div class="value">{{问题总数}}</div>
+      <div class="sub">覆盖 {{功能点数}} 个功能点</div>
+    </div>
+    <div class="stat-card red">
+      <div class="label">🔴 阻塞问题</div>
+      <div class="value">{{阻塞数}}</div>
+      <div class="sub">必须解决才能开发</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="label">🟡 重要问题</div>
+      <div class="value">{{重要数}}</div>
+      <div class="sub">影响质量或体验</div>
+    </div>
+    <div class="stat-card green">
+      <div class="label">🟢 优化建议</div>
+      <div class="value">{{建议数}}</div>
+      <div class="sub">锦上添花</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">应对覆盖率</div>
+      <div class="value" style="color: var(--primary)">{{覆盖率}}%</div>
+      <div class="sub">{{已覆盖数}}/{{问题总数}} 已有方案</div>
+    </div>
+  </div>
+
+  <!-- ====== Filters ====== -->
+  <div class="filters">
+    <span class="label">严重度：</span>
+    <button class="filter-btn severity-red active" data-severity="all">全部</button>
+    <button class="filter-btn severity-red" data-severity="red">🔴 阻塞 ({{阻塞数}})</button>
+    <button class="filter-btn severity-yellow" data-severity="yellow">🟡 重要 ({{重要数}})</button>
+    <button class="filter-btn severity-green" data-severity="green">🟢 建议 ({{建议数}})</button>
+    <span style="margin-left: 16px;" class="label">角色：</span>
+    <div class="role-filters">
+      <button class="role-tag active" data-role="all">全部角色</button>
+      <!--
+        动态生成角色筛选按钮，列出本次评审涉及的所有角色
+        示例：
+        <button class="role-tag" data-role="前端开发">前端</button>
+        <button class="role-tag" data-role="后端开发">后端</button>
+      -->
+    </div>
+  </div>
+  <div class="results-count" id="resultsCount">显示全部 {{问题总数}} 个问题</div>
+
+  <!-- ====== 评审概览 ====== -->
+  <div class="section" id="summary">
+    <h2>评审概览</h2>
+    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
+      {{需求摘要}}
+    </p>
+
+    <!-- 如果输入是 HTML 原型，展示状态覆盖检查；否则可省略此节 -->
+    <!--
+    <h3>HTML 原型状态覆盖检查</h3>
+    <div class="coverage-grid">
+      <div class="coverage-item">
+        <div class="page-name">{{页面名称}}</div>
+        <div class="coverage-dots">
+          <span class="coverage-dot pass">✅ 加载</span>
+          <span class="coverage-dot fail">❌ 错误</span>
+          ...
+          <span style="font-size:12px;color:var(--text-muted);">X/4</span>
+        </div>
+      </div>
+    </div>
+    -->
+  </div>
+
+  <!-- ====== 角色评审详情 ====== -->
+  <!--
+    ═══════════════════════════════════════════════════════════════
+    问题卡片模板 — 根据评审结果按严重度分组，逐个生成 .q-card
+    ═══════════════════════════════════════════════════════════════
+
+    每个问题的结构：
+    1. .q-card 容器，class 加 severity-red / severity-yellow / severity-green
+    2. data-severity="red|yellow|green" 和 data-role="角色名" 用于筛选
+    3. .q-header 包含问题编号、标题、徽章（严重度+角色+关联功能）
+    4. .q-body 问题详述
+    5. .expand-toggle 展开/收起按钮
+    6. .q-detail 展开区：应对方案 / 追问预判 / 兜底话术（阻塞问题必须有）
+  -->
+
+  <div class="section" id="questions">
+    <h2>角色评审详情</h2>
+    <div id="questionList">
+
+      <!--
+        ── 每张问题卡片按此结构生成 ──
+        严重度 class: severity-red | severity-yellow | severity-green
+        data-role: 前端开发 | 后端开发 | 设计师 | 测试 | 业务方 | 老板
+        data-severity: red | yellow | green
+      -->
+      <!--
+      <div class="q-card severity-red" data-severity="red" data-role="后端开发">
+        <div class="q-header">
+          <span class="q-id">Q-001</span>
+          <span class="q-title">{{问题标题}}</span>
+          <div class="badge-row">
+            <span class="badge badge-red">🔴 阻塞</span>
+            <span class="badge badge-role">{{角色名}}</span>
+            <span class="badge badge-feature">{{关联功能编号及名称}}</span>
+          </div>
+        </div>
+        <div class="q-body">{{问题详述}}</div>
+
+        <span class="expand-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '收起应对方案 ▲' : '展开应对方案 ▼'">展开应对方案 ▼</span>
+        <div class="q-detail">
+          <div class="q-section-title">应对方案</div>
+          <ol class="solution-list">
+            <li><strong>方案一：</strong>{{方案描述}}</li>
+            <li><strong>方案二：</strong>{{方案描述}}</li>
+          </ol>
+
+          <div class="q-section-title">追问预判</div>
+          <ul class="solution-list">
+            <li>如果追问 "{{追问}}"：{{回应}}</li>
+          </ul>
+
+          <div class="q-section-title">兜底话术</div>
+          <div class="script-box">
+            "{{可直接使用的口语化回应}}"
+          </div>
+        </div>
+      </div>
+      -->
+
+    </div>
+  </div>
+
+  <!-- ====== 应对话术库 ====== -->
+  <!--
+    分为两部分：
+    A. 通用应对框架 — 固定 4 个场景（被问没准备/角色冲突/质疑价值/范围蔓延）
+    B. 本产品专用话术 — 按角色生成速查表
+  -->
+  <!--
+  <div class="section" id="scripts">
+    <h2>应对话术库</h2>
+    <h3>通用应对框架</h3>
+
+    <div class="script-card">
+      <div class="scene">场景 1：被问到没准备的问题</div>
+      <div class="script-text">"{{话术内容}}"</div>
+    </div>
+    ... (共 4 个通用场景)
+
+    <h3>本产品场景专用话术</h3>
+    <table class="summary-table">
+      <thead>
+        <tr><th>角色</th><th>场景</th><th>话术</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>{{角色}}</td><td>{{场景}}</td><td>"{{话术}}"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  -->
+
+  <!-- ====== 改进清单 ====== -->
+  <!--
+  <div class="section" id="improvements">
+    <h2>改进清单</h2>
+    <table class="improve-table">
+      <thead>
+        <tr><th>编号</th><th>改进项</th><th>优先级</th><th>关联问题</th><th>建议操作</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>IMP-001</td>
+          <td>{{改进项}}</td>
+          <td class="priority-p0">P0</td>
+          <td>{{关联问题编号}}</td>
+          <td>{{具体操作建议}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  -->
+
+</div>
+
+<script>
+/*
+ * 筛选逻辑 — 固定代码，不需要修改
+ * 依赖：问题卡片有 data-severity 和 data-role 属性
+ */
+(function() {
+  let activeSeverity = 'all';
+  let activeRole = 'all';
+
+  const severityBtns = document.querySelectorAll('[data-severity]');
+  const roleBtns = document.querySelectorAll('[data-role]');
+  const questionCards = document.querySelectorAll('.q-card');
+  const resultsCount = document.getElementById('resultsCount');
+
+  function updateFilters() {
+    let count = 0;
+    questionCards.forEach(card => {
+      const severityMatch = activeSeverity === 'all' || card.dataset.severity === activeSeverity;
+      const roleMatch = activeRole === 'all' || card.dataset.role === activeRole;
+      card.style.display = (severityMatch && roleMatch) ? '' : 'none';
+      if (severityMatch && roleMatch) count++;
+    });
+    resultsCount.textContent = `显示 ${count} 个问题`;
+  }
+
+  severityBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      severityBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeSeverity = btn.dataset.severity;
+      updateFilters();
+    });
+  });
+
+  roleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      roleBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeRole = btn.dataset.role;
+      updateFilters();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 # 第3章 01 · 产品架构图工具盘点
 
-> 本节配套 Claude Code Skill：`arch-diagram`
+> 本节配套 Claude Code Skill：`arch-diagram`，以及 Codex Skill：`product-architecture-diagrams`
 
 ---
 
@@ -10,6 +10,7 @@
 
 - **路径 A（推荐）**：Claude 直接生成精准的 SVG/HTML 架构图，文字和连线 100% 可控，浏览器打开即用，支持导出 PNG/PDF
 - **路径 B**：生成优化好的图片提示词，粘贴到 ChatGPT Image 2 / Midjourney；配置 API Key 后可一键直出
+- **路径 C**：Codex 生成绚烂分层 HTML 产品架构图，内置 PNG/JPG 导出，适合直接放入 PPT、文档或课程材料
 
 ---
 
@@ -19,7 +20,11 @@
 01_架构图工具盘点/
 ├── README.md              ← 本文件，使用说明
 ├── skill/
-│   └── SKILL.md           ← arch-diagram Skill 源文件
+│   ├── SKILL.md           ← arch-diagram Skill 源文件
+│   └── codex-product-architecture-diagrams/
+│       ├── SKILL.md       ← Codex 产品架构图 Skill 源文件
+│       ├── references/    ← 方法论、图型分类、HTML 导出规范
+│       └── examples/      ← HTML Demo 与 PNG 预览图
 └── guide/
     └── arch-diagram-guide.html  ← 图文教程（浏览器打开）
 ```
@@ -37,6 +42,18 @@ npx skills add <url> --skill arch-diagram
 ```
 
 安装后重启 Claude Code，即可使用 `/arch-diagram` 命令。
+
+### Codex Skill
+
+```bash
+cp -R skill/codex-product-architecture-diagrams ~/.codex/skills/product-architecture-diagrams
+```
+
+安装后可在 Codex 中使用：
+
+```text
+用 $product-architecture-diagrams 帮我画一个智能风控产品架构图，包含用户端、运营端、风控评分、报告生成、模型训练、标签系统、数据仓库、监控运维。
+```
 
 ---
 
@@ -69,6 +86,7 @@ Skill 会引导你描述系统架构，然后选择输出模式。
 | 工具 | 适用场景 | 精度 | 学习成本 |
 |------|---------|------|---------|
 | `/arch-diagram`（路径A） | 正式交付、文档归档 | ★★★★★ | 低（描述即可）|
+| `$product-architecture-diagrams`（路径C） | 分层产品架构图、PPT/课程配图 | ★★★★★ | 低（描述即可）|
 | ChatGPT Image 2（路径B） | 课程演示、探索风格 | ★★★ | 低 |
 | Mermaid | 技术文档嵌入 | ★★★★ | 中 |
 | draw.io / Excalidraw | 精细手工调整 | ★★★★★ | 高 |

@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>智能风控产品架构图 Demo</title>
+  <style>
+    :root {
+      --bg: #eef2f7;
+      --ink: #162033;
+      --muted: #65748b;
+      --line: rgba(32, 44, 68, 0.16);
+      --shadow: 0 18px 50px rgba(24, 39, 75, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top left, #dbeafe 0, transparent 34%), var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    .app {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 22px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 12px 32px rgba(36, 58, 92, 0.12);
+      backdrop-filter: blur(10px);
+    }
+
+    .tabs, .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    button {
+      min-height: 36px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: #1f2937;
+      border-radius: 8px;
+      padding: 0 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button.active {
+      border-color: #2563eb;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: #fff;
+    }
+
+    .actions button {
+      background: #111827;
+      color: #fff;
+      border-color: #111827;
+    }
+
+    #status {
+      min-width: 160px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stage {
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    #captureArea {
+      width: 1360px;
+      min-height: 920px;
+      padding: 28px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.72) 0 1px, transparent 1px 80px),
+        linear-gradient(0deg, rgba(255,255,255,0.72) 0 1px, transparent 1px 80px),
+        linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+      border: 1px solid rgba(148, 163, 184, 0.42);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .arch-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 58px;
+      margin-bottom: 20px;
+      padding: 0 24px;
+      border-radius: 8px;
+      color: #fff;
+      background: linear-gradient(135deg, #a6292f 0%, #c24151 45%, #6d28d9 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    .arch-title h1 {
+      margin: 0;
+      font-size: 25px;
+      letter-spacing: 0;
+    }
+
+    .arch-title .tag {
+      font-size: 14px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 158px;
+      gap: 18px;
+    }
+
+    .layers {
+      display: grid;
+      gap: 14px;
+    }
+
+    .layer {
+      display: grid;
+      grid-template-columns: 152px 1fr;
+      gap: 14px;
+      align-items: stretch;
+      min-height: 92px;
+    }
+
+    .layer-label {
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      border-radius: 7px;
+      color: #fff;
+      font-size: 21px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.25;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .layer-content {
+      display: grid;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 22px;
+      border-radius: 7px;
+      border: 1px dashed rgba(30, 41, 59, 0.3);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+    .module {
+      min-height: 48px;
+      display: grid;
+      place-items: center;
+      padding: 10px 12px;
+      border-radius: 7px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.25;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      box-shadow: 0 10px 22px rgba(25, 37, 66, 0.12);
+    }
+
+    .module.light {
+      color: #1f2937;
+      background: #fff;
+      border-color: rgba(15, 23, 42, 0.22);
+    }
+
+    .subhead {
+      min-height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .rail {
+      display: grid;
+      gap: 12px;
+      align-content: stretch;
+      min-height: 100%;
+      padding: 16px;
+      border-radius: 8px;
+      color: #fff;
+      background: linear-gradient(180deg, #1d4ed8, #0f766e);
+      border: 1px dashed rgba(255,255,255,0.55);
+    }
+
+    .rail-title {
+      display: grid;
+      place-items: center;
+      min-height: 44px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.18);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .rail .module {
+      min-height: 58px;
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #1e293b;
+    }
+
+    .c-cyan { background: linear-gradient(135deg, #06b6d4, #2563eb); }
+    .c-blue { background: linear-gradient(135deg, #60a5fa, #4f46e5); }
+    .c-red { background: linear-gradient(135deg, #fb7185, #ef4444); }
+    .c-orange { background: linear-gradient(135deg, #fdba74, #f97316); }
+    .c-pink { background: linear-gradient(135deg, #f0abfc, #db2777); }
+    .c-purple { background: linear-gradient(135deg, #a78bfa, #7c3aed); }
+    .c-green { background: linear-gradient(135deg, #86efac, #16a34a); }
+    .c-yellow { background: linear-gradient(135deg, #fde68a, #ca8a04); }
+    .c-slate { background: linear-gradient(135deg, #475569, #111827); }
+
+    .domain-board {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 18px;
+    }
+
+    .domain {
+      min-height: 230px;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px dashed rgba(15, 23, 42, 0.32);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .domain h2 {
+      margin: 0 0 16px;
+      font-size: 24px;
+      text-align: center;
+    }
+
+    .domain-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      min-height: 132px;
+    }
+
+    .arrow {
+      color: #334155;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: 160px repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .matrix .cell {
+      min-height: 74px;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      border-radius: 7px;
+      text-align: center;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.55);
+      color: #fff;
+    }
+
+    .matrix .head {
+      background: #111827;
+    }
+
+    .matrix .rowhead {
+      background: linear-gradient(135deg, #0891b2, #1d4ed8);
+    }
+
+    .note {
+      margin-top: 16px;
+      color: #475569;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="toolbar">
+      <div class="tabs" id="tabs"></div>
+      <div class="actions">
+        <button id="exportPng">保存为 PNG</button>
+        <button id="exportJpg">保存为 JPG</button>
+        <span id="status">已就绪</span>
+      </div>
+    </div>
+    <div class="stage">
+      <section id="captureArea" aria-label="产品架构图"></section>
+    </div>
+  </main>
+
+  <script>
+    const diagrams = {
+      layered: {
+        tab: "分层平台图",
+        tag: "默认推荐",
+        title: "智能风控产品分层架构",
+        mode: "layers",
+        layers: [
+          { label: "展现层", color: "c-blue", cols: 3, items: ["用户端", "运营端", "风控看板"] },
+          { label: "接入层", color: "c-cyan", cols: 4, items: ["统一网关", "身份认证", "权限控制", "API编排"] },
+          { label: "风控服务层", color: "c-red", cols: 4, items: ["风控评分", "报告生成", "规则策略", "风险预警"] },
+          { label: "建模分析层", color: "c-orange", cols: 4, items: ["模型训练", "评分模型", "策略模型", "特征工程"] },
+          { label: "数据处理层", color: "c-pink", cols: 4, items: ["标签系统", "数据清洗", "样本管理", "特征宽表"] },
+          { label: "数据平台层", color: "c-green", cols: 4, items: ["数据仓库", "模型仓库", "指标体系", "数据治理"] },
+          { label: "技术支撑层", color: "c-yellow", cols: 4, items: ["任务调度", "消息队列", "对象存储", "计算集群"] }
+        ],
+        rail: ["服务监控", "模型监控", "日志告警", "发布回滚", "审计合规"]
+      },
+      business: {
+        tab: "业务关系图",
+        tag: "业务/应用/数据/技术",
+        title: "智能风控业务架构关系图",
+        mode: "domains"
+      },
+      capability: {
+        tab: "能力地图",
+        tag: "Capability Map",
+        title: "智能风控能力地图",
+        mode: "matrix"
+      },
+      ai: {
+        tab: "AI数据架构",
+        tag: "AI/Data Product",
+        title: "智能风控 AI 与数据产品架构",
+        mode: "layers",
+        layers: [
+          { label: "体验层", color: "c-blue", cols: 3, items: ["风险评估页", "运营工作台", "可视化看板"] },
+          { label: "智能服务层", color: "c-red", cols: 4, items: ["评分服务", "报告生成", "策略推荐", "告警推送"] },
+          { label: "智能体层", color: "c-purple", cols: 4, items: ["风控Agent", "解释Agent", "报告Agent", "运营Agent"] },
+          { label: "模型层", color: "c-orange", cols: 4, items: ["模型训练", "风险模型", "评分模型", "策略模型"] },
+          { label: "特征标签层", color: "c-pink", cols: 4, items: ["标签系统", "特征工程", "样本库", "画像构建"] },
+          { label: "数据底座", color: "c-green", cols: 4, items: ["数据仓库", "实时数据", "外部征信", "数据治理"] }
+        ],
+        rail: ["模型监控", "漂移检测", "效果评估", "审计追踪"]
+      },
+      c4: {
+        tab: "C4容器图",
+        tag: "Context / Container",
+        title: "智能风控系统容器架构",
+        mode: "layers",
+        layers: [
+          { label: "外部参与者", color: "c-blue", cols: 4, items: ["业务用户", "运营人员", "管理者", "外部数据源"] },
+          { label: "产品容器", color: "c-cyan", cols: 4, items: ["用户端", "运营端", "开放API", "风控看板"] },
+          { label: "服务容器", color: "c-red", cols: 5, items: ["评分服务", "报告服务", "策略服务", "标签服务", "模型服务"] },
+          { label: "数据容器", color: "c-green", cols: 4, items: ["业务库", "数据仓库", "特征库", "模型仓库"] },
+          { label: "基础设施", color: "c-slate", cols: 4, items: ["K8s集群", "消息队列", "监控日志", "CI/CD"] }
+        ],
+        rail: ["认证授权", "限流熔断", "日志审计", "告警通知"]
+      }
+    };
+
+    let current = "layered";
+
+    function moduleHtml(text, color, light) {
+      return `<div class="module ${light ? "light" : color}">${text}</div>`;
+    }
+
+    function renderLayers(data) {
+      const layers = data.layers.map(layer => `
+        <div class="layer">
+          <div class="layer-label ${layer.color}">${layer.label}</div>
+          <div class="layer-content">
+            <div class="grid cols-${layer.cols}">
+              ${layer.items.map(item => moduleHtml(item, layer.color)).join("")}
+            </div>
+          </div>
+        </div>
+      `).join("");
+      const rail = data.rail ? `
+        <aside class="rail">
+          <div class="rail-title">监控运维</div>
+          ${data.rail.map(item => moduleHtml(item, "", true)).join("")}
+        </aside>
+      ` : "";
+      return `<div class="layout"><div class="layers">${layers}</div>${rail}</div>`;
+    }
+
+    function renderDomains() {
+      return `
+        <div class="domain-board">
+          <section class="domain" style="background:#fff1d6">
+            <h2>业务架构</h2>
+            <div class="domain-flow">
+              ${moduleHtml("风险识别", "c-orange")}<span class="arrow">→</span>
+              ${moduleHtml("风险评分", "c-red")}<span class="arrow">→</span>
+              ${moduleHtml("报告决策", "c-purple")}<span class="arrow">→</span>
+              ${moduleHtml("运营处置", "c-blue")}
+            </div>
+          </section>
+          <section class="domain" style="background:#dbeafe">
+            <h2>应用架构</h2>
+            <div class="grid cols-2">
+              ${["用户端", "运营端", "评分服务", "报告服务", "策略服务", "标签服务"].map(x => moduleHtml(x, "c-blue")).join("")}
+            </div>
+          </section>
+          <section class="domain" style="background:#dcfce7">
+            <h2>数据架构</h2>
+            <div class="grid cols-2">
+              ${["数据仓库", "标签系统", "特征宽表", "样本管理", "模型仓库", "指标体系"].map(x => moduleHtml(x, "c-green")).join("")}
+            </div>
+          </section>
+          <section class="domain" style="background:#f3e8ff">
+            <h2>技术架构</h2>
+            <div class="grid cols-2">
+              ${["模型训练", "任务调度", "监控运维", "权限审计", "消息队列", "发布回滚"].map(x => moduleHtml(x, "c-purple")).join("")}
+            </div>
+          </section>
+        </div>
+        <p class="note">关系：业务能力由应用服务实现，应用服务消费数据与模型，技术平台支撑训练、部署、监控和治理。</p>
+      `;
+    }
+
+    function renderMatrix() {
+      const rows = [
+        ["核心风控", "风险识别", "风控评分", "策略决策", "预警处置"],
+        ["智能分析", "模型训练", "特征工程", "报告生成", "解释归因"],
+        ["数据能力", "数据仓库", "标签系统", "样本管理", "指标体系"],
+        ["运营治理", "权限审计", "监控运维", "日志告警", "发布回滚"]
+      ];
+      return `
+        <div class="matrix">
+          ${["能力域", "识别", "评估", "决策", "治理"].map(x => `<div class="cell module head">${x}</div>`).join("")}
+          ${rows.map(row => row.map((cell, index) => `<div class="cell module ${index === 0 ? "rowhead" : ["c-red", "c-orange", "c-pink", "c-green"][Math.max(0, rows.indexOf(row))]}">${cell}</div>`).join("")).join("")}
+        </div>
+        <p class="note">能力地图更适合做产品规划和边界讨论：它弱化箭头，强调风控产品必须具备哪些稳定能力。</p>
+      `;
+    }
+
+    function render() {
+      const data = diagrams[current];
+      document.querySelectorAll("[data-tab]").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === current));
+      const body = data.mode === "domains" ? renderDomains() : data.mode === "matrix" ? renderMatrix() : renderLayers(data);
+      document.getElementById("captureArea").innerHTML = `
+        <div class="arch-title">
+          <h1>${data.title}</h1>
+          <span class="tag">${data.tag}</span>
+        </div>
+        ${body}
+      `;
+    }
+
+    function initTabs() {
+      document.getElementById("tabs").innerHTML = Object.keys(diagrams).map(key => `<button data-tab="${key}">${diagrams[key].tab}</button>`).join("");
+      document.querySelectorAll("[data-tab]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          current = btn.dataset.tab;
+          render();
+        });
+      });
+    }
+
+    function downloadDataUrl(dataUrl, filename) {
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      const radius = Math.min(r, w / 2, h / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.arcTo(x + w, y, x + w, y + h, radius);
+      ctx.arcTo(x + w, y + h, x, y + h, radius);
+      ctx.arcTo(x, y + h, x, y, radius);
+      ctx.arcTo(x, y, x + w, y, radius);
+      ctx.closePath();
+    }
+
+    function fillGradient(ctx, x, y, w, h, colors) {
+      const gradient = ctx.createLinearGradient(x, y, x + w, y + h);
+      gradient.addColorStop(0, colors[0]);
+      gradient.addColorStop(1, colors[1]);
+      ctx.fillStyle = gradient;
+    }
+
+    const palette = {
+      "c-cyan": ["#06b6d4", "#2563eb"],
+      "c-blue": ["#60a5fa", "#4f46e5"],
+      "c-red": ["#fb7185", "#ef4444"],
+      "c-orange": ["#fdba74", "#f97316"],
+      "c-pink": ["#f0abfc", "#db2777"],
+      "c-purple": ["#a78bfa", "#7c3aed"],
+      "c-green": ["#86efac", "#16a34a"],
+      "c-yellow": ["#fde68a", "#ca8a04"],
+      "c-slate": ["#475569", "#111827"]
+    };
+
+    function drawText(ctx, text, x, y, w, h, size = 18, color = "#fff", weight = 800) {
+      ctx.fillStyle = color;
+      ctx.font = `${weight} ${size}px -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      const chars = String(text).split("");
+      const lines = [];
+      let line = "";
+      for (const char of chars) {
+        const next = line + char;
+        if (ctx.measureText(next).width > w - 20 && line) {
+          lines.push(line);
+          line = char;
+        } else {
+          line = next;
+        }
+      }
+      if (line) lines.push(line);
+      const lineHeight = size * 1.28;
+      const start = y + h / 2 - (lines.length - 1) * lineHeight / 2;
+      lines.slice(0, 3).forEach((item, index) => ctx.fillText(item, x + w / 2, start + index * lineHeight));
+    }
+
+    function drawModule(ctx, text, x, y, w, h, color, light = false) {
+      roundRect(ctx, x, y, w, h, 9);
+      if (light) {
+        ctx.fillStyle = "#ffffff";
+      } else {
+        fillGradient(ctx, x, y, w, h, palette[color] || palette["c-blue"]);
+      }
+      ctx.fill();
+      ctx.strokeStyle = light ? "rgba(15,23,42,0.25)" : "rgba(255,255,255,0.65)";
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+      drawText(ctx, text, x, y, w, h, 18, light ? "#1e293b" : "#ffffff");
+    }
+
+    function drawBackground(ctx, width, height, white) {
+      ctx.fillStyle = white ? "#ffffff" : "#f8fbff";
+      ctx.fillRect(0, 0, width, height);
+      ctx.strokeStyle = "rgba(148,163,184,0.22)";
+      ctx.lineWidth = 1;
+      for (let x = 0; x <= width; x += 80) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+      }
+      for (let y = 0; y <= height; y += 80) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+      }
+    }
+
+    function drawTitle(ctx, data, width) {
+      fillGradient(ctx, 28, 28, width - 56, 58, ["#a6292f", "#6d28d9"]);
+      roundRect(ctx, 28, 28, width - 56, 58, 8);
+      ctx.fill();
+      drawText(ctx, data.title, 52, 28, 640, 58, 26, "#fff", 900);
+      ctx.textAlign = "right";
+      ctx.fillStyle = "rgba(255,255,255,0.92)";
+      ctx.font = "800 16px -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', Arial";
+      ctx.fillText(data.tag, width - 52, 57);
+    }
+
+    function drawLayeredCanvas(ctx, data, width, height) {
+      const hasRail = Boolean(data.rail);
+      const left = 28;
+      const top = 106;
+      const labelW = 152;
+      const gap = 14;
+      const railW = hasRail ? 158 : 0;
+      const contentW = width - left * 2 - labelW - gap - (hasRail ? railW + 18 : 0);
+      const rowH = Math.floor((height - top - 28 - gap * (data.layers.length - 1)) / data.layers.length);
+      data.layers.forEach((layer, index) => {
+        const y = top + index * (rowH + gap);
+        fillGradient(ctx, left, y, labelW, rowH, palette[layer.color]);
+        roundRect(ctx, left, y, labelW, rowH, 8); ctx.fill();
+        drawText(ctx, layer.label, left, y, labelW, rowH, 23, "#fff", 900);
+
+        const cx = left + labelW + gap;
+        roundRect(ctx, cx, y, contentW, rowH, 8);
+        ctx.fillStyle = "rgba(255,255,255,0.78)"; ctx.fill();
+        ctx.setLineDash([8, 6]); ctx.strokeStyle = "rgba(30,41,59,0.35)"; ctx.stroke(); ctx.setLineDash([]);
+        const cols = layer.cols;
+        const itemGap = 12;
+        const itemW = (contentW - 44 - itemGap * (cols - 1)) / cols;
+        const itemH = Math.min(54, rowH - 32);
+        layer.items.forEach((item, itemIndex) => {
+          const ix = cx + 22 + (itemIndex % cols) * (itemW + itemGap);
+          const iy = y + (rowH - itemH) / 2;
+          drawModule(ctx, item, ix, iy, itemW, itemH, layer.color);
+        });
+      });
+      if (hasRail) {
+        const rx = width - left - railW;
+        const rh = height - top - 28;
+        fillGradient(ctx, rx, top, railW, rh, ["#1d4ed8", "#0f766e"]);
+        roundRect(ctx, rx, top, railW, rh, 8); ctx.fill();
+        drawText(ctx, "监控运维", rx + 14, top + 14, railW - 28, 50, 20, "#fff", 900);
+        const itemH = 58;
+        data.rail.forEach((item, index) => drawModule(ctx, item, rx + 16, top + 84 + index * (itemH + 14), railW - 32, itemH, "c-blue", true));
+      }
+    }
+
+    function drawDomainsCanvas(ctx, width) {
+      const domains = [
+        ["业务架构", "#fff1d6", "c-orange", ["风险识别", "风控评分", "报告决策", "运营处置"]],
+        ["应用架构", "#dbeafe", "c-blue", ["用户端", "运营端", "评分服务", "报告服务", "策略服务", "标签服务"]],
+        ["数据架构", "#dcfce7", "c-green", ["数据仓库", "标签系统", "特征宽表", "样本管理", "模型仓库", "指标体系"]],
+        ["技术架构", "#f3e8ff", "c-purple", ["模型训练", "任务调度", "监控运维", "权限审计", "消息队列", "发布回滚"]]
+      ];
+      const x0 = 28, y0 = 106, gap = 18, boxW = (width - 56 - gap) / 2, boxH = 330;
+      domains.forEach((domain, index) => {
+        const x = x0 + (index % 2) * (boxW + gap);
+        const y = y0 + Math.floor(index / 2) * (boxH + gap);
+        roundRect(ctx, x, y, boxW, boxH, 8); ctx.fillStyle = domain[1]; ctx.fill();
+        ctx.setLineDash([8, 6]); ctx.strokeStyle = "rgba(15,23,42,0.34)"; ctx.stroke(); ctx.setLineDash([]);
+        drawText(ctx, domain[0], x, y + 18, boxW, 42, 26, "#1e293b", 900);
+        const cols = domain[3].length === 4 ? 4 : 2;
+        const itemW = (boxW - 48 - 12 * (cols - 1)) / cols;
+        const itemH = 58;
+        domain[3].forEach((item, i) => {
+          const ix = x + 24 + (i % cols) * (itemW + 12);
+          const iy = y + 110 + Math.floor(i / cols) * 78;
+          drawModule(ctx, item, ix, iy, itemW, itemH, domain[2]);
+        });
+      });
+    }
+
+    function drawMatrixCanvas(ctx, width) {
+      const rows = [
+        ["核心风控", "风险识别", "风控评分", "策略决策", "预警处置", "c-red"],
+        ["智能分析", "模型训练", "特征工程", "报告生成", "解释归因", "c-orange"],
+        ["数据能力", "数据仓库", "标签系统", "样本管理", "指标体系", "c-pink"],
+        ["运营治理", "权限审计", "监控运维", "日志告警", "发布回滚", "c-green"]
+      ];
+      const heads = ["能力域", "识别", "评估", "决策", "治理"];
+      const x0 = 44, y0 = 130, gap = 12, colW = (width - 88 - gap * 4) / 5, rowH = 96;
+      heads.forEach((h, i) => drawModule(ctx, h, x0 + i * (colW + gap), y0, colW, rowH, "c-slate"));
+      rows.forEach((row, r) => {
+        row.slice(0, 5).forEach((cell, c) => drawModule(ctx, cell, x0 + c * (colW + gap), y0 + (r + 1) * (rowH + gap), colW, rowH, c === 0 ? "c-cyan" : row[5]));
+      });
+    }
+
+    async function exportChart(format, shouldDownload = true) {
+      const data = diagrams[current];
+      const status = document.getElementById("status");
+      const width = 1360;
+      const height = current === "business" ? 820 : current === "capability" ? 690 : 920;
+      const canvas = document.createElement("canvas");
+      canvas.width = width * 2;
+      canvas.height = height * 2;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(2, 2);
+      try {
+        drawBackground(ctx, width, height, format === "jpg");
+        drawTitle(ctx, data, width);
+        if (data.mode === "domains") {
+          drawDomainsCanvas(ctx, width);
+        } else if (data.mode === "matrix") {
+          drawMatrixCanvas(ctx, width);
+        } else {
+          drawLayeredCanvas(ctx, data, width, height);
+        }
+        const mime = format === "jpg" ? "image/jpeg" : "image/png";
+        const dataUrl = canvas.toDataURL(mime, 0.95);
+        if (shouldDownload) downloadDataUrl(dataUrl, `智能风控产品架构图-${diagrams[current].tab}.${format}`);
+        status.textContent = `已生成 ${format.toUpperCase()}：${width}×${height}`;
+        return { width, height, length: dataUrl.length, mime };
+      } catch (error) {
+        status.textContent = "导出受限，可使用浏览器截图或打印为 PDF";
+        throw error;
+      }
+    }
+
+    document.getElementById("exportPng").addEventListener("click", () => exportChart("png"));
+    document.getElementById("exportJpg").addEventListener("click", () => exportChart("jpg"));
+    window.__demo = { diagrams, exportChart, setTab: key => { current = key; render(); } };
+    initTabs();
+    render();
+  </script>
+</body>
+</html>

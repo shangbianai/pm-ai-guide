@@ -6,3 +6,8 @@ __pycache__/
 .trae/
 *.tmp
 *.bak
+
+# arch-diagram guide 文件不公开（本地保留，含中转 API 配置）
+第3章_产品设计/01_盘点画产品架构图的工具/guide/arch-diagram-guide.html
+第3章_产品设计/01_盘点画产品架构图的工具/guide/demo-prompts.html
+第3章_产品设计/01_盘点画产品架构图的工具/guide/setup-api.md

@@ -1,6 +1,6 @@
 ---
 name: arch-diagram
-description: "产品架构图生成器。支持两种模式：① SVG 模式：直接生成精准的 HTML+SVG 架构图文件，可导出 PNG/PDF；② 图片模式：生成优化好的提示词可复制到 ChatGPT/Midjourney，配置 OPENAI_API_KEY 后可直接调用 gpt-image-1 出图。当用户想画架构图、系统图、模块关系图时触发。"
+description: "产品架构图生成器。三种输出：① SVG 模式直接生成精准的 HTML+SVG 架构图文件，可导出 PNG/PDF；② 提示词模式生成优化好的中英文提示词，复制到 ChatGPT/Midjourney 使用；③ 出图模式在配置了图片生成 API（OpenAI 或兼容的第三方中转）后直接调用 API 输出图片。当用户想画架构图、系统图、模块关系图时触发。"
 ---
 
 # arch-diagram — 产品架构图生成器
@@ -27,24 +27,36 @@ description: "产品架构图生成器。支持两种模式：① SVG 模式：�
 
 信息充足后进入 Step 2。
 
-### Step 2：选择输出模式
+### Step 2：选择输出形式
 
-展示以下选项让用户选择：
+**先静默检测图片 API 是否已配置**（Windows PowerShell）：
+
+```powershell
+echo $env:OPENAI_API_KEY
+```
+
+根据检测结果，在选项 C 后标注状态，然后展示三个选项让用户选择：
 
 ```
-请选择输出模式：
+请选择输出形式：
 
 A) SVG 直接生成 — Claude 直接输出精准的 HTML+SVG 架构图文件
-   优点：文字/箭头/层级100%精准，浏览器打开即用，可导出 PNG/PDF
+   优点：文字/箭头/层级 100% 精准，浏览器打开即用，可导出 PNG/PDF
    适合：正式交付、文档归档、PPT 插图
 
-B) AI 图片模式 — 生成优化好的提示词，复制到 ChatGPT Image / Midjourney 使用
-   优点：视觉风格更丰富，适合展示 AI 图片生成能力
-   配置了 OPENAI_API_KEY 后可直接调用 API 出图
-   适合：课程演示、探索视觉风格
+B) AI 提示词 — 生成优化好的中英文提示词，复制到 ChatGPT Image / Midjourney 使用
+   优点：视觉风格丰富，无需 API，任何人都能用
+   适合：探索视觉风格、手上没有 API 的场景
+
+C) AI 直接出图 — 调用图片生成 API，直接输出 PNG 图片文件
+   [检测到 Key 时显示] ✅ 已检测到 API Key，可直接使用
+   [未检测到时显示]   ⚠️ 未检测到 API Key，暂不可用（配置方法见 guide/setup-api.md）
+   适合：课程演示、一键出图
 ```
 
-根据用户选择，跳转到对应模式。
+说明：**配置了 API 也可以选 B（只要提示词）**，C 只是额外多了一键出图的能力，不强制。
+
+根据用户选择跳转：A → 模式 A；B → 模式 B；C → 模式 C（未配置 Key 时引导用户先看配置说明，或改选 A/B）。
 
 ---
 
@@ -84,6 +96,8 @@ B) AI 图片模式 — 生成优化好的提示词，复制到 ChatGPT Image / M
 
 字体：JetBrains Mono（Google Fonts），组件名 12px/600，子标签 9px/#94a3b8
 
+**文字语言规则**：组件名、标签默认用简体中文；但通用技术缩写保留英文（如 API、HTTP、MySQL、Redis、Docker、Kafka、iOS、Android、CDN、OSS、VPC）。例：「用户服务」「订单服务」用中文，「MySQL」「API 网关」中的缩写保留英文。
+
 组件框画法（先画不透明底层遮挡箭头，再画带色彩表层）：
 ```svg
 <rect x="X" y="Y" width="W" height="H" rx="6" fill="#0f172a"/>
@@ -104,139 +118,20 @@ B) AI 图片模式 — 生成优化好的提示词，复制到 ChatGPT Image / M
 
 **完整 HTML 模板：**
 
-```html
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <title>[系统名] Architecture</title>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
-          integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H"
-          crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"
-          integrity="sha384-en/ztfPSRkGfME4KIm05joYXynqzUgbsG5nMrj/xEFAHXkeZfO3yMK8QQ+mP7p1/"
-          crossorigin="anonymous"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #020617; color: white; font-family: 'JetBrains Mono', monospace; padding: 24px; }
-    .container { max-width: 1100px; margin: 0 auto; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .title-area { display: flex; align-items: center; gap: 12px; }
-    .dot { width: 10px; height: 10px; background: #22d3ee; border-radius: 50%; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-    h1 { font-size: 22px; font-weight: 700; }
-    .subtitle { font-size: 12px; color: #64748b; margin-top: 4px; }
-    .toolbar { position: relative; }
-    .toolbar-toggle { background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 13px; }
-    .toolbar-toggle:hover { background: #334155; color: white; }
-    .toolbar-actions { display: none; position: absolute; right: 0; top: 36px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 8px; gap: 6px; flex-direction: column; min-width: 140px; z-index: 10; }
-    .toolbar-actions.open { display: flex; }
-    .toolbar-actions button { background: #0f172a; border: 1px solid #334155; color: #94a3b8; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; text-align: left; }
-    .toolbar-actions button:hover { background: #1e293b; color: white; }
-    .diagram-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 20px; overflow: hidden; }
-    svg { width: 100%; height: auto; display: block; }
-    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .card { background: #0f172a; border: 1px solid #1e293b; border-radius: 10px; padding: 16px; }
-    .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .card-dot { width: 8px; height: 8px; border-radius: 50%; }
-    .card-dot.cyan { background: #22d3ee; }
-    .card-dot.green { background: #34d399; }
-    .card-dot.violet { background: #a78bfa; }
-    .card h3 { font-size: 12px; font-weight: 600; }
-    .card ul { list-style: none; }
-    .card li { font-size: 11px; color: #64748b; margin-bottom: 4px; }
-    .footer { text-align: center; font-size: 10px; color: #334155; margin-top: 16px; }
-    @media print { .toolbar { display: none !important; } }
-  </style>
-</head>
-<body>
-<div class="container" id="report-container">
-  <div class="header">
-    <div class="title-area">
-      <div class="dot"></div>
-      <div>
-        <h1>[系统名] Architecture</h1>
-        <div class="subtitle">[副标题]</div>
-      </div>
-    </div>
-    <div class="toolbar">
-      <button class="toolbar-toggle" onclick="this.nextElementSibling.classList.toggle('open')">⋯</button>
-      <div class="toolbar-actions">
-        <button onclick="copyAsImage()">📋 复制 PNG</button>
-        <button onclick="downloadPNG()">🖼️ 下载 PNG</button>
-        <button onclick="downloadPDF()">📄 下载 PDF</button>
-      </div>
-    </div>
-  </div>
+读取 `references/svg-template.html`（与本文件同目录），它已包含完整的页面骨架、配色 CSS、工具栏（复制 PNG / 下载 PNG / 下载 PDF）和导出脚本。你只需：
+1. 替换 `[系统名]`、`[副标题]` 占位符
+2. 在 `<svg>` 内的三处注释位置（箭头 → 组件框 → 图例）按上面的画法填入元素
+3. 替换底部 `.cards` 三张卡片（核心组件 / 数据流向 / 技术栈）的占位内容
 
-  <div class="diagram-card">
-    <svg viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
-        </pattern>
-        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-          <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
-        </marker>
-      </defs>
-      <rect width="1000" height="680" fill="#020617"/>
-      <rect width="1000" height="680" fill="url(#grid)"/>
-
-      <!-- 箭头（先于组件绘制） -->
-
-      <!-- 组件框 -->
-
-      <!-- 图例 -->
-    </svg>
-  </div>
-
-  <div class="cards">
-    <div class="card">
-      <div class="card-header"><div class="card-dot cyan"></div><h3>核心组件</h3></div>
-      <ul><li>• 组件 1</li></ul>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="card-dot green"></div><h3>数据流向</h3></div>
-      <ul><li>• 流程 1</li></ul>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="card-dot violet"></div><h3>技术栈</h3></div>
-      <ul><li>• 技术 1</li></ul>
-    </div>
-  </div>
-  <div class="footer">[系统名] · Architecture Diagram</div>
-</div>
-<script>
-  function captureOptions() {
-    const r = document.getElementById('report-container').getBoundingClientRect();
-    const toolbar = document.querySelector('.toolbar');
-    return { x: r.left+scrollX, y: r.top+scrollY, width: r.width, height: r.height, scale: 2, ignoreElements: el => el===toolbar };
-  }
-  function copyAsImage() {
-    html2canvas(document.body, captureOptions()).then(c => c.toBlob(b => navigator.clipboard.write([new ClipboardItem({'image/png':b})])));
-  }
-  function downloadPNG() {
-    html2canvas(document.body, captureOptions()).then(c => { const a=document.createElement('a'); a.download='architecture.png'; a.href=c.toDataURL(); a.click(); });
-  }
-  function downloadPDF() {
-    html2canvas(document.body, captureOptions()).then(c => {
-      const {jsPDF}=window.jspdf;
-      const pdf=new jsPDF({orientation:'landscape',unit:'px',format:[c.width/2+64,c.height/2+64]});
-      pdf.addImage(c.toDataURL('image/png'),'PNG',32,32,c.width/2,c.height/2);
-      pdf.save('architecture.pdf');
-    });
-  }
-</script>
-</body>
-</html>
-```
+不要改动 CSS 和 `<script>` 部分，保持导出功能可用。
 
 生成后告知用户文件路径，提示用浏览器打开，可继续对话迭代调整。
 
 ---
 
-## 模式 B：AI 图片提示词
+## 模式 B：AI 提示词
+
+> 模式 C（直接出图）也复用本节的 B1、B2 生成提示词，只是最后多一步调 API。
 
 ### B1 — 询问风格偏好
 
@@ -283,6 +178,7 @@ Directional arrows showing: [A→B, B→C 等连接关系]
 White text labels, JetBrains Mono style monospace font.
 Clean, professional, high-resolution, no watermarks, diagram only.
 Style: AWS architecture diagram, tech blog illustration.
+IMPORTANT: All text labels must be in Simplified Chinese, EXCEPT universally recognized technical abbreviations that are always written in English (e.g. API, HTTP, MySQL, Redis, Docker, Kafka, iOS, Android, CDN, OSS, VPC).
 ```
 
 **提示词框架（白底简洁风）：**
@@ -292,6 +188,7 @@ Flat colored boxes with soft shadows, sans-serif labels.
 Blue for frontend, green for backend, purple for database, orange for external.
 Thin directional arrows: [连接关系]
 Presentation-ready, Google Cloud architecture diagram style.
+IMPORTANT: All text labels must be in Simplified Chinese, EXCEPT universally recognized technical abbreviations that are always written in English (e.g. API, HTTP, MySQL, Redis, Docker, Kafka, iOS, Android, CDN, OSS, VPC).
 ```
 
 **提示词框架（手绘白板风）：**
@@ -301,33 +198,53 @@ Sketch-like boxes and rough arrows, black on white, marker-pen aesthetic.
 Components: [列出模块]
 Connections: [连接关系]
 Clean scan quality, readable labels.
+IMPORTANT: All text labels must be in Simplified Chinese, EXCEPT universally recognized technical abbreviations that are always written in English (e.g. API, HTTP, MySQL, Redis, Docker, Kafka, iOS, Android, CDN, OSS, VPC).
 ```
 
-### B3 — 检查 API 配置并直接生成（可选）
+---
 
-运行检查：
-```bash
-echo $OPENAI_API_KEY
-```
+## 模式 C：AI 直接出图
 
-若已配置，询问用户是否直接调用 API 生成图片。确认后写入并执行以下脚本：
+前提：Step 2 已检测到 API Key。若未配置，引导用户先看 `guide/setup-api.md` 配置，或改选模式 A / B。
+
+**流程：**
+1. 先按 B1、B2 完成风格选择和提示词生成（让用户看到最终提示词）
+2. 询问用户是否直接调 API 出图
+3. 确认后，把 B2 的英文提示词填入下方脚本的 `prompt`，写入文件并执行
 
 ```python
-import os, base64
-from openai import OpenAI
+import os, base64, requests
 
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+# ── 配置区 ──────────────────────────────────────────────
+# 默认官方 OpenAI；用第三方中转就改下面三项（详见 guide/setup-api.md）：
+API_KEY  = os.environ.get("OPENAI_API_KEY")   # 环境变量名（建议沿用 OPENAI_API_KEY）
+BASE_URL = "https://api.openai.com/v1"         # 中转地址，如 https://www.moyu.info/v1
+MODEL    = "gpt-image-1"                       # 中转模型名，如 gpt-image-2
+# ────────────────────────────────────────────────────────
 
-prompt = """[插入 B2 生成的英文提示词]"""
+if not API_KEY:
+    raise RuntimeError("未检测到 API Key，请先按 setup-api.md 配置环境变量")
 
-result = client.images.generate(
-    model="gpt-image-1",
-    prompt=prompt,
-    size="1536x1024",
-    quality="high",
+prompt = """[插入 B2 生成的英文提示词，末尾必须包含：IMPORTANT: All text labels must be in Simplified Chinese, EXCEPT universally recognized technical abbreviations (API, MySQL, Redis, etc.) which stay in English.]"""
+
+response = requests.post(
+    f"{BASE_URL}/images/generations",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={
+        "model": MODEL,
+        "prompt": prompt,
+        "n": 1,
+        "size": "1536x1024",
+        "quality": "high",
+    }
 )
 
-image_bytes = base64.b64decode(result.data[0].b64_json)
+# 失败时打印 API 返回的具体原因（余额不足 / 模型名错误 / Key 失效等都在这里）
+if response.status_code != 200:
+    raise RuntimeError(f"API 调用失败（HTTP {response.status_code}）：{response.text}")
+
+data = response.json()
+image_bytes = base64.b64decode(data["data"][0]["b64_json"])
 output_path = "architecture-diagram.png"
 with open(output_path, "wb") as f:
     f.write(image_bytes)
@@ -335,12 +252,15 @@ with open(output_path, "wb") as f:
 print(f"✅ 架构图已保存：{output_path}（1536×1024，高质量）")
 ```
 
+> 注：脚本默认按 OpenAI 兼容格式解析返回（`data[0].b64_json`）。若你的中转返回的是图片 URL 而非 base64，需相应调整解析逻辑。
+
 执行后告知用户图片路径。
 
 ---
 
 ## 注意事项
 
-- **图片 AI 的局限**：文字标注和箭头方向控制有限，生成后如有文字偏差属正常，可在 ChatGPT 中追加描述迭代
-- **精度要求高时**：推荐选模式 A（SVG），文字/箭头/层级 100% 精准
-- **课程演示**：两种模式都适合，模式 B 更适合展示 ChatGPT Image 2 的能力
+- **图片 AI 的局限**：文字标注和箭头方向控制有限，生成后如有文字偏差属正常，可追加描述迭代
+- **精度要求高时**：推荐模式 A（SVG），文字/箭头/层级 100% 精准
+- **没有 API**：选模式 B，把提示词复制到 ChatGPT / Midjourney 同样能出图
+- **课程演示**：模式 C 一键出图最有冲击力，模式 A 最适合正式交付

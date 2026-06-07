@@ -1,21 +1,21 @@
 ---
 name: prd-doc-writer
-description: Use this skill when the user wants to write, structure, rewrite, or polish a PRD/需求文档/功能需求说明书 from prototypes, business notes, meeting records, screenshots, process diagrams, feature lists, or rough requirements. It produces a professional Chinese PRD with revision history, scope, glossary, business process, page elements, business rules, functional details, non-functional requirements, launch/offline plan, acceptance criteria, and open questions while removing generic AI-sounding prose.
+description: 当用户需要基于原型、业务资料、会议记录、流程图、功能清单、访谈记录或粗略需求，撰写、整理、改写、润色 PRD/需求文档/功能需求说明书时使用。本 Skill 会输出中文专业 PRD，覆盖修订记录、范围、名词解释、业务流程、页面元素、业务规则、功能详细说明、非功能需求、上线下线计划、验收标准和待确认问题，并尽量去除泛泛的 AI 味道。
 ---
 
-# PRD Doc Writer
+# PRD 文档生成 Skill
 
-## Core Rule
+## 核心原则
 
-Write a PRD that can be reviewed by business, design, development, testing, operations, legal, finance, and support teams. Do not output generic “AI summary” prose. Prefer concrete structure, tables, rules, states, page fields, flows, and acceptance criteria.
+输出的 PRD 要能被业务、设计、研发、测试、运营、法务、财务和客服等角色共同评审。不要输出泛泛的“AI 总结式”文字，要优先使用清晰结构、表格、规则、状态、页面字段、业务流程和验收标准。
 
-## Workflow
+## 工作流程
 
-1. Clarify the product, business goal, target users, scope, prototype/source material, and expected output format.
-2. Read the PRD structure in `references/prd-template.md`.
-3. If the user only has rough notes, first produce a “待确认问题” list before drafting.
-4. Draft the PRD in Chinese Markdown using the template structure.
-5. For each function module, include:
+1. 先确认产品名称、业务目标、目标用户、需求范围、原型/资料来源和期望输出格式。
+2. 读取 `references/PRD文档模板.md` 中的 PRD 结构。
+3. 如果用户只提供了零散资料，先整理“待确认问题”，再开始起草。
+4. 按模板结构输出中文 Markdown PRD。
+5. 每个功能模块至少包含：
    - 功能描述
    - 业务流程
    - 页面/界面说明
@@ -23,22 +23,21 @@ Write a PRD that can be reviewed by business, design, development, testing, oper
    - 业务规则
    - 状态与异常
    - 验收标准
-6. If source material lacks a rule or detail, write it under “待确认问题”; do not invent fake certainty.
-7. Before final output, run the quality checklist in `references/prd-quality-checklist.md`.
+6. 如果资料中缺少关键规则或细节，写入“待确认问题”，不要编造确定结论。
+7. 最终输出前，按 `references/PRD质量检查清单.md` 做一次质量检查。
 
-## Style
+## 写作风格
 
-- Use precise product language, not promotional language.
-- Use tables for fields, rules, versions, permissions, states, and acceptance criteria.
-- Avoid vague phrases such as “提升用户体验”, “智能化赋能”, “打造闭环” unless followed by measurable rules or scenarios.
-- Keep business judgment visible: scope, assumptions, risks, dependencies, and decisions must be explicit.
+- 使用精确的产品语言，不使用营销口号。
+- 字段、规则、版本、权限、状态、验收标准优先用表格表达。
+- 避免“提升用户体验”“智能化赋能”“打造闭环”等空泛表达；如果必须使用，要补充可衡量的规则或场景。
+- 让业务判断可见：范围、假设、风险、依赖和决策结论必须写清楚。
 
-## Output
+## 输出内容
 
-Default output is one Markdown PRD. If the user asks for supporting files, also provide:
+默认输出一份 Markdown PRD。如果用户需要配套资料，可以同时输出：
 
 - PRD 模板
 - PRD 生成提示词
 - 验收清单
 - 待确认问题清单
-

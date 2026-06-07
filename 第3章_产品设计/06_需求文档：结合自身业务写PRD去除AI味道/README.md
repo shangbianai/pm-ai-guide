@@ -35,7 +35,8 @@
 skills/prd-doc-writer/
 ├── SKILL.md
 └── references/
-    ├── prd-template.md
-    └── prd-quality-checklist.md
+    ├── PRD文档模板.md
+    └── PRD质量检查清单.md
 ```
 
+另提供 `PRD文档模板.docx`，用于正式文档交付和团队评审留档。

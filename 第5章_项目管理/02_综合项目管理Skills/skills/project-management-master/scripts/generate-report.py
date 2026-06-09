@@ -7,6 +7,7 @@
 import json
 import sys
 import os
+import re
 from datetime import datetime
 from html import escape
 
@@ -129,6 +130,105 @@ def _styled_list(items):
     return '<ul class="styled-list">' + "".join("<li>{}</li>".format(e(i)) for i in items) + "</ul>"
 
 
+def _format_scope(text):
+    """将 scope 文本按编号拆分为结构化 HTML（做什么 / 不做什么）"""
+    if not text:
+        return ""
+    # 拆分【做什么】和【不做什么】
+    parts = text.split("【不做什么】")
+    do_text = parts[0].replace("【做什么】", "").strip()
+    not_do_text = parts[1].strip() if len(parts) > 1 else ""
+
+    # 将编号项拆分为列表：按 1） 2） 3） 等分割
+    do_items = re.split(r'\d+[）\)]', do_text)
+    do_items = [i.strip().rstrip('；;') for i in do_items if i.strip()]
+
+    html = '<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">项目范围</h3>'
+    html += '<div style="margin-bottom:4px;font-size:13px;font-weight:600;color:var(--ink-soft)">做什么</div>'
+    html += _styled_list(do_items)
+    if not_do_text:
+        not_items = re.split(r'[、，,]', not_do_text)
+        not_items = [i.strip() for i in not_items if i.strip()]
+        html += '<div style="margin:16px 0 4px;font-size:13px;font-weight:600;color:var(--red)">不做什么</div>'
+        html += '<ul class="styled-list">' + "".join(
+            '<li style="color:var(--ink-muted)">{}</li>'.format(e(i)) for i in not_items
+        ) + '</ul>'
+    return html
+
+
+def _parse_date(date_str, year=2026):
+    """将 '6/15' 格式的日期字符串解析为 datetime 对象"""
+    try:
+        m, d = date_str.strip().split("/")
+        return datetime(year, int(m), int(d))
+    except (ValueError, AttributeError):
+        return None
+
+
+_GANTT_COLORS = ["c1", "c2", "c3", "c4", "c5", "c6"]
+
+
+def _gantt_chart(phases):
+    """渲染甘特图概览条"""
+    if not phases:
+        return ""
+    # 从 phase 名称中提取日期（格式如 "阶段一：启动与方案设计（6/15 — 6/28，2周）"）
+    parsed = []
+    for phase in phases:
+        name = phase.get("phase", "")
+        sd = phase.get("start_date", "")
+        ed = phase.get("end_date", "")
+        if not sd or not ed:
+            # 尝试从名称中提取日期
+            m = re.search(r'（(\d+/\d+)\s*[—\-–]\s*(\d+/\d+)', name)
+            if m:
+                sd, ed = m.group(1), m.group(2)
+            else:
+                continue
+        start_dt = _parse_date(sd)
+        end_dt = _parse_date(ed)
+        if start_dt and end_dt:
+            parsed.append((name, start_dt, end_dt, sd, ed))
+    if not parsed:
+        return ""
+    # 计算总时间跨度
+    min_dt = min(p[1] for p in parsed)
+    max_dt = max(p[2] for p in parsed)
+    total_days = (max_dt - min_dt).days
+    if total_days <= 0:
+        total_days = 1
+    rows = ""
+    for i, (name, start_dt, end_dt, sd, ed) in enumerate(parsed):
+        offset_pct = (start_dt - min_dt).days / total_days * 100
+        width_pct = max((end_dt - start_dt).days / total_days * 100, 4)
+        color_cls = _GANTT_COLORS[i % len(_GANTT_COLORS)]
+        # 截取阶段简短名称（取冒号前的"阶段X"或前10字）
+        short = name.split("（")[0] if "（" in name else name[:16]
+        rows += (
+            '<div class="gantt-row"><div class="gantt-label">{}</div>'
+            '<div class="gantt-bar-wrap">'
+            '<div class="gantt-bar {}" style="left:{:.1f}%;width:{:.1f}%">{} — {}</div>'
+            '</div></div>'.format(e(short), color_cls, offset_pct, width_pct, sd, ed)
+        )
+    return '<div class="gantt-chart">{}</div>'.format(rows)
+
+
+def _wbs_table(phases):
+    """渲染 WBS 全宽任务列表（按阶段分组）"""
+    task_headers = [("任务", "task"), ("负责人", "owner"), ("工作量", "effort"),
+                    ("依赖", "dependencies"), ("优先级", "priority"), ("交付物", "deliverable")]
+    th = "".join("<th>{}</th>".format(label) for label, _ in task_headers)
+    rows = ""
+    for phase in phases:
+        phase_name = e(phase.get("phase", ""))
+        rows += '<tr class="phase-row"><td colspan="6">{}</td></tr>'.format(phase_name)
+        for task in phase.get("tasks", []):
+            rows += "<tr>" + "".join(
+                "<td>{}</td>".format(e(task.get(key, ""))) for _, key in task_headers
+            ) + "</tr>"
+    return '<table class="data-table wbs-table"><thead><tr>{}</tr></thead><tbody>{}</tbody></table>'.format(th, rows)
+
+
 def _insight_items(findings):
     rows = ""
     for f in findings:
@@ -208,14 +308,13 @@ def _build_report(d):
     po = d.get("project_overview", {})
     parts.append(_section("Module 01", "项目全景", "项目目标、范围、约束、成功标准",
         '<div class="hl-box hl-blue"><p><strong>项目目标</strong>：{}</p></div>'
-        '<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">项目范围</h3>'
-        '<p style="margin-bottom:20px">{}</p>'
-        '<h3 style="margin:0 0 12px;font-size:15px;font-weight:700;color:var(--red)">约束条件</h3>'
+        '{}'
+        '<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700;color:var(--red)">约束条件</h3>'
         '{}'
         '<h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">成功标准</h3>'
         '{}'.format(
             e(po.get("goal", "")),
-            e(po.get("scope", "")),
+            _format_scope(po.get("scope", "")),
             _styled_list(po.get("constraints", [])),
             _styled_list(po.get("success_criteria", []))
         )
@@ -223,16 +322,11 @@ def _build_report(d):
 
     # Module 2: WBS 任务分解
     wbs = d.get("wbs", {})
-    wbs_phases_html = ""
-    for phase in wbs.get("phases", []):
-        phase_name = e(phase.get("phase", ""))
-        task_headers = [("任务","task"),("负责人","owner"),("工作量","effort"),("依赖","dependencies"),("优先级","priority"),("交付物","deliverable")]
-        tasks_html = _data_table(task_headers, phase.get("tasks", []))
-        wbs_phases_html += (
-            '<div class="tl-phase tl-now"><h4>{}</h4>{}</div>'.format(phase_name, tasks_html)
-        )
+    wbs_phases = wbs.get("phases", [])
+    gantt_html = _gantt_chart(wbs_phases)
+    wbs_table_html = _wbs_table(wbs_phases)
     parts.append(_section("Module 02", "任务分解（WBS）", "工作分解结构，拆解到可执行粒度（单任务 ≤ 3人天）",
-        '<div class="timeline">{}</div>'.format(wbs_phases_html)
+        gantt_html + wbs_table_html
     ))
 
     # Module 3: 里程碑规划

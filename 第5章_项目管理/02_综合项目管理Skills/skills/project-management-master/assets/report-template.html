@@ -121,8 +121,15 @@ body{font-family:"Noto Sans SC",-apple-system,BlinkMacSystemFont,sans-serif;colo
 .ind-item strong{color:var(--ink)}
 .partner-item{padding:10px 14px;background:var(--surface-raised);border-radius:var(--radius-sm);margin-bottom:6px;font-size:13.5px;color:var(--ink-soft);border-left:3px solid var(--blue)}
 .report-footer{text-align:center;padding:32px 0 16px;color:var(--ink-faint);font-size:12px}
+.gantt-chart{margin:20px 0 32px}
+.gantt-row{display:flex;align-items:center;margin-bottom:8px}
+.gantt-label{width:260px;flex-shrink:0;font-size:13px;font-weight:600;color:var(--ink);padding-right:12px;text-align:right;line-height:1.4}
+.gantt-bar-wrap{flex:1;position:relative;height:28px;background:var(--surface-dim);border-radius:6px}
+.gantt-bar{position:absolute;top:3px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:600;white-space:nowrap;padding:0 8px;min-width:60px}
+.gantt-bar.c1{background:var(--blue)}.gantt-bar.c2{background:var(--green)}.gantt-bar.c3{background:var(--amber)}.gantt-bar.c4{background:var(--violet)}.gantt-bar.c5{background:var(--red)}.gantt-bar.c6{background:var(--ink-soft)}
+.wbs-table .phase-row td{background:var(--surface-dim);font-weight:700;font-size:13px;color:var(--ink);padding:12px 14px;border-bottom:2px solid var(--border-strong);letter-spacing:.3px}
 @media print{body{background:#fff}.page{padding:0}.s,.verdict,.decision-box{break-inside:avoid;box-shadow:none}.cover{background:var(--ink)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.verdict,.decision-box{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-@media(max-width:768px){.page{padding:16px 12px 48px}.cover{padding:36px 24px 32px}.cover h1{font-size:24px}.s{padding:24px 20px}.swot-2col{grid-template-columns:1fr}.timeline,.roi-grid{grid-template-columns:1fr}.metric-row{grid-template-columns:1fr 1fr}.player-grid,.persona-grid,.risk-grid{grid-template-columns:1fr}.verdict .v-text,.decision-box .one-liner{font-size:18px}}
+@media(max-width:768px){.page{padding:16px 12px 48px}.cover{padding:36px 24px 32px}.cover h1{font-size:24px}.s{padding:24px 20px}.swot-2col{grid-template-columns:1fr}.timeline,.roi-grid{grid-template-columns:1fr}.metric-row{grid-template-columns:1fr 1fr}.player-grid,.persona-grid,.risk-grid{grid-template-columns:1fr}.verdict .v-text,.decision-box .one-liner{font-size:18px}.gantt-label{width:120px;font-size:11px}}
 </style>
 </head>
 <body>

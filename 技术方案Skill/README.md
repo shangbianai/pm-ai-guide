@@ -1,6 +1,6 @@
-# 技术方案 Skill · long-tech-proposal
+# 技术方案 Skill · proposal-master
 
-> 配套 Claude Code Skill：`long-tech-proposal`（长技术方案生成器）
+> 配套 Claude Code Skill：`proposal-master`（长技术方案生成器）
 
 ---
 
@@ -50,22 +50,22 @@
 ## 安装 Skill
 
 整个 Skill 目录需**完整安装**（含 `scripts/` 和 `references/`，`SKILL.md` 会引用它们）。
-注意：安装到本地的目录名必须是 `long-tech-proposal`（与 `SKILL.md` 里 `name` 一致），不是「技术方案Skill」。
+注意：安装到本地的目录名必须是 `proposal-master`（与 `SKILL.md` 里 `name` 一致），不是「技术方案Skill」。
 
 **Windows PowerShell：**
 ```powershell
-$dst = "$env:USERPROFILE\.claude\skills\long-tech-proposal"
+$dst = "$env:USERPROFILE\.claude\skills\proposal-master"
 New-Item -ItemType Directory -Force -Path $dst | Out-Null
 Copy-Item -Path 技术方案Skill\* -Destination $dst -Recurse -Force
 ```
 
 **macOS / Linux：**
 ```bash
-mkdir -p ~/.claude/skills/long-tech-proposal
-cp -R 技术方案Skill/* ~/.claude/skills/long-tech-proposal/
+mkdir -p ~/.claude/skills/proposal-master
+cp -R 技术方案Skill/* ~/.claude/skills/proposal-master/
 ```
 
-安装后重启 Claude Code，输入 `/long-tech-proposal` 触发。
+安装后重启 Claude Code，输入 `/proposal-master` 触发。
 
 ---
 
@@ -74,7 +74,7 @@ cp -R 技术方案Skill/* ~/.claude/skills/long-tech-proposal/
 直接输入触发，Skill 会逐阶段引导你完成：
 
 ```
-/long-tech-proposal
+/proposal-master
 ```
 
 Skill 先问清楚文档类型、用途受众、主题、篇幅格式，然后逐阶段推进：

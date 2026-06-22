@@ -9,7 +9,8 @@ order: 封面 → 目录 → 正文.
 Usage:
     python add_cover.py in.docx out.docx "主标题" "副行1" "副行2" ...
 
-- 主标题: 方正小标宋简体 22pt(二号) 加粗 居中
+- 主标题: 微软雅黑 28pt 加粗 居中（微软雅黑全平台都有，避免方正小标宋简体缺字时
+  回退成行书等怪异字体；字号比正文标题大一档，封面更醒目）
 - 副行 (承担单位 / 日期 等): 仿宋_GB2312 16pt(三号) 居中
 """
 import sys
@@ -57,7 +58,7 @@ def main(path_in, path_out, title, sublines):
     # push the title down a bit from the top
     for _ in range(6):
         elems.append(_par('', '仿宋_GB2312', 16))
-    elems.append(_par(title, '方正小标宋简体', 22, bold=True))
+    elems.append(_par(title, '微软雅黑', 28, bold=True))
     elems.append(_par('', '仿宋_GB2312', 16))
     for line in sublines:
         elems.append(_par(line, '仿宋_GB2312', 16, space_before=120))
@@ -65,6 +66,12 @@ def main(path_in, path_out, title, sublines):
 
     for el in elems:           # insert in order, each right before `first`
         first.addprevious(el)
+
+    # Page break AFTER the TOC so 正文 starts on a fresh page (otherwise 目录
+    # 末尾和正文首段挤在同一页). `first` is pandoc's TOC sdt; only break when
+    # it really is the TOC, else we'd split body content.
+    if first.tag == qn('w:sdt'):
+        first.addnext(_page_break_par())
 
     doc.save(path_out)
     print(f'Cover inserted before TOC. Saved {path_out}')

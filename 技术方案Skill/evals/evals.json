@@ -1,0 +1,32 @@
+{
+  "skill_name": "long-tech-proposal",
+  "evals": [
+    {
+      "id": "typeset",
+      "name": "排版合成-政府申报书格式",
+      "prompt": "我已经写好了一份政府项目申报书的各章节 Markdown，放在 fixtures/chapters/ 目录（text_*.md，含一二三级标题、表格、正文）。请按政府申报书格式，把它们合成排版成一个最终的 .docx 文件：正文仿宋三号、一级黑体/二级楷体/三级仿宋的标题、表格用三线表、并且要有目录。",
+      "expected_output": "一个排版正确的 .docx：正文仿宋16pt、H1黑体16pt、H2楷体16pt、H3仿宋16pt、三线表、含可更新目录字段。",
+      "files": ["fixtures/chapters/text_1_团队.md", "fixtures/chapters/text_2_背景.md", "fixtures/chapters/text_3_方案.md"],
+      "assertions": [
+        "正文段落字体为仿宋（eastAsia=仿宋_GB2312 或 仿宋）且字号16pt",
+        "一级标题字体为黑体、16pt",
+        "二级标题字体为楷体（楷体_GB2312 或 楷体）、16pt",
+        "三级标题字体为仿宋、16pt",
+        "至少一个表格被设为三线表（仅上/下/表头下边框，无竖线）",
+        "文档包含目录（TOC 域：含 instrText 'TOC' 与 fldChar）"
+      ]
+    },
+    {
+      "id": "gate",
+      "name": "需求澄清门禁-vague输入",
+      "prompt": "帮我写个技术方案",
+      "expected_output": "应先向用户提问澄清（文档类型/用途受众/主题/篇幅等），不应在缺信息时直接生成正式大纲或正文。",
+      "files": [],
+      "assertions": [
+        "回复以提问/澄清为主，向用户询问文档类型、用途受众、主题、篇幅中的多项",
+        "没有在未确认信息的情况下直接产出一份正式的多章节大纲或正文",
+        "提问数量克制（约5问以内），不是一次抛十几个问题"
+      ]
+    }
+  ]
+}

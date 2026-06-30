@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="128" viewBox="0 0 520 128" role="img" aria-label="熵变智元">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#37e0a0"/>
+      <stop offset="1" stop-color="#58a6ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="520" height="128" rx="28" fill="#09131f"/>
+  <g transform="translate(32 26)">
+    <path d="M42 6 76 70H8L42 6Z" fill="url(#g)"/>
+    <path d="M42 24 63 64H21L42 24Z" fill="#0b1824"/>
+    <circle cx="42" cy="43" r="9" fill="#35d6a0"/>
+  </g>
+  <text x="134" y="59" fill="#f6fbff" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="34" font-weight="800">熵变智元</text>
+  <text x="134" y="94" fill="#8fa2b7" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="1">SHANG BIAN ZHI YUAN</text>
+</svg>

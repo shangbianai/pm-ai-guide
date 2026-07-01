@@ -58,6 +58,7 @@
 - 日报助手：日报自动化的 2 个 AI 方法
 - AI 效率工具实战：Markdown 转 Word/PDF
 - **PPT 生成 Skills**：AI 一键生成幻灯片图片并合并为 PPTX/PDF
+- **HTML 报告生成 Skills**：任意内容秒变带目录导航和图表的专业网页报告
 
 ### 第 7 章：新天地
 - 课程资料分享：内部资料与知识库
@@ -67,7 +68,7 @@
 
 ## 已完成的 Skills
 
-所有 Skill 统一采用 **JSON 数据 + Python 脚本 + HTML 模板** 架构：AI 分析结果整理为 JSON → `generate-report.py` 基于模板渲染 → 同时输出 HTML 报告和 Markdown 文档。
+多数报告类 Skill 采用 **JSON 数据 + Python 脚本 + HTML 模板** 架构：AI 分析结果整理为 JSON → `generate-report.py` 基于模板渲染 → 同时输出 HTML 报告和 Markdown 文档；部分 Skill（如 html-report）为**零依赖单文件模板直出**，Agent 直接编辑模板四要素（Hero 头部 / 章节正文 / REPORT_DATA / 指标卡）即交付。
 
 ### 🏪 市场洞察 Skill（market-insight）
 

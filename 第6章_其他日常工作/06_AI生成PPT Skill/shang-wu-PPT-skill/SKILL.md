@@ -10,7 +10,7 @@ Create a dark, cinematic HTML presentation for Chinese AI/business sharing sessi
 ## Workflow
 
 1. Collect the event title, date, location, speaker/brand, section outline, QR codes, and any real photos.
-2. Start from `templates/reference-3-pages-template.html` for production drafts, or open `examples/reference-3-pages.html` as the visual reference. Keep `templates/dark-ai-ppt.css` and `templates/dark-ai-ppt.js`. The reference/template file demonstrates cover, body, report, transition, and closing page types.
+2. Start from `templates/reference-3-pages-template.html` for production drafts, or open `examples/reference-3-pages.html` as the visual reference. Keep `templates/dark-ai-ppt.css` and `templates/dark-ai-ppt.js`. The reference/template file demonstrates cover, body, report, transition, and closing page types. When the deck must be shared as one offline file, use `templates/dark-ai-ppt-reference-standalone.html`, which inlines CSS, JS, images, and audio so it can be opened directly from the local filesystem.
 3. Generate slide visuals with image2/Seedream. Prompts must match the slide idea, target aspect ratio, and tone. Do not ask the model to render exact QR codes, logos, or critical text; overlay those in HTML.
 4. Use `scripts/generate_seedream_image.py` when the Ark API is available. It reads `ARK_API_KEY` from the environment.
 5. Verify in the browser at desktop size and check that titles, images, bottom quotes, controls, and zoom behavior do not overlap.

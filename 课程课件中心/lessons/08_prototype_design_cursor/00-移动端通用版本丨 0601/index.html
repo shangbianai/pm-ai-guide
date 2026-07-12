@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>移动端产品原型演示</title>
+    <script>
+        (function () {
+            var t = localStorage.getItem('prototype-theme');
+            if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="prototype-container">
+        <!-- 左侧导航菜单 -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-mobile-alt"></i> 功能导航</h3>
+                <button class="toggle-btn" id="toggleBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-item main-item" data-page="home">
+                        <i class="fas fa-home"></i>
+                        <span>首页</span>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-item main-item" data-page="user">
+                        <i class="fas fa-user"></i>
+                        <span>用户中心</span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="sub-menu">
+                        <div class="nav-item sub-item" data-page="profile">
+                            <i class="fas fa-id-card"></i>
+                            <span>个人资料</span>
+                        </div>
+                        <div class="nav-item sub-item" data-page="settings">
+                            <i class="fas fa-cog"></i>
+                            <span>设置</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-item main-item" data-page="products">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>商品管理</span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="sub-menu">
+                        <div class="nav-item sub-item" data-page="product-list">
+                            <i class="fas fa-list"></i>
+                            <span>商品列表</span>
+                        </div>
+                        <div class="nav-item sub-item" data-page="product-add">
+                            <i class="fas fa-plus"></i>
+                            <span>添加商品</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-item main-item" data-page="orders">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>订单管理</span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="sub-menu">
+                        <div class="nav-item sub-item" data-page="order-list">
+                            <i class="fas fa-list-alt"></i>
+                            <span>订单列表</span>
+                        </div>
+                        <div class="nav-item sub-item" data-page="order-detail">
+                            <i class="fas fa-file-alt"></i>
+                            <span>订单详情</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-item main-item" data-page="analytics">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>数据分析</span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="sub-menu">
+                        <div class="nav-item sub-item" data-page="sales-chart">
+                            <i class="fas fa-chart-line"></i>
+                            <span>销售统计</span>
+                        </div>
+                        <div class="nav-item sub-item" data-page="user-analytics">
+                            <i class="fas fa-users"></i>
+                            <span>用户分析</span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="theme-switcher">
+                <span class="theme-switcher-label"><i class="fas fa-palette"></i> 外观主题</span>
+                <div class="theme-toggle" id="themeToggle">
+                    <button class="theme-toggle-btn" data-theme="light" type="button">
+                        <i class="fas fa-sun"></i><span>亮色</span>
+                    </button>
+                    <button class="theme-toggle-btn active" data-theme="dark" type="button">
+                        <i class="fas fa-moon"></i><span>暗色</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- iPhone Max 手机壳容器 -->
+        <div class="phone-container">
+            <div class="iphone-device">
+                <div class="iphone-button iphone-button-silent"></div>
+                <div class="iphone-button iphone-button-vol-up"></div>
+                <div class="iphone-button iphone-button-vol-down"></div>
+                <div class="iphone-button iphone-button-power"></div>
+
+                <div class="iphone-bezel">
+                    <div class="iphone-screen">
+                        <!-- Dynamic Island -->
+                        <div class="dynamic-island" aria-hidden="true">
+                            <div class="dynamic-island-camera"></div>
+                        </div>
+
+                        <!-- 小程序顶部状态栏 + 胶囊按钮 -->
+                        <div class="mp-chrome">
+                            <div class="mp-status-bar">
+                                <span class="mp-time">9:41</span>
+                                <div class="mp-status-icons">
+                                    <span class="mp-signal">
+                                        <i></i><i></i><i></i><i></i>
+                                    </span>
+                                    <span class="mp-wifi"></span>
+                                    <span class="mp-battery"><span class="mp-battery-level"></span></span>
+                                </div>
+                            </div>
+                            <div class="mp-capsule">
+                                <button class="mp-capsule-btn mp-capsule-more" type="button" aria-label="更多">
+                                    <span></span><span></span><span></span>
+                                </button>
+                                <span class="mp-capsule-sep"></span>
+                                <button class="mp-capsule-btn mp-capsule-close" type="button" aria-label="关闭小程序">
+                                    <span class="mp-close-ring"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="phone-content" id="phoneContent">
+                            <!-- 页面内容将通过JavaScript动态加载 -->
+                        </div>
+
+                        <!-- 底部 Tab 导航 -->
+                        <nav class="mp-tabbar" id="mpTabbar">
+                            <button class="mp-tabbar-item active" data-page="home" type="button">
+                                <i class="fas fa-home"></i>
+                                <span>首页</span>
+                            </button>
+                            <button class="mp-tabbar-item" data-page="products" type="button">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>商品</span>
+                            </button>
+                            <button class="mp-tabbar-item" data-page="orders" type="button">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>订单</span>
+                            </button>
+                            <button class="mp-tabbar-item" data-page="analytics" type="button">
+                                <i class="fas fa-chart-bar"></i>
+                                <span>数据</span>
+                            </button>
+                            <button class="mp-tabbar-item" data-page="profile" type="button">
+                                <i class="fas fa-user"></i>
+                                <span>我的</span>
+                            </button>
+                        </nav>
+
+                        <!-- 手机壳内弹窗 -->
+                        <div class="phone-modal" id="phoneModal" aria-hidden="true">
+                            <div class="phone-modal-mask" id="phoneModalMask"></div>
+                            <div class="phone-modal-panel" id="phoneModalPanel">
+                                <div class="phone-modal-handle"></div>
+                                <button class="phone-modal-close" id="phoneModalClose" type="button" aria-label="关闭">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <div class="phone-modal-body" id="phoneModalBody"></div>
+                            </div>
+                        </div>
+
+                        <div class="iphone-home-bar" aria-hidden="true"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="scripts/main.js"></script>
+</body>
+</html> 

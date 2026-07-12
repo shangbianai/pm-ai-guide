@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>验收测试 · AI Agent 自动化验收</title>
+  <style>
+    :root{
+      --bg:#f4f7f3;--paper:#fffef8;--ink:#17231b;--soft:#556457;--muted:#899488;--line:rgba(23,35,27,.14);
+      --green:#1c9a6c;--lime:#b7d935;--blue:#2d6cdf;--orange:#f28b30;--red:#e84d4d;--purple:#7257d9;
+      --shadow:0 30px 90px rgba(29,55,42,.15);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;color:var(--ink);
+      background:
+        radial-gradient(820px 520px at 5% 10%,rgba(183,217,53,.22),transparent 60%),
+        radial-gradient(760px 520px at 96% 18%,rgba(45,108,223,.15),transparent 58%),
+        linear-gradient(180deg,#fbfcf7,#eaf0e8);
+      overflow-x:hidden;
+    }
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.64;background:linear-gradient(90deg,rgba(28,154,108,.055) 1px,transparent 1px),linear-gradient(rgba(28,154,108,.045) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(180deg,#000,transparent 84%)}
+    .topbar{position:sticky;top:0;z-index:80;background:rgba(255,254,248,.86);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:1520px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:14px}
+    .mark{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,var(--green),var(--lime));box-shadow:0 16px 34px rgba(28,154,108,.22);display:grid;place-items:center;color:#fff;font-weight:950}
+    .brand{font-size:21px;font-weight:950;line-height:1.05}.brand small{display:block;margin-top:5px;color:var(--muted);font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:900}
+    .spacer{flex:1}.hint{font-size:13px;color:var(--muted)}kbd{border:1px solid var(--line);background:#fff;border-radius:7px;padding:1px 7px;color:var(--soft)}
+    .progress{height:4px;background:rgba(23,35,27,.07)}.progress span{display:block;width:12.5%;height:100%;background:linear-gradient(90deg,var(--green),var(--lime),var(--blue));transition:.25s}
+    .deck{max-width:1520px;margin:0 auto;padding:24px 24px 108px}.slide{display:none;position:relative;overflow:hidden;min-height:790px;border:1px solid var(--line);border-radius:30px;background:linear-gradient(150deg,rgba(255,254,248,.98),rgba(245,250,244,.96));box-shadow:var(--shadow)}
+    .slide.active{display:block;animation:in .28s ease}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .slide:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 16% 18%,rgba(183,217,53,.17),transparent 28%),radial-gradient(circle at 84% 75%,rgba(242,139,48,.10),transparent 26%)}
+    .inner{position:relative;z-index:1;min-height:790px;padding:58px 64px;display:grid;grid-template-columns:1.03fr .97fr;gap:44px;align-items:center}.inner.full{grid-template-columns:1fr}
+    .time-chip{position:absolute;right:28px;top:24px;z-index:5;border:1px solid var(--line);background:rgba(255,255,255,.74);border-radius:999px;padding:7px 12px;font-size:12px;color:var(--muted);font-weight:900}
+    .tag{display:inline-flex;gap:9px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.72);border-radius:999px;padding:8px 14px;margin-bottom:18px;color:var(--soft);font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:950}
+    .tag:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 20px rgba(28,154,108,.5)}
+    h1{font-size:58px;line-height:1.08;margin:0 0 18px;letter-spacing:0;font-weight:950}h2{font-size:38px;line-height:1.18;margin:0 0 16px}h3{font-size:21px;margin:0 0 10px}
+    p{font-size:19px;line-height:1.72;color:var(--soft);margin:0 0 12px}.hl{background:linear-gradient(120deg,var(--green),var(--blue),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .focus{margin-top:18px;border:1px solid rgba(28,154,108,.26);border-left:5px solid var(--green);border-radius:17px;padding:16px 18px;background:linear-gradient(90deg,rgba(28,154,108,.08),rgba(183,217,53,.10));font-size:17px;font-weight:900;line-height:1.55;color:#205a40}
+    .panel,.code{border:1px solid var(--line);border-radius:21px;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.64));padding:22px;box-shadow:0 14px 36px rgba(29,55,42,.06)}
+    .panel p,.panel li{font-size:16px}.panel.green{border-color:rgba(28,154,108,.3)}.panel.blue{border-color:rgba(45,108,223,.28)}.panel.orange{border-color:rgba(242,139,48,.3)}.panel.red{border-color:rgba(232,77,77,.28)}.panel.purple{border-color:rgba(114,87,217,.28)}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    ul{margin:10px 0 0 20px;padding:0}li{margin:7px 0;color:var(--soft);font-size:16px;line-height:1.58}
+    .hero-board{min-height:570px;border:1px solid var(--line);border-radius:34px;background:linear-gradient(135deg,#17231b,#274e3b);color:#fff;padding:30px;position:relative;overflow:hidden;box-shadow:0 26px 70px rgba(29,55,42,.24)}
+    .hero-board:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px);background-size:36px 36px;mask-image:linear-gradient(180deg,#000,transparent 88%)}
+    .test-card{position:relative;z-index:1;border:1px solid rgba(255,255,255,.18);border-radius:20px;background:rgba(255,255,255,.10);padding:18px;margin:14px 0}.test-card b{font-size:28px;display:block}.test-card span{display:block;margin-top:8px;color:rgba(255,255,255,.72);font-size:15px}
+    .pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.pipe{position:relative;border:1px solid var(--line);border-radius:18px;background:#fff;padding:18px;min-height:172px}.pipe:after{content:"";position:absolute;right:-10px;top:50%;width:8px;height:2px;background:var(--green)}.pipe:last-child:after{display:none}.pipe strong{display:block;color:var(--green);font-size:24px;margin-bottom:8px}.pipe p{font-size:15px;line-height:1.55}
+    .matrix{display:grid;grid-template-columns:1.05fr 1fr;gap:18px}.module-list{display:grid;gap:11px}.module{border:1px solid var(--line);border-radius:16px;background:#fff;padding:15px;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start}.badge{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:950;background:linear-gradient(135deg,var(--green),var(--blue))}
+    table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px;text-align:left;vertical-align:top;font-size:14px;line-height:1.48;color:var(--soft)}th{background:rgba(28,154,108,.08);color:#205a40}tr:last-child td{border-bottom:0}td:last-child,th:last-child{border-right:0}
+    .code{font-family:"SFMono-Regular",Consolas,monospace;color:#1f4a36;font-size:15px;line-height:1.72;white-space:pre-wrap;background:#f7fbf3;max-height:540px;overflow:auto}
+    .evidence{display:grid;grid-template-columns:1fr 1fr;gap:16px}.shot{border:1px solid var(--line);border-radius:20px;background:#fff;overflow:hidden}.shot-top{height:160px;background:linear-gradient(135deg,rgba(28,154,108,.18),rgba(45,108,223,.14));display:grid;place-items:center;color:#244f3a;font-size:46px;font-weight:950}.shot-body{padding:16px}.shot-body p{font-size:15px}
+    .controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;gap:10px;align-items:center;z-index:95;border:1px solid var(--line);background:rgba(255,254,248,.9);backdrop-filter:blur(14px);padding:10px;border-radius:999px;box-shadow:0 18px 48px rgba(29,55,42,.12)}
+    button{border:0;border-radius:999px;padding:10px 16px;font-weight:950;background:linear-gradient(135deg,var(--green),var(--blue));color:#fff;cursor:pointer}button.secondary{background:#fff;color:var(--soft);border:1px solid var(--line)}.page-no{color:var(--soft);font-size:13px;min-width:62px;text-align:center}
+    .note-trigger,.draw-toggle{position:fixed;bottom:24px;z-index:98;border:1px solid var(--line);background:rgba(255,254,248,.94);color:var(--ink);box-shadow:0 16px 44px rgba(29,55,42,.12)}.note-trigger{right:24px;width:42px;height:42px;padding:0;font-size:20px}.draw-toggle{right:78px}
+    #drawCanvas{position:fixed;inset:0;z-index:70;pointer-events:none}body.drawing #drawCanvas{pointer-events:auto;cursor:crosshair}.controls,.note-trigger,.draw-toggle,.draw-toolbar{pointer-events:auto}.draw-toolbar{position:fixed;right:24px;top:90px;z-index:96;display:none;gap:8px;align-items:center;border:1px solid var(--line);border-radius:999px;background:rgba(255,254,248,.94);padding:9px;box-shadow:0 16px 44px rgba(29,55,42,.12)}body.drawing .draw-toolbar{display:flex}.color-btn{width:30px;height:30px;border-radius:50%;border:2px solid rgba(23,35,27,.15);padding:0}.color-btn.active{outline:3px solid rgba(28,154,108,.18)}.red-pen{background:#ef4444}.yellow{background:#facc15}.blue-pen{background:#2563eb}
+    .note-modal{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(23,35,27,.42)}.note-modal.open{display:flex}.note-box{width:min(720px,100%);border:1px solid var(--line);border-radius:20px;background:#fff;padding:24px;box-shadow:0 28px 90px rgba(29,55,42,.24)}.note-box p{font-size:16px}.note-actions{display:flex;justify-content:flex-end;margin-top:18px}
+    @media(max-width:980px){.inner,.inner.full,.grid-2,.grid-3,.grid-4,.pipeline,.matrix,.evidence{grid-template-columns:1fr}.inner{padding:34px}.time-chip{position:static;display:inline-flex;margin:18px}.hint{display:none}h1{font-size:40px}.pipe:after{display:none}}
+  </style>
+</head>
+<body>
+  <canvas id="drawCanvas"></canvas>
+  <div class="topbar"><div class="topbar-inner"><div class="mark">T</div><div class="brand">AI 增强型产品经理 <small>Chapter 4 · 验收测试</small></div><div class="spacer"></div><div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页 · 标注自动清空</div></div><div class="progress"><span id="bar"></span></div></div>
+  <main class="deck">
+    <section class="slide active" data-note="开场先把这节课定位成方法课：不是讲某个 Skill，而是讲一种可复用的 AI Agent 验收工作法。">
+      <div class="time-chip">00:00 - 02:00</div>
+      <div class="inner">
+        <div><div class="tag">Acceptance Test</div><h1>用 AI Agent 做<span class="hl">验收测试</span></h1><p>这一节讲一个方法：让 Codex 结合浏览器和本地应用自动化能力，像产品验收人员一样阅读项目、制定测试计划、执行操作、截图取证，并输出测试报告。</p><div class="focus">核心不是“让 AI 点几下页面”，而是把验收过程变成可复查、可交付、可沉淀的证据链。</div></div>
+        <div class="hero-board"><div class="test-card"><b>测试计划</b><span>先定义模块、场景、预期结果</span></div><div class="test-card"><b>自动执行</b><span>打开页面或应用，逐项操作验证</span></div><div class="test-card"><b>截图证据</b><span>关键状态必须留下可复查截图</span></div><div class="test-card"><b>MD / PDF 报告</b><span>输出专业验收结论和上线建议</span></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="解释验收测试和普通测试的区别：验收更关心是否满足业务交付，而不是只找 bug。">
+      <div class="time-chip">02:00 - 05:00</div>
+      <div class="inner">
+        <div><div class="tag">Why It Matters</div><h1>验收测试不是找茬，而是确认<span class="hl">能不能交付</span></h1><p>产品经理做验收时，最怕只凭印象说“差不多能用”。真正可靠的验收，需要把需求、功能、状态、数据、异常和证据连接起来。</p><div class="focus">一句话：验收测试要回答“这个版本是否达到交付标准，以及还剩哪些风险”。</div></div>
+        <div class="grid-2"><div class="panel red"><h3>人工随手验</h3><ul><li>想到哪里点哪里</li><li>截图散落，结论难复查</li><li>容易漏掉异常和边界</li><li>报告写得像主观感受</li></ul></div><div class="panel green"><h3>AI Agent 验收</h3><ul><li>先制定测试范围和用例</li><li>每个关键结果留证据</li><li>失败、阻塞、未测分开记录</li><li>直接生成 MD 和 PDF 报告</li></ul></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲核心思想：AI 不是替代产品判断，而是替你执行重复测试和整理证据。">
+      <div class="time-chip">05:00 - 08:00</div>
+      <div class="inner full">
+        <div><div class="tag">Core Idea</div><h1>Codex + Chrome 的核心思想</h1><div class="pipeline"><div class="pipe"><strong>01</strong><h3>读懂项目</h3><p>README、源码、运行方式、关键功能。</p></div><div class="pipe"><strong>02</strong><h3>拆测试范围</h3><p>模块、路径、异常、边界、证据。</p></div><div class="pipe"><strong>03</strong><h3>自动操作</h3><p>浏览器或本地应用逐项执行。</p></div><div class="pipe"><strong>04</strong><h3>截图取证</h3><p>关键页面、错误提示、输出文件。</p></div><div class="pipe"><strong>05</strong><h3>生成报告</h3><p>Markdown 汇总，再转成 PDF。</p></div></div><div class="focus">产品经理仍然负责验收判断；AI Agent 负责高频操作、证据整理和报告成稿。</div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="介绍本节课会用录音项目作为案例，同时把测试矩阵的概念放进来。">
+      <div class="time-chip">08:00 - 11:00</div>
+      <div class="inner">
+        <div><div class="tag">Case Project</div><h1>案例项目：快速录音 App</h1><p>这次用一个真实的 macOS 录音应用做验收对象。它包含录音、实时转写、AI 摘要、悬浮球、历史记录、设置和本地文件归档。</p><div class="focus">测试矩阵先定四件事：核心路径、异常路径、数据结果、证据要求。</div></div>
+        <div class="panel"><table><thead><tr><th>模块</th><th>验收关注点</th></tr></thead><tbody><tr><td>录音主流程</td><td>开始、停止、状态、文件生成</td></tr><tr><td>实时转写/纪要</td><td>窗口、实时文本、人工备注、待办</td></tr><tr><td>悬浮球</td><td>显示、计时、置顶、停止、回主窗口</td></tr><tr><td>历史与归档</td><td>录音列表、转写记录、文件定位</td></tr><tr><td>设置</td><td>Key、模型、麦克风、快捷键、连接测试</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="展示报告模板结构，强调结论、用例、风险、截图证据。">
+      <div class="time-chip">11:00 - 14:00</div>
+      <div class="inner">
+        <div><div class="tag">Report Template</div><h1>一份老板能看的验收报告，应该长什么样？</h1><p>测试报告不能只写“功能正常”。它要说明测了什么、怎么测的、结果如何、证据在哪里、还有哪些风险。</p><div class="focus">模板重点：基本信息、范围、标准、用例、缺陷、截图证据、结论、上线建议。</div></div>
+        <div class="code"># 验收测试报告
+
+1. 报告基本信息
+2. 验收范围
+3. 验收标准
+4. 测试用例汇总
+5. 缺陷与风险
+6. 截图证据
+7. 测试结论
+8. 上线建议
+9. 附录：环境、文件、日志</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="把实操提示词和证据链放到一页，强调执行时要明确证据要求。">
+      <div class="time-chip">14:00 - 18:00</div>
+      <div class="inner">
+        <div><div class="tag">Prompt & Evidence</div><h1>实操输入：让 Agent 按流程验收</h1><p>提示词里一定要明确项目路径、测试对象、测试范围、证据要求和输出格式。否则 AI 很容易只做泛泛检查。</p><div class="focus">关键句：不要只给主观评价，要有操作步骤、实际结果和证据。</div><div class="grid-2" style="margin-top:16px"><div class="panel green"><h3>保留什么证据</h3><ul><li>关键入口</li><li>关键状态</li><li>关键结果</li><li>关键问题</li></ul></div><div class="panel blue"><h3>证据形式</h3><ul><li>页面截图</li><li>文件路径</li><li>日志片段</li><li>错误提示</li></ul></div></div></div>
+        <div class="code">你现在是一个产品验收测试 Agent。
+
+项目路径：/Users/dpxj/Documents/录音
+测试对象：快速录音 macOS App
+
+请先阅读 README 和关键源码，整理可验收模块。
+然后制定测试计划，启动应用逐项测试。
+每个关键模块至少保留一张截图证据。
+最后输出 Markdown 验收测试报告，并转成 PDF。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="合并讲测试状态和最终交付物，强调报告不仅是聊天记录。">
+      <div class="time-chip">18:00 - 22:00</div>
+      <div class="inner">
+        <div><div class="tag">Result & Deliverable</div><h1>结论要分清，交付要成文件</h1><p>验收报告里最常见的问题，是把“测不了”和“不通过”混在一起。测试结束后也不能只停留在聊天记录里，要形成 MD、PDF、截图和日志。</p><div class="code">验收测试输出/
+├── 验收测试报告.md
+├── 验收测试报告.pdf
+├── screenshots/
+└── logs/</div></div>
+        <div class="panel"><table><thead><tr><th>状态</th><th>含义</th><th>例子</th></tr></thead><tbody><tr><td>通过</td><td>实际结果符合预期</td><td>设置页可打开，字段和按钮可见</td></tr><tr><td>失败</td><td>实际结果不符合预期</td><td>点击开始录音后状态未变化</td></tr><tr><td>阻塞</td><td>因权限、账号、Key、环境无法继续</td><td>未授权麦克风，无法验证录音</td></tr><tr><td>未测</td><td>本轮未覆盖</td><td>线上支付链路暂不纳入范围</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="结尾把避坑和回顾合并，最后自然承接实操。">
+      <div class="time-chip">22:00 - 25:00</div>
+      <div class="inner">
+        <div><div class="tag">Review</div><h1>回顾重点：这节课的价值</h1><p>第一，AI Agent 验收不是随机点页面，而是从测试范围到证据链的完整流程。</p><p>第二，报告必须包含用例、结果、缺陷、截图和上线建议。</p><p>第三，测试前准备账号、Key、权限和测试数据；测试后复核失败项、阻塞项和截图证据。</p><div class="focus">接下来进入实操环节：让 Codex 针对快速录音 App 执行一次完整验收，并输出 MD 与 PDF 报告。</div></div>
+        <div class="panel green"><h3>一句话带走</h3><p style="font-size:30px;line-height:1.48;font-weight:950;color:#205a40">验收测试的本质，是把“我觉得能用”变成“证据证明可以交付”。</p></div>
+      </div>
+    </section>
+  </main>
+  <div class="controls"><button class="secondary" id="prev">上一页</button><span class="page-no" id="pageNo">1 / 8</span><button id="next">下一页</button></div>
+  <button class="draw-toggle" id="drawToggle">标注</button><button class="note-trigger" id="noteBtn">?</button>
+  <div class="draw-toolbar"><button class="color-btn red-pen active" data-color="#ef4444" title="红色"></button><button class="color-btn yellow" data-color="#facc15" title="黄色"></button><button class="color-btn blue-pen" data-color="#2563eb" title="蓝色"></button><button class="secondary" id="clearDraw">清空</button><button class="secondary" id="exitDraw">退出</button></div>
+  <div class="note-modal" id="noteModal"><div class="note-box"><h3>讲师备注</h3><p id="noteText"></p><div class="note-actions"><button id="closeNote">关闭</button></div></div></div>
+  <script>
+    const slides=[...document.querySelectorAll('.slide')],bar=document.getElementById('bar'),pageNo=document.getElementById('pageNo'),noteText=document.getElementById('noteText'),noteModal=document.getElementById('noteModal');let current=0;
+    const canvas=document.getElementById('drawCanvas'),ctx=canvas.getContext('2d');let drawing=false,pen='#ef4444';function clearDraw(){ctx.clearRect(0,0,canvas.width,canvas.height)}
+    function show(i){current=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,idx)=>s.classList.toggle('active',idx===current));bar.style.width=`${((current+1)/slides.length)*100}%`;pageNo.textContent=`${current+1} / ${slides.length}`;noteText.textContent=slides[current].dataset.note||'这一页没有额外备注。';clearDraw()}
+    document.getElementById('prev').onclick=()=>show(current-1);document.getElementById('next').onclick=()=>show(current+1);document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')show(current-1);if(e.key==='ArrowRight'||e.key===' ')show(current+1);if(e.key==='Escape')noteModal.classList.remove('open')});
+    document.getElementById('noteBtn').onclick=()=>{noteText.textContent=slides[current].dataset.note||'这一页没有额外备注。';noteModal.classList.add('open')};document.getElementById('closeNote').onclick=()=>noteModal.classList.remove('open');noteModal.onclick=e=>{if(e.target===noteModal)noteModal.classList.remove('open')};
+    function resize(){canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=5}resize();addEventListener('resize',resize);
+    canvas.addEventListener('pointerdown',e=>{drawing=true;ctx.beginPath();ctx.moveTo(e.clientX,e.clientY)});canvas.addEventListener('pointermove',e=>{if(!drawing)return;ctx.strokeStyle=pen;ctx.lineTo(e.clientX,e.clientY);ctx.stroke()});['pointerup','pointerleave','pointercancel'].forEach(evt=>canvas.addEventListener(evt,()=>drawing=false));
+    document.getElementById('drawToggle').onclick=()=>{document.body.classList.toggle('drawing');document.getElementById('drawToggle').textContent=document.body.classList.contains('drawing')?'标注中':'标注'};document.getElementById('exitDraw').onclick=()=>{document.body.classList.remove('drawing');document.getElementById('drawToggle').textContent='标注'};document.getElementById('clearDraw').onclick=clearDraw;document.querySelectorAll('.color-btn').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.color-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');pen=btn.dataset.color});
+    show(0);
+  </script>
+</body>
+</html>

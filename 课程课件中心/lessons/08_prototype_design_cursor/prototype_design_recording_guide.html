@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>原型设计课程 · 讲师参考</title>
+  <style>
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;background:#f7fafc;color:#111827}.wrap{max-width:1120px;margin:0 auto;padding:42px 24px 80px}h1{font-size:42px;margin:0 0 10px}p{color:#4b5563;line-height:1.75}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{border:1px solid rgba(17,24,39,.12);border-radius:18px;background:white;padding:20px;box-shadow:0 16px 40px rgba(15,23,42,.08)}.time{display:inline-flex;border-radius:999px;background:#eff6ff;color:#1d4ed8;padding:5px 10px;font-weight:900;font-size:13px;margin-bottom:8px}.card h3{margin:0 0 8px}.card ul{margin:8px 0 0 20px;color:#4b5563;line-height:1.7}.note{border-left:5px solid #2563eb;background:#eff6ff;border-radius:14px;padding:14px 16px;margin:18px 0;color:#1e3a8a;font-weight:850}.code{white-space:pre-wrap;font-family:"SFMono-Regular",Consolas,monospace;background:#0f172a;color:#d1fae5;border-radius:16px;padding:18px;line-height:1.7;overflow:auto}.full{grid-column:1/-1}@media(max-width:900px){.grid{grid-template-columns:1fr}h1{font-size:32px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>原型设计课程 · 讲师参考</h1>
+    <p>这份页面只给讲师自己看，用来把控录课节奏、实操顺序和提示词。正式课件请使用 `prototype_design_cursor_lesson.html`。</p>
+    <div class="note">建议总时长 30 分钟左右：前 20 分钟讲方法和规则，后 10 分钟进入 Cursor 项目包实操或互动 Demo。</div>
+    <section class="grid">
+      <div class="card"><span class="time">00:00 - 03:30</span><h3>开场与痛点</h3><ul><li>强调原型不是界面截图，而是需求传递载体。</li><li>对比传统工具和 AI 原型的变化。</li><li>不要一上来讲工具细节，先讲为什么要有工作流。</li></ul></div>
+      <div class="card"><span class="time">03:30 - 09:00</span><h3>三种路线与项目规则</h3><ul><li>Cursor：有项目包时首选。</li><li>Codex：从零生成 HTML 原型时很快。</li><li>Skills：把输入、判断、输出沉淀成团队标准。</li><li>重点停在规则文件：一致性、复用、状态、目录。</li></ul></div>
+      <div class="card"><span class="time">09:00 - 17:00</span><h3>高低保真与样例产品</h3><ul><li>低保真用于讨论结构，高保真用于评审体验。</li><li>讲小程序和后台是一体两面：端上体验 + 管理配置。</li><li>打开 `miniapp_admin_prototype.html` 演示切换和导航。</li></ul></div>
+      <div class="card"><span class="time">17:00 - 30:00</span><h3>Cursor 实操衔接</h3><ul><li>导入小程序项目包。</li><li>先补项目规则，再让 AI 改页面。</li><li>先跑低保真结构，再增强为高保真。</li><li>最后讲部署、预览码、版本留痕。</li></ul></div>
+      <div class="card full"><h3>可复制提示词</h3><div class="code">你现在是一个资深产品原型设计助手。
+
+背景：
+我有一个小程序项目包，需要基于它快速生成产品原型。
+
+目标：
+先做低保真原型，验证页面结构、导航路径和主流程；
+再做高保真原型，增强视觉层级、真实内容和交互状态；
+同时补一个后台管理页面，说明移动端数据和配置从哪里来。
+
+必须遵守：
+1. 优先复用现有组件、样式和目录结构。
+2. 新增页面前，先说明页面所属场景和用户任务。
+3. 每个关键页面补齐默认态、空态、加载态、异常态。
+4. 不要为了改 A 功能破坏 B 功能入口。
+5. 输出页面清单、用户流程、关键字段和验收点。
+
+请先阅读项目结构，然后给出实施计划，不要立即大改代码。</div></div>
+    </section>
+  </main>
+</body>
+</html>

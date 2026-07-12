@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BRD/MRD 文档生成 Skills · 一键输出可评审的市场与商业文档</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#111827;
+      --panel2:#172033;
+      --ink:#f8fafc;
+      --soft:#d7deec;
+      --muted:#94a3b8;
+      --line:rgba(255,255,255,.13);
+      --cyan:#22d3ee;
+      --green:#34d399;
+      --amber:#fbbf24;
+      --red:#fb7185;
+      --violet:#a78bfa;
+      --blue:#60a5fa;
+      --shadow:0 28px 90px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(860px 560px at 6% -10%,rgba(34,211,238,.18),transparent 64%),
+        radial-gradient(760px 520px at 105% 5%,rgba(251,191,36,.12),transparent 62%),
+        linear-gradient(180deg,#0b1020 0%,#101626 100%);
+      overflow-x:hidden;
+    }
+    .topbar{
+      position:sticky;top:0;z-index:20;
+      background:rgba(11,16,32,.78);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar-inner{max-width:1360px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
+    .brand{font-weight:900;letter-spacing:.02em}
+    .brand small{display:block;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+    .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--amber));box-shadow:0 0 24px rgba(34,211,238,.7)}
+    .spacer{flex:1}
+    .hint{color:var(--muted);font-size:13px}
+    kbd{font-family:inherit;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:6px;padding:1px 6px;color:var(--soft)}
+    .progress{height:3px;background:rgba(255,255,255,.06)}
+    .progress span{display:block;height:100%;width:7.14%;background:linear-gradient(90deg,var(--cyan),var(--green),var(--amber));transition:.25s}
+    .deck{max-width:1360px;margin:0 auto;padding:24px 24px 100px}
+    .slide{
+      display:none;
+      min-height:720px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:linear-gradient(180deg,rgba(17,24,39,.94),rgba(13,18,33,.90));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .slide.active{display:block;animation:in .35s ease}
+    @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .slide:before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+        linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px);
+      background-size:44px 44px;
+      mask-image:linear-gradient(180deg,black,transparent 82%);
+    }
+    .inner{position:relative;z-index:1;padding:54px;min-height:720px;display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center}
+    .inner.full{grid-template-columns:1fr}
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--soft);
+      border-radius:999px;
+      padding:6px 12px;
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-weight:850;
+      margin-bottom:18px;
+    }
+    .tag:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+    h1{font-size:54px;line-height:1.08;margin:0 0 18px;letter-spacing:-.02em}
+    h2{font-size:38px;line-height:1.18;margin:0 0 16px;letter-spacing:-.01em}
+    h3{margin:0 0 10px;font-size:21px}
+    p{font-size:19px;line-height:1.72;color:var(--soft);margin:0}
+    b,.strong{color:white}
+    .hl{background:linear-gradient(120deg,var(--cyan),var(--green),var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .mark{
+      display:inline;
+      color:#fff;
+      font-weight:900;
+      padding:2px 7px 3px;
+      margin:0 2px;
+      border:2px solid rgba(34,211,238,.9);
+      border-radius:7px;
+      background:rgba(34,211,238,.08);
+      box-shadow:0 0 0 1px rgba(34,211,238,.18),0 0 18px rgba(34,211,238,.12);
+      box-decoration-break:clone;
+      -webkit-box-decoration-break:clone;
+    }
+    .mark.amber{border-color:rgba(251,191,36,.9);background:rgba(251,191,36,.10)}
+    .mark.green{border-color:rgba(52,211,153,.9);background:rgba(52,211,153,.09)}
+    .focus-line{
+      margin-top:18px;
+      border:1px solid rgba(34,211,238,.32);
+      border-left:5px solid var(--cyan);
+      border-radius:14px;
+      padding:14px 16px;
+      background:linear-gradient(90deg,rgba(34,211,238,.13),rgba(251,191,36,.06));
+      color:#ecfeff;
+      font-size:17px;
+      font-weight:850;
+      line-height:1.55;
+    }
+    .hero-card,.panel,.code,.doc,.screen{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+      border-radius:18px;
+      padding:22px;
+    }
+    .hero-card{min-height:470px;display:flex;flex-direction:column;justify-content:space-between}
+    .metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .metric{border:1px solid var(--line);border-radius:16px;padding:18px;background:rgba(255,255,255,.045)}
+    .metric strong{display:block;font-size:28px;color:var(--cyan);line-height:1}
+    .metric span{display:block;color:var(--soft);font-size:14px;line-height:1.45;margin-top:7px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .panel p,.panel li{font-size:16px;color:var(--soft);line-height:1.62}
+    .panel.focus{border-color:rgba(34,211,238,.45);background:linear-gradient(180deg,rgba(34,211,238,.10),rgba(255,255,255,.025))}
+    .panel.warn{border-color:rgba(251,113,133,.45);background:linear-gradient(180deg,rgba(251,113,133,.10),rgba(255,255,255,.025))}
+    .panel.key{border-color:rgba(251,191,36,.45);background:linear-gradient(180deg,rgba(251,191,36,.10),rgba(255,255,255,.025))}
+    .panel.green{border-color:rgba(52,211,153,.45);background:linear-gradient(180deg,rgba(52,211,153,.10),rgba(255,255,255,.025))}
+    .panel.violet{border-color:rgba(167,139,250,.45);background:linear-gradient(180deg,rgba(167,139,250,.10),rgba(255,255,255,.025))}
+    .panel h3{display:flex;align-items:center;gap:8px}
+    .panel h3:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+    .panel.key h3:before{background:var(--amber);box-shadow:0 0 12px var(--amber)}
+    .panel.warn h3:before{background:var(--red);box-shadow:0 0 12px var(--red)}
+    .panel.green h3:before{background:var(--green);box-shadow:0 0 12px var(--green)}
+    .panel.violet h3:before{background:var(--violet);box-shadow:0 0 12px var(--violet)}
+    ul{margin:10px 0 0 20px;padding:0}
+    li{margin:6px 0}
+    li.hot{color:#fff;font-weight:850}
+    li.hot::marker{color:var(--red)}
+    li.good{color:#fff;font-weight:850}
+    li.good::marker{color:var(--green)}
+    .pill{
+      display:inline-flex;align-items:center;border-radius:999px;
+      border:1px solid var(--line);
+      padding:5px 10px;margin:4px 4px 0 0;
+      background:rgba(255,255,255,.055);
+      color:var(--soft);
+      font-size:13px;font-weight:750;
+    }
+    .pill.cyan{color:#a5f3fc;border-color:rgba(34,211,238,.35);background:rgba(34,211,238,.1)}
+    .pill.green{color:#bbf7d0;border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.1)}
+    .pill.amber{color:#fde68a;border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.1)}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:22px}
+    .step{border:1px solid var(--line);border-radius:16px;padding:16px;background:rgba(255,255,255,.045);min-height:148px}
+    .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:9px;background:linear-gradient(135deg,var(--cyan),var(--green));font-weight:900;margin-bottom:10px}
+    .step b{display:block;font-size:16px;margin-bottom:7px}
+    .step span{color:var(--soft);font-size:13px;line-height:1.52}
+    .doc{background:#f8fafc;color:#0f172a;box-shadow:0 24px 60px rgba(0,0,0,.28)}
+    .doc p,.doc li{color:#334155}
+    .doc h3{color:#0f172a}
+    .doc .doc-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e2e8f0;padding-bottom:14px;margin-bottom:16px}
+    .doc .doc-title{font-weight:900;font-size:18px}
+    .doc .doc-tag{font-size:12px;color:#2563eb;background:#dbeafe;border-radius:999px;padding:4px 10px;font-weight:800}
+    .doc .row{display:grid;grid-template-columns:112px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid #e2e8f0;font-size:14px}
+    .doc .row:last-child{border-bottom:none}
+    .doc .k{color:#64748b;font-weight:800}
+    .code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font-size:14px;color:#dbeafe;line-height:1.72;background:rgba(2,6,23,.72)}
+    .code .comment{color:#94a3b8}
+    .code .cmd{color:#86efac}
+    .compare{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+    .compare .side{border:1px solid var(--line);border-radius:18px;padding:22px;background:rgba(255,255,255,.05)}
+    .side.bad{border-color:rgba(251,113,133,.42)}
+    .side.good{border-color:rgba(52,211,153,.42)}
+    .side h3{font-size:22px}
+    .badge{font-size:12px;border-radius:999px;padding:4px 10px;font-weight:900;background:rgba(255,255,255,.08);color:var(--soft)}
+    .matrix{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+    .mini{border:1px solid var(--line);border-radius:14px;padding:16px;background:rgba(255,255,255,.045)}
+    .mini b{display:block;margin-bottom:7px}
+    .mini span{display:block;color:var(--soft);font-size:14px;line-height:1.55}
+    .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
+    .phase{border:1px solid var(--line);border-radius:16px;padding:18px;background:rgba(255,255,255,.045)}
+    .phase small{display:block;color:var(--cyan);font-weight:900;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+    .phase b{display:block;font-size:17px;margin-bottom:8px}
+    .phase span{color:var(--soft);font-size:14px;line-height:1.55}
+    .quote{
+      font-size:28px;line-height:1.45;font-weight:900;color:#fff;
+      border-left:5px solid var(--amber);
+      padding-left:18px;
+      margin:20px 0;
+    }
+    .speaker{border-left:4px solid var(--cyan);padding-left:14px;color:var(--soft);font-size:16px;line-height:1.68}
+    .controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:10px;background:rgba(8,12,24,.82);border:1px solid var(--line);backdrop-filter:blur(16px);padding:10px 12px;border-radius:999px;box-shadow:0 16px 40px rgba(0,0,0,.32)}
+    .controls button,.note-trigger,.close-note{border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--ink);border-radius:999px;padding:8px 13px;font-weight:800;cursor:pointer}
+    .controls button:hover,.note-trigger:hover{background:rgba(255,255,255,.16)}
+    .counter{color:var(--soft);font-size:13px;font-weight:800;min-width:58px;text-align:center}
+    .note-trigger{position:fixed;right:22px;bottom:22px;z-index:31;width:42px;height:42px;padding:0;font-size:18px}
+    .note-modal{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.58);display:none;align-items:flex-end;justify-content:center;padding:24px}
+    .note-box{max-width:900px;width:100%;border:1px solid var(--line);border-radius:20px;background:#0f172a;color:var(--soft);box-shadow:var(--shadow);padding:24px}
+    .note-box h3{color:white;margin-bottom:8px}
+    .note-text{font-size:16px;line-height:1.75}
+    .close-note{float:right}
+    @media(max-width:900px){
+      .inner{grid-template-columns:1fr;padding:34px;gap:24px}
+      h1{font-size:40px}h2{font-size:30px}
+      .grid-3,.grid-4,.flow,.timeline,.matrix{grid-template-columns:1fr}
+      .compare{grid-template-columns:1fr}
+      .slide,.inner{min-height:auto}
+    }
+    body.export-mode{background:#fff}
+    body.export-mode .topbar,
+    body.export-mode .controls,
+    body.export-mode .note-trigger,
+    body.export-mode .note-modal{display:none!important}
+    body.export-mode .deck{max-width:1265px;margin:0;padding:0}
+    body.export-mode .slide{border:0;border-radius:0;box-shadow:none;min-height:720px;background:#f8fafc;color:#0f172a;filter:none}
+    body.export-mode .slide:before{display:none}
+    body.export-mode .inner{min-height:720px}
+    body.export-mode h1,
+    body.export-mode h2,
+    body.export-mode h3,
+    body.export-mode b,
+    body.export-mode .strong{color:#0f172a}
+    body.export-mode p,
+    body.export-mode .panel p,
+    body.export-mode .panel li,
+    body.export-mode .step span,
+    body.export-mode .mini span,
+    body.export-mode .phase span,
+    body.export-mode .speaker{color:#334155}
+    body.export-mode .tag,
+    body.export-mode .panel,
+    body.export-mode .hero-card,
+    body.export-mode .screen,
+    body.export-mode .code{border-color:#cbd5e1;background:#fff;color:#0f172a}
+    body.export-mode .code{background:#eef2ff;color:#1e293b}
+    body.export-mode .code .comment{color:#64748b}
+    body.export-mode .code .cmd{color:#047857}
+    body.export-mode .focus-line{background:#ecfeff;color:#0f172a;border-color:#67e8f9}
+    body.export-mode .mark{color:#0f172a}
+    body.export-mode .hl{background:none;color:#0891b2;-webkit-text-fill-color:currentColor}
+    body.export-mode .metric{background:#fff;border-color:#cbd5e1}
+    body.export-mode .pill{background:#f8fafc;color:#334155;border-color:#cbd5e1}
+    body.export-mode .compare .side,
+    body.export-mode .mini,
+    body.export-mode .step,
+    body.export-mode .phase{background:#fff;border-color:#cbd5e1}
+    body.export-mode .quote{color:#0f172a}
+    @media print{
+      @page{size:13.333in 7.5in;margin:0}
+      body{background:#fff;color:#0f172a}
+      .topbar,.controls,.note-trigger,.note-modal{display:none!important}
+      .deck{max-width:none;padding:0}
+      .slide{display:block!important;page-break-after:always;width:13.333in;height:7.5in;min-height:0;border:0;border-radius:0;box-shadow:none;background:#fff;color:#0f172a;overflow:hidden}
+      .slide:before{display:none}
+      .inner{height:7.5in;min-height:0;color:#0f172a}
+      h1,h2,h3,b,.strong{color:#0f172a}
+      p,.panel p,.panel li,.step span,.mini span,.phase span,.speaker{color:#334155}
+      .tag,.panel,.hero-card,.screen,.code{border-color:#cbd5e1;background:#f8fafc;color:#0f172a}
+      .code{color:#0f172a;background:#f1f5f9}
+      .mark{color:#0f172a}
+      .focus-line{color:#0f172a;background:#ecfeff}
+      .hl{color:#0f172a;background:none;-webkit-text-fill-color:currentColor}
+      .slide:last-child{page-break-after:auto}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="dot"></span>
+      <div class="brand">BRD/MRD 文档生成 Skills<small>AI PM Course · Chapter 1 / Lesson 03</small></div>
+      <div class="spacer"></div>
+      <div class="hint"><kbd>←</kbd><kbd>→</kbd> 翻页 · <kbd>?</kbd> 讲师备注</div>
+    </div>
+    <div class="progress"><span id="progress"></span></div>
+  </div>
+
+  <main class="deck">
+    <section class="slide active" data-note="开场页建立本节课期待：不是让 AI 写一份漂亮但空泛的文档，而是把 BRD/MRD 变成可复用、可评审、可落地的输出流程。">
+      <div class="inner">
+        <div>
+          <div class="tag">Document Automation</div>
+          <h1>一键输出<br><span class="hl">可评审的 BRD / MRD 文档</span></h1>
+          <p>把业务资料、市场判断、竞品信息和产品想法，压进一套稳定的 Skill 工作流，输出高质量、可使用、符合你规范和偏好的商业与市场文档。</p>
+          <div class="focus-line">这节课的目标：让 AI 不再只会“写得像文档”，而是能交付一份可以拿去讨论、评审和继续修改的 BRD/MRD。</div>
+        </div>
+        <div class="hero-card">
+          <div class="metric-grid">
+            <div class="metric"><strong>BRD</strong><span>回答“为什么做、值不值得做”</span></div>
+            <div class="metric"><strong>MRD</strong><span>回答“市场要什么、做什么能赢”</span></div>
+            <div class="metric"><strong>Skill</strong><span>固化角色、流程、方法论和模板</span></div>
+            <div class="metric"><strong>PDF</strong><span>课后资料与评审材料可直接分享</span></div>
+          </div>
+          <div>
+            <span class="pill cyan">拒绝 AI 味道</span>
+            <span class="pill green">遵循文档规范</span>
+            <span class="pill amber">支持实操演示</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页讲清楚为什么产品经理常常卡在 BRD/MRD：不是不会写，而是缺少结构化输入、行业框架和稳定的输出格式。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Why It Matters</div>
+          <h2>很多 BRD/MRD 的问题，不是“字不够多”，而是<span class="mark">判断不够硬</span></h2>
+          <div class="compare">
+            <div class="side bad">
+              <h3>普通 AI 写法</h3>
+              <ul>
+                <li class="hot">标题很完整，但结论泛泛而谈</li>
+                <li>市场分析像百科摘要，缺少边界</li>
+                <li>用户痛点没有优先级和证据链</li>
+                <li>BRD/MRD/PRD 的关注点混在一起</li>
+                <li>每次输出版式和质量都不稳定</li>
+              </ul>
+            </div>
+            <div class="side good">
+              <h3>Skill 工作流写法</h3>
+              <ul>
+                <li class="good">先定义文档目的和受众</li>
+                <li>用 BRD/MRD 框架约束章节和判断</li>
+                <li>用 TAM/SAM/SOM、SWOT、RICE 等模型支撑结论</li>
+                <li>用脚本和 HTML 模板固定交付格式</li>
+                <li>输出后可以继续沉淀成团队规范</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="用这一页把 BRD 和 MRD 的边界讲清楚，后面实操时学员才知道为什么同一份材料可以生成不同文档。">
+      <div class="inner">
+        <div>
+          <div class="tag">BRD vs MRD</div>
+          <h2>BRD 和 MRD 不是两种格式，而是两种<span class="mark amber">决策问题</span></h2>
+          <p>BRD 面向资源投入和立项判断，MRD 面向市场需求和产品方向。你要先问清楚“谁看这份文档、用它做什么决策”，再决定输出哪一种。</p>
+          <div class="focus-line">一句话记忆：BRD 争取资源，MRD 锁定机会。</div>
+        </div>
+        <div class="grid-2">
+          <div class="panel key">
+            <h3>BRD · Business</h3>
+            <p>核心问题：为什么现在做？值不值得投？</p>
+            <ul>
+              <li>商业价值与 ROI</li>
+              <li>市场规模与商业模式</li>
+              <li>资源需求与风险评估</li>
+              <li>面向高管、业务负责人、投资人</li>
+            </ul>
+          </div>
+          <div class="panel focus">
+            <h3>MRD · Market</h3>
+            <p>核心问题：市场要什么？怎么做才能赢？</p>
+            <ul>
+              <li>用户需求与痛点优先级</li>
+              <li>竞品和替代方案</li>
+              <li>产品建议与 GTM 策略</li>
+              <li>面向产品、技术、市场团队</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里讲本节课使用的 brd-mrd-master skill 的定位。重点强调它不是一个提示词，而是一整套交付系统。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Skill Anatomy</div>
+          <h2>`brd-mrd-master` 的本质：<span class="hl">把文档生产变成一个可复用系统</span></h2>
+          <div class="grid-4" style="margin-top:24px">
+            <div class="panel focus">
+              <h3>角色</h3>
+              <p>资深产品经理 + 商业分析师，默认用评审视角写文档。</p>
+            </div>
+            <div class="panel key">
+              <h3>输入</h3>
+              <p>产品、行业、文档类型、资料、受众和背景信息。</p>
+            </div>
+            <div class="panel green">
+              <h3>方法论</h3>
+              <p>BRD/MRD 章节、TAM/SAM/SOM、SWOT、RICE、用户画像。</p>
+            </div>
+            <div class="panel violet">
+              <h3>交付</h3>
+              <p>AI 生成结构化 JSON，脚本渲染成 HTML 报告，再导出 PDF。</p>
+            </div>
+          </div>
+          <div class="focus-line">关键变化：AI 负责分析和结构化内容，模板负责版式和一致性，脚本负责最终交付。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="展示仓库目录时可以打开实际文件夹对应讲：SKILL.md 控制行为，reference 存方法论，assets 存模板，scripts 负责生成。">
+      <div class="inner">
+        <div>
+          <div class="tag">File Structure</div>
+          <h2>一个好 Skill，至少有<span class="mark green">说明书、方法论、模板、脚本</span></h2>
+          <p>这一节的 Skill 包不是靠一次性 prompt 取胜，而是把“怎么分析”和“怎么呈现”拆开维护。</p>
+        </div>
+        <div class="code">
+          <div><span class="cmd">skills/brd-mrd-master/</span></div>
+          <div>├── SKILL.md</div>
+          <div>│   <span class="comment"># 角色、输入、流程、输出约束</span></div>
+          <div>├── reference/</div>
+          <div>│   ├── brd-guide.md</div>
+          <div>│   ├── mrd-guide.md</div>
+          <div>│   └── industry-analysis-framework.md</div>
+          <div>├── assets/</div>
+          <div>│   └── report-template.html</div>
+          <div>└── scripts/</div>
+          <div>    └── generate-report.py</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页是实操前的输入模板。不要只强调变量名，而要强调输入质量决定输出质量。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Input Design</div>
+          <h2>想让文档不像 AI 写的，第一步是给它<span class="mark">真实业务约束</span></h2>
+          <div class="grid-3" style="margin-top:24px">
+            <div class="panel focus">
+              <h3>必须输入</h3>
+              <ul>
+                <li>`PRODUCT`：产品/项目名称和简介</li>
+                <li>`INDUSTRY`：行业与市场范围</li>
+                <li>`DOC_TYPE`：BRD / MRD / BOTH</li>
+              </ul>
+            </div>
+            <div class="panel key">
+              <h3>强烈建议</h3>
+              <ul>
+                <li>`MATERIALS`：业务资料、访谈、报告</li>
+                <li>`PURPOSE`：立项、规划、融资或合作</li>
+                <li>`AUDIENCE`：高管、业务方或产品团队</li>
+              </ul>
+            </div>
+            <div class="panel green">
+              <h3>最好补充</h3>
+              <ul>
+                <li>已有资源和限制</li>
+                <li>竞品名单和内部判断</li>
+                <li>公司偏好的文档结构和表达风格</li>
+              </ul>
+            </div>
+          </div>
+          <div class="focus-line">资料越贴近真实项目，AI 越不容易写成“正确但没用”的通用稿。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里讲生成流程。后面实操时可以按这个顺序演示：准备资料、调用 skill、检查 JSON、运行脚本、打开 HTML/PDF。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Workflow</div>
+          <h2>从一堆资料到一份文档：中间要经过<span class="hl">5 个稳定步骤</span></h2>
+          <div class="flow">
+            <div class="step"><span class="num">1</span><b>定义任务</b><span>明确产品、行业、文档类型和受众。</span></div>
+            <div class="step"><span class="num">2</span><b>提取材料</b><span>从业务资料里抽取事实、数据、限制和假设。</span></div>
+            <div class="step"><span class="num">3</span><b>框架分析</b><span>套入 BRD/MRD 章节和行业分析模型。</span></div>
+            <div class="step"><span class="num">4</span><b>结构化输出</b><span>生成符合模板字段的 JSON 数据。</span></div>
+            <div class="step"><span class="num">5</span><b>脚本渲染</b><span>用模板生成 HTML，再导出 PDF 文档。</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页讲为什么要用脚本生成 HTML，而不是让模型直接手写完整页面。重点是稳定、可检查、可复用。">
+      <div class="inner">
+        <div>
+          <div class="tag">Anti AI Flavor</div>
+          <h2>拒绝 AI 味道，不是靠“语气更像人”，而是靠<span class="mark amber">结构化交付</span></h2>
+          <p>如果让模型直接写整份 HTML，它会同时承担分析、排版、字段组织和视觉一致性，任何一环都可能漂移。</p>
+          <div class="focus-line">更稳的方式：模型只产出内容数据，模板和脚本负责样式。</div>
+        </div>
+        <div class="doc">
+          <div class="doc-head">
+            <span class="doc-title">输出质量控制</span>
+            <span class="doc-tag">HTML Template</span>
+          </div>
+          <div class="row"><div class="k">内容</div><div>执行摘要、市场分析、商业模式、功能规划、风险与指标</div></div>
+          <div class="row"><div class="k">格式</div><div>统一标题层级、卡片组件、表格、指标和章节节奏</div></div>
+          <div class="row"><div class="k">检查</div><div>字段缺失可以回查，章节缺口可以补齐，模板可以持续复用</div></div>
+          <div class="row"><div class="k">交付</div><div>HTML 可演示，PDF 可归档，后续可接入团队文档规范</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页适合把 BRD 章节快速过一遍，强调每一章都有一个决策问题，不是目录堆叠。">
+      <div class="inner full">
+        <div>
+          <div class="tag">BRD Spine</div>
+          <h2>BRD 的 10 章，其实是在回答一个问题：<span class="hl">这事值不值得投？</span></h2>
+          <div class="matrix">
+            <div class="mini"><b>1. 执行摘要</b><span>30 秒让决策者知道结论和行动。</span></div>
+            <div class="mini"><b>2. 项目背景</b><span>为什么现在必须做，不做有什么代价。</span></div>
+            <div class="mini"><b>3. 市场分析</b><span>市场多大、谁在玩、趋势往哪走。</span></div>
+            <div class="mini"><b>4. 商业模式</b><span>怎么赚钱，多久能回本。</span></div>
+            <div class="mini"><b>5. 产品定位</b><span>卖给谁，解决什么，凭什么选我们。</span></div>
+            <div class="mini"><b>6. 功能规划</b><span>MVP 先做什么，后面怎么扩展。</span></div>
+            <div class="mini"><b>7. 运营策略</b><span>怎么获客，怎么增长，谁能合作。</span></div>
+            <div class="mini"><b>8. 风险评估</b><span>可能怎么失败，提前怎么处理。</span></div>
+            <div class="mini"><b>9. 资源需求</b><span>要多少人、多少钱、多长时间。</span></div>
+            <div class="mini"><b>10. 成功指标</b><span>用什么指标判断它真的做成了。</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里的 7 不是 7 张图，而是 MRD 指南里的七个核心章节。讲的时候可以先解释这个数字，再强调这些章节如何从市场事实推导产品方向。">
+      <div class="inner full">
+        <div>
+          <div class="tag">MRD Spine</div>
+          <h2>MRD 的 <span class="hl">7 章骨架</span>，是从市场事实推导产品方向</h2>
+          <div class="matrix">
+            <div class="mini"><b>1. 执行摘要</b><span>一句话说清市场机会、核心发现和下一步建议。</span></div>
+            <div class="mini"><b>2. 市场机会评估</b><span>用容量、增速、渗透率判断市场是否值得进入。</span></div>
+            <div class="mini"><b>3. 用户需求分析</b><span>明确画像、核心需求和高优先级痛点。</span></div>
+            <div class="mini"><b>4. 竞品分析</b><span>对比直接竞品、间接竞品和替代方案，找到机会缺口。</span></div>
+            <div class="mini"><b>5. 产品建议</b><span>把市场证据转成功能优先级、体验建议和技术方向。</span></div>
+            <div class="mini"><b>6. GTM 策略建议</b><span>说明定价、渠道、推广和进入市场路径。</span></div>
+            <div class="mini"><b>7. 数据支撑</b><span>交代行业数据、调研证据和市场预测模型。</span></div>
+          </div>
+          <div class="focus-line">这里的“7”指七个章节，不是七张页面。MRD 的好坏，不看“写了多少功能”，而看功能建议是否来自市场证据和用户痛点。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里可以讲本节实操案例的建议选题。你后面可以换成真实项目，但课堂上建议用一个熟悉的业务场景。">
+      <div class="inner">
+        <div>
+          <div class="tag">Demo Case</div>
+          <h2>实操案例可以这样跑：<span class="hl">口腔连锁 AI 线索转化系统</span></h2>
+          <p>沿用前两节市场洞察的业务语境，把零散资料进一步变成 BRD/MRD 文档。这样学员能看到：洞察报告不是终点，它可以继续转化成立项材料和产品规划材料。</p>
+          <div class="focus-line">同一批市场资料，可以先生成洞察报告，再生成 BRD/MRD，再继续拆 PRD 和路线图。</div>
+        </div>
+        <div class="grid-2">
+          <div class="panel focus">
+            <h3>输入材料</h3>
+            <ul>
+              <li>客户访谈摘要</li>
+              <li>业务痛点：线索浪费、转化慢、跟进不稳定</li>
+              <li>竞品和替代方案</li>
+              <li>公司已有销售和运营资源</li>
+            </ul>
+          </div>
+          <div class="panel key">
+            <h3>输出目标</h3>
+            <ul>
+              <li>BRD：是否立项、资源怎么投</li>
+              <li>MRD：市场机会和产品方向</li>
+              <li>HTML：可演示、可修改</li>
+              <li>PDF：可分享给团队和学员</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页给出课堂里的操作提示词。可在实操环节复制使用，并根据真实材料补充项目名、行业和受众。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Prompt Pattern</div>
+          <h2>调用 Skill 时，不要只说“帮我写 BRD”</h2>
+          <div class="code" style="margin-top:22px">
+            <div>请使用 brd-mrd-master Skill，基于以下资料生成 BOTH 类型文档：</div>
+            <div></div>
+            <div>PRODUCT：口腔连锁 AI 线索转化系统</div>
+            <div>INDUSTRY：口腔医疗服务 / 本地生活获客与转化</div>
+            <div>DOC_TYPE：BOTH</div>
+            <div>PURPOSE：内部立项评审 + 产品规划讨论</div>
+            <div>AUDIENCE：业务负责人、产品团队、运营负责人</div>
+            <div>MATERIALS：访谈摘要、业务痛点、竞品资料、上一节市场洞察报告</div>
+            <div></div>
+            <div class="comment">要求：先输出结构化 JSON，再调用 scripts/generate-report.py 生成 HTML 报告。</div>
+          </div>
+          <div class="focus-line">提示词越像“项目说明书”，生成结果越像真实产品文档；提示词越像一句愿望，生成结果越像 AI 作文。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里讲课后资料/交付物的组织方式，也回应用户提出的 HTML 命名和 PDF 转换要求。">
+      <div class="inner">
+        <div>
+          <div class="tag">Course Assets</div>
+          <h2>从这一节开始，每节课都保留<span class="mark green">HTML 课件 + PDF 资料</span></h2>
+          <p>HTML 是课堂演示用的可交互课件，PDF 是发给学员的静态资料。两个版本内容一致，但承担不同场景。</p>
+        </div>
+        <div class="code">
+          <div><span class="cmd">03_brd_mrd_skills_document_generation/</span></div>
+          <div>├── brd_mrd_skills_lesson.html</div>
+          <div>├── brd_mrd_skills_lesson.pdf</div>
+          <div>└── preview/</div>
+          <div>    ├── slide-01.png</div>
+          <div>    └── ...</div>
+          <div class="comment"># HTML 负责上课；PDF 负责发资料；preview 负责检查画面。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页自然承接实操，不要停在课程制作视角。可以在这里切到仓库和实际 Skill 文件演示。">
+      <div class="inner full">
+        <div>
+          <div class="tag">What To Watch</div>
+          <h2>看完这一节，学员应该记住 3 个判断</h2>
+          <div class="grid-3" style="margin-top:24px">
+            <div class="panel focus">
+              <h3>文档不是越厚越好</h3>
+              <p>BRD/MRD 的价值在于让团队更快做决策，而不是堆满正确废话。</p>
+            </div>
+            <div class="panel key">
+              <h3>Skill 不是提示词</h3>
+              <p>它把角色、流程、方法论、模板和脚本一起固化，质量才稳定。</p>
+            </div>
+            <div class="panel green">
+              <h3>模板让风格归一</h3>
+              <p>团队可以把自己的规范沉淀进模板，让 AI 更像内部同事。</p>
+            </div>
+          </div>
+          <div class="quote">接下来进入实操：打开仓库，安装 Skill，跑一份真实的 BRD/MRD。</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls">
+    <button onclick="prevSlide()">上一页</button>
+    <span class="counter" id="counter">1 / 14</span>
+    <button onclick="nextSlide()">下一页</button>
+  </div>
+  <button class="note-trigger" onclick="openNote()" aria-label="讲师备注">?</button>
+  <div class="note-modal" id="noteModal" onclick="closeNote(event)">
+    <div class="note-box">
+      <button class="close-note" onclick="closeNote(event)">关闭</button>
+      <h3>讲师备注</h3>
+      <div class="note-text" id="noteText"></div>
+    </div>
+  </div>
+
+  <script>
+    const urlParams=new URLSearchParams(location.search);
+    if(urlParams.get('export')==='1') document.body.classList.add('export-mode');
+    const slides=[...document.querySelectorAll('.slide')];
+    let index=Math.min(Math.max((parseInt(urlParams.get('slide')||'1',10)||1)-1,0),slides.length-1);
+    const progress=document.getElementById('progress');
+    const counter=document.getElementById('counter');
+    const noteText=document.getElementById('noteText');
+    const noteModal=document.getElementById('noteModal');
+    function render(){
+      slides.forEach((s,i)=>s.classList.toggle('active',i===index));
+      progress.style.width=((index+1)/slides.length*100)+'%';
+      counter.textContent=`${index+1} / ${slides.length}`;
+      noteText.textContent=slides[index].dataset.note || '这一页暂无备注。';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    function nextSlide(){index=Math.min(index+1,slides.length-1);render()}
+    function prevSlide(){index=Math.max(index-1,0);render()}
+    function openNote(){noteText.textContent=slides[index].dataset.note || '这一页暂无备注。';noteModal.style.display='flex'}
+    function closeNote(e){if(e.target===noteModal || e.target.classList.contains('close-note')) noteModal.style.display='none'}
+    window.addEventListener('keydown',e=>{
+      if(e.key==='ArrowRight' || e.key==='PageDown') nextSlide();
+      if(e.key==='ArrowLeft' || e.key==='PageUp') prevSlide();
+      if(e.key==='?') openNote();
+      if(e.key==='Escape') noteModal.style.display='none';
+    });
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pm-review · 需求评审大师使用指南</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #0f172a;
+    --border: #334155;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --cyan: #22d3ee;
+    --green: #34d399;
+    --violet: #a78bfa;
+    --amber: #fbbf24;
+    --rose: #fb7185;
+    --red: #e74c3c;
+    --yellow: #f39c12;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.7;
+    padding: 0 24px 80px;
+  }
+
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(15,23,42,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0; margin: 0 -24px;
+  }
+  .nav-inner { max-width: 900px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 12px; }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .nav-title { font-size: 14px; font-weight: 600; font-family: 'JetBrains Mono', monospace; color: var(--cyan); }
+  .nav-sep { color: var(--border); }
+  .nav-sub { font-size: 13px; color: var(--muted); }
+
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* Hero */
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--border); }
+  .hero h1 { font-size: 42px; font-weight: 700; letter-spacing: -1px; margin-bottom: 16px; }
+  .hero h1 span { color: var(--cyan); }
+  .hero p { font-size: 18px; color: var(--muted); max-width: 600px; }
+
+  /* Section */
+  .section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+  .section h2 { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+  .section h2 .num { color: var(--muted); font-weight: 400; font-size: 16px; margin-right: 8px; }
+  .section .desc { color: var(--muted); margin-bottom: 32px; font-size: 15px; }
+
+  /* Code block */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    background: var(--surface);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--cyan);
+  }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 16px 0;
+  }
+  pre .cmd { color: var(--cyan); }
+  pre .arg { color: var(--amber); }
+  pre .comment { color: #64748b; }
+
+  /* Badge row */
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+  .badge {
+    display: inline-block; padding: 4px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+  }
+  .badge-role { background: rgba(34,211,238,0.12); color: var(--cyan); }
+  .badge-frontend { background: rgba(167,139,250,0.12); color: var(--violet); }
+
+  /* Role grid */
+  .role-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .role-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.15s;
+  }
+  .role-card:hover { border-color: var(--cyan); }
+  .role-card .icon { font-size: 28px; margin-bottom: 12px; }
+  .role-card h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .role-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .role-card .focus-tag {
+    display: inline-block; font-size: 11px;
+    padding: 2px 8px; border-radius: 4px;
+    background: rgba(255,255,255,0.05);
+    color: var(--muted); margin-top: 10px;
+  }
+
+  /* Step list */
+  .step-list { list-style: none; counter-reset: step; }
+  .step-list li {
+    counter-increment: step;
+    padding: 20px 0 20px 52px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  .step-list li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: 20px;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: var(--cyan);
+  }
+  .step-list h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .step-list p { font-size: 13px; color: var(--muted); }
+
+  /* Flow diagram */
+  .flow {
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap; margin: 24px 0;
+    font-size: 13px;
+  }
+  .flow-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-weight: 600;
+  }
+  .flow-arrow { color: var(--cyan); font-size: 18px; }
+
+  /* Table */
+  table {
+    width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 13px;
+  }
+  th {
+    text-align: left; padding: 12px 16px;
+    background: var(--surface); color: var(--muted);
+    font-weight: 600; font-size: 12px;
+    border-bottom: 2px solid var(--border);
+  }
+  td {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+  }
+  td code { font-size: 12px; }
+
+  /* Tip box */
+  .tip {
+    background: rgba(34,211,238,0.06);
+    border: 1px solid rgba(34,211,238,0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-size: 13px;
+    color: var(--cyan);
+  }
+  .tip::before { content: '💡 '; }
+
+  /* Comparison cards */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .compare-card {
+    border-radius: 12px; padding: 24px; text-align: center;
+  }
+  .compare-card.before { background: rgba(251,113,133,0.06); border: 1px solid rgba(251,113,133,0.2); }
+  .compare-card.after { background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.2); }
+  .compare-card .label { font-size: 12px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  .compare-card.before .label { color: var(--rose); }
+  .compare-card.after .label { color: var(--green); }
+  .compare-card p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  .compare-card p strong { color: var(--text); }
+
+  /* Footer */
+  .footer { padding: 48px 0; text-align: center; color: var(--muted); font-size: 13px; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 28px; }
+    .compare { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-dot"></div>
+    <span class="nav-title">pm-review</span>
+    <span class="nav-sep">/</span>
+    <span class="nav-sub">需求评审大师 · 使用指南</span>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- Hero -->
+  <header class="hero">
+    <h1>用 AI 预演评审会，<br><span>提前发现需求疏漏</span></h1>
+    <p>AI 模拟前端、后端、设计、测试、业务方、老板 6 个角色，在评审会前预判所有可能的提问，并给出专业应对话术。</p>
+  </header>
+
+  <!-- 核心理念 -->
+  <section class="section">
+    <h2><span class="num">01</span>为什么需要需求评审大师</h2>
+    <p class="desc">需求评审会上被问到哑口无言？你的 PRD 可能已经写得很好了——只是缺了 6 个视角的提前审视。</p>
+
+    <div class="compare">
+      <div class="compare-card before">
+        <div class="label">没有预审</div>
+        <p>
+          评审会上被连续追问 → <strong>现场找答案</strong> → 讨论跑偏 → 评审超时 → 需求被打回重写<br><br>
+          散会后发现：<strong>"这些问题我明明可以提前想到"</strong>
+        </p>
+      </div>
+      <div class="compare-card after">
+        <div class="label">使用 pm-review</div>
+        <p>
+          提前暴露问题 → <strong>补充到 PRD 里</strong> → 评审会聚焦范围确认 → 各角色看到自己的关切已被覆盖<br><br>
+          评审结果：<strong>"想得挺全面的，没什么大问题，过"</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6个角色 -->
+  <section class="section">
+    <h2><span class="num">02</span>AI 模拟的 6 个角色</h2>
+    <p class="desc">每个角色从自己的专业领域出发提问，不跨角色、不笼统、分严重度。</p>
+
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="icon">🖥️</div>
+        <h4>前端开发</h4>
+        <p>关注交互实现、组件复用、状态管理、性能。会追问："加载态和错误态设计了吗？""这个组件需要复用吗？"</p>
+        <span class="focus-tag">交互 · 状态 · 性能</span>
+      </div>
+      <div class="role-card">
+        <div class="icon">🗄️</div>
+        <h4>后端开发</h4>
+        <p>关注数据模型、API 设计、并发安全。会追问："两个用户同时操作一条数据怎么处理？""数据量大时需要分页吗？"</p>
+        <span class="focus-tag">数据 · 接口 · 安全</span>
+      </div>
+      <div class="role-card">
+        <div class="icon">🎨</div>
+        <h4>设计师</h4>
+        <p>关注视觉一致性、交互规范、可用性。会追问："空状态有没有用户引导？""极端文本长度怎么处理？"</p>
+        <span class="focus-tag">一致性 · 交互 · 可用性</span>
+      </div>
+      <div class="role-card">
+        <div class="icon">🧪</div>
+        <h4>测试 / QA</h4>
+        <p>关注边界条件、异常路径、兼容性。会追问："最可能出 bug 的地方在哪？""弱网环境测试过吗？"</p>
+        <span class="focus-tag">边界 · 异常 · 兼容</span>
+      </div>
+      <div class="role-card">
+        <div class="icon">📊</div>
+        <h4>业务方 / 运营</h4>
+        <p>关注业务逻辑、用户价值、运营效率。会追问："这个真能解决用户痛点吗？""上线后怎么衡量效果？"</p>
+        <span class="focus-tag">价值 · 逻辑 · 效果</span>
+      </div>
+      <div class="role-card">
+        <div class="icon">👔</div>
+        <h4>老板 / 管理者</h4>
+        <p>关注战略对齐、ROI、时间资源。会追问："为什么现在做？""预计投入多少？""不做会怎样？"</p>
+        <span class="focus-tag">战略 · 资源 · 风险</span>
+      </div>
+    </div>
+
+    <div class="tip">
+      每个角色至少提出 3 个具体问题，关联到具体功能点。问题分三级：🔴 阻塞（不解决无法开发）/ 🟡 重要（影响质量）/ 🟢 建议（锦上添花）
+    </div>
+  </section>
+
+  <!-- 使用流程 -->
+  <section class="section">
+    <h2><span class="num">03</span>使用流程</h2>
+    <p class="desc">从输入到输出，4 步完成一次完整的模拟评审。</p>
+
+    <div class="flow">
+      <span class="flow-item">输入 PRD 或原型</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-item">AI 解析内容</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-item">6 角色模拟提问</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-item">生成评审报告</span>
+    </div>
+
+    <ol class="step-list">
+      <li>
+        <h4>启动 Skill</h4>
+        <p>在 Claude Code 中输入 <code>/pm-review</code>，然后把 PRD 文本或 HTML 原型粘贴进来。支持三种输入：纯 PRD、HTML 原型、PRD + 原型混合。</p>
+      </li>
+      <li>
+        <h4>AI 解析需求内容</h4>
+        <p>自动提取功能点、核心流程、数据模型。如果是 HTML 原型，还会检查每个页面的加载态、空状态、错误态、成功态四态覆盖。</p>
+      </li>
+      <li>
+        <h4>6 角色模拟评审</h4>
+        <p>每个角色从自己的领域出发，生成 3-5 个具体问题。问题分为 🔴阻塞 / 🟡重要 / 🟢建议 三级。相同问题自动合并去重。</p>
+      </li>
+      <li>
+        <h4>生成应对方案和报告</h4>
+        <p>每个阻塞问题配套：应对方案 + 追问预判 + 兜底话术。最终输出 .md 文件，可选额外生成 .docx 和 .html。</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 输入类型 -->
+  <section class="section">
+    <h2><span class="num">04</span>支持的输入类型</h2>
+    <p class="desc">不只是 PRD 文本，HTML 原型同样可以评审。</p>
+
+    <table>
+      <thead>
+        <tr><th>输入类型</th><th>识别方式</th><th>特别检查项</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>PRD / 需求文档</code></td>
+          <td>文本描述、功能列表、用户故事</td>
+          <td>功能完整性、逻辑一致性、角色权限</td>
+        </tr>
+        <tr>
+          <td><code>HTML 原型</code></td>
+          <td>.html 文件或 HTML 代码块</td>
+          <td>四态覆盖（加载/空/错误/成功）、组件复用、交互状态</td>
+        </tr>
+        <tr>
+          <td><code>PRD + 原型混合</code></td>
+          <td>同时包含文档和原型</td>
+          <td>交叉验证：原型是否实现了 PRD 描述的所有功能</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      HTML 原型输入时，Skill 会自动提取页面结构、交互元素、状态覆盖情况，并生成专门的状态覆盖检查表。
+    </div>
+  </section>
+
+  <!-- 输出示例 -->
+  <section class="section">
+    <h2><span class="num">05</span>输出物一览</h2>
+    <p class="desc">一份评审报告包含以下核心模块。</p>
+
+    <table>
+      <thead>
+        <tr><th>模块</th><th>内容</th><th>作用</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>评审概览仪表盘</td><td>问题总数、严重度分布、应对覆盖率</td><td>一眼看清评审健康度</td></tr>
+        <tr><td>角色评审详情</td><td>每个角色提出的问题 + 应对方案 + 追问预判 + 兜底话术</td><td>评审会的弹药库</td></tr>
+        <tr><td>应对话术库</td><td>通用应对框架 + 本产品场景专用话术</td><td>被突袭时不慌</td></tr>
+        <tr><td>改进清单</td><td>按优先级排列的改进项 + 关联问题 + 操作建议</td><td>评审后的行动指南</td></tr>
+        <tr><td>状态覆盖检查（原型输入）</td><td>每个页面的四种状态检查结果</td><td>原型完整度体检</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      完整示例见同级目录下的 <code>需求评审报告-示例.html</code>——以"订单管理系统（OMS）"为案例，22 个问题、5 个阻塞项、10 条改进建议。支持按角色/严重度筛选，可展开查看每个问题的完整应对方案。
+    </div>
+  </section>
+
+  <!-- 安装 -->
+  <section class="section">
+    <h2><span class="num">06</span>安装与配置</h2>
+    <p class="desc">一行命令安装，30 秒即可开始使用。</p>
+
+    <pre><span class="comment"># 安装 Skill</span>
+<span class="cmd">Copy-Item</span> skills\pm-review\SKILL.md <span class="arg">"$env:USERPROFILE\.claude\skills\pm-review\SKILL.md"</span>
+
+<span class="comment"># 安装 docx 生成依赖（可选，需要 Word 输出时）</span>
+<span class="cmd">pip install</span> <span class="arg">python-docx</span></pre>
+
+    <p style="margin-top: 16px; font-size: 13px; color: var(--muted);">
+      安装后重启 Claude Code，输入 <code>/pm-review</code> 即可触发。Skill 会自动识别输入类型——粘贴 PRD 文本、HTML 原型都可以。
+    </p>
+  </section>
+
+  <footer class="footer">
+    <p>pm-review Skill · AI PM 效率课程 · 第3章 产品设计</p>
+  </footer>
+
+</div>
+</body>
+</html>

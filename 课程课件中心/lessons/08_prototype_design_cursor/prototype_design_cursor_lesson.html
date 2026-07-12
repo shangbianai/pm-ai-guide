@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 原型设计 · Cursor 小程序原型课</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;--paper:#ffffff;--ink:#111827;--soft:#4b5563;--muted:#8b95a7;--line:rgba(17,24,39,.12);
+      --blue:#2563eb;--cyan:#06b6d4;--green:#22c55e;--amber:#f59e0b;--rose:#fb7185;--violet:#8b5cf6;
+      --shadow:0 28px 90px rgba(15,23,42,.16)
+    }
+    *{box-sizing:border-box}html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;color:var(--ink);
+      background:
+        radial-gradient(680px 420px at 0% 0%,rgba(37,99,235,.16),transparent 64%),
+        radial-gradient(720px 480px at 100% 4%,rgba(34,197,94,.13),transparent 62%),
+        radial-gradient(640px 460px at 65% 100%,rgba(245,158,11,.12),transparent 62%),
+        linear-gradient(180deg,#f6f7fb,#edf2f7);
+      overflow-x:hidden;
+    }
+    .topbar{position:sticky;top:0;z-index:80;background:rgba(246,247,251,.86);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:1440px;margin:0 auto;padding:13px 24px;display:flex;gap:14px;align-items:center}
+    .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));box-shadow:0 0 24px rgba(37,99,235,.42)}
+    .brand{font-weight:950;letter-spacing:.01em}.brand small{display:block;font-size:11px;color:var(--muted);font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+    .spacer{flex:1}.hint{font-size:13px;color:var(--muted)}kbd{border:1px solid var(--line);border-radius:6px;background:white;padding:1px 6px;color:var(--soft)}
+    .progress{height:4px;background:rgba(17,24,39,.06)}.progress span{display:block;height:100%;width:8.33%;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green),var(--amber));transition:.25s}
+    .deck{max-width:1480px;margin:0 auto;padding:22px 24px 108px}
+    .slide{display:none;min-height:780px;position:relative;overflow:hidden;border:1px solid var(--line);border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(250,252,255,.92));box-shadow:var(--shadow)}
+    .slide.active{display:block;animation:slideIn .34s ease}@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .slide:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(37,99,235,.045) 1px,transparent 1px),linear-gradient(rgba(37,99,235,.045) 1px,transparent 1px);background-size:46px 46px;mask-image:linear-gradient(180deg,black,transparent 82%)}
+    .slide:after{content:"";position:absolute;right:-160px;top:-160px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,.18),transparent 65%);pointer-events:none}
+    .inner{position:relative;z-index:1;min-height:780px;padding:52px 58px;display:grid;grid-template-columns:1.02fr .98fr;gap:42px;align-items:center}.inner.full{grid-template-columns:1fr}
+    .time-chip{position:absolute;right:28px;top:24px;z-index:3;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.78);backdrop-filter:blur(12px);padding:7px 12px;font-size:12px;color:var(--muted);font-weight:900}
+    .tag{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(255,255,255,.75);border-radius:999px;padding:6px 12px;color:var(--soft);font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:950;margin-bottom:18px}.tag:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 14px rgba(37,99,235,.55)}
+    h1{font-size:56px;line-height:1.08;margin:0 0 18px;letter-spacing:-.025em}h2{font-size:38px;line-height:1.18;margin:0 0 16px}h3{font-size:21px;margin:0 0 10px}p{font-size:19px;line-height:1.72;color:var(--soft);margin:0 0 12px}b{color:var(--ink)}ul{margin:10px 0 0 20px;padding:0}li{margin:7px 0;color:var(--soft);font-size:16px;line-height:1.58}
+    .hl{background:linear-gradient(120deg,var(--blue),var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .focus{margin-top:18px;border:1px solid rgba(37,99,235,.28);border-left:5px solid var(--blue);border-radius:16px;padding:15px 17px;background:linear-gradient(90deg,rgba(37,99,235,.10),rgba(34,197,94,.08));font-size:17px;font-weight:900;color:#1e3a8a;line-height:1.55}
+    .panel,.code,.phone-card,.board{border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(255,255,255,.55));padding:22px;box-shadow:0 14px 34px rgba(15,23,42,.06)}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .panel.blue{border-color:rgba(37,99,235,.32);background:linear-gradient(180deg,rgba(37,99,235,.08),rgba(255,255,255,.62))}.panel.green{border-color:rgba(34,197,94,.32);background:linear-gradient(180deg,rgba(34,197,94,.09),rgba(255,255,255,.62))}.panel.amber{border-color:rgba(245,158,11,.34);background:linear-gradient(180deg,rgba(245,158,11,.10),rgba(255,255,255,.62))}.panel.rose{border-color:rgba(251,113,133,.34);background:linear-gradient(180deg,rgba(251,113,133,.09),rgba(255,255,255,.62))}
+    .panel p,.panel li{font-size:16px;line-height:1.62}.pill{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:5px 10px;background:white;color:var(--soft);font-size:13px;font-weight:850;margin:4px 4px 0 0}
+    .cover{background:linear-gradient(135deg,rgba(37,99,235,.12),transparent 38%),linear-gradient(315deg,rgba(34,197,94,.16),transparent 42%),#fff}
+    .cover-visual{min-height:560px;position:relative;border-radius:32px;border:1px solid rgba(17,24,39,.14);background:linear-gradient(145deg,#0f172a,#172554 58%,#064e3b 140%);overflow:hidden;box-shadow:0 28px 80px rgba(15,23,42,.30)}
+    .cover-visual:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px);background-size:34px 34px}.cover-visual:after{content:"";position:absolute;inset:-40%;background:conic-gradient(from 120deg,transparent,rgba(37,99,235,.26),transparent 25%,rgba(34,197,94,.24),transparent 46%);animation:spin 13s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .proto-phone{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:230px;height:456px;border-radius:38px;background:#0b1120;border:8px solid #020617;box-shadow:0 30px 70px rgba(0,0,0,.42);padding:18px}.proto-screen{height:100%;border-radius:27px;background:linear-gradient(180deg,#f8fafc,#e0f2fe);padding:16px;color:#0f172a}.mini-top{height:78px;border-radius:20px;background:linear-gradient(135deg,#2563eb,#22c55e);margin-bottom:12px}.mini-line{height:12px;border-radius:999px;background:#cbd5e1;margin:10px 0}.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.mini-grid div{height:64px;border-radius:15px;background:white;border:1px solid #e2e8f0}
+    .float-card{position:absolute;z-index:4;border:1px solid rgba(255,255,255,.18);border-radius:18px;background:rgba(255,255,255,.10);backdrop-filter:blur(8px);color:white;padding:14px 16px;font-weight:950;animation:float 4s ease-in-out infinite}.float-card small{display:block;color:rgba(255,255,255,.62);font-size:11px;margin-top:4px}.fc1{left:44px;top:70px}.fc2{right:46px;top:115px;animation-delay:.7s}.fc3{left:62px;bottom:84px;animation-delay:1.3s}.fc4{right:58px;bottom:78px;animation-delay:1.9s}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+    .route{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.route .panel{min-height:250px}.route-num{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:grid;place-items:center;color:white;font-weight:950;margin-bottom:14px}
+    .value-map{display:grid;grid-template-columns:1fr 1fr;gap:18px}.value-card{border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.76);padding:20px;min-height:170px;position:relative;overflow:hidden}.value-card:before{content:"";position:absolute;right:-38px;top:-38px;width:110px;height:110px;border-radius:50%;background:rgba(37,99,235,.10)}.value-card b{display:block;font-size:22px;margin-bottom:8px}.value-card span{font-size:15px;color:var(--soft);line-height:1.62}.doc-stack{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.doc-card{border:1px solid var(--line);border-radius:18px;background:white;padding:18px;min-height:210px;box-shadow:0 14px 34px rgba(15,23,42,.06)}.doc-card code{display:inline-block;border-radius:8px;background:#eff6ff;color:#1d4ed8;padding:4px 7px;font-size:13px;margin-bottom:10px}.doc-card p{font-size:15px;line-height:1.6}.article-shot{border:1px solid var(--line);border-radius:24px;background:#111827;padding:16px;box-shadow:0 22px 60px rgba(15,23,42,.18)}.article-shot img{display:block;width:100%;border-radius:16px}.prompt-list{display:grid;gap:12px}.prompt-item{border:1px solid var(--line);border-radius:16px;background:white;padding:14px 16px}.prompt-item b{display:block;margin-bottom:5px}.prompt-item span{font-size:14px;color:var(--soft);line-height:1.55}.prompt-code{font-family:"SFMono-Regular",Consolas,monospace;font-size:13px;line-height:1.65;color:#0f766e;background:#f0fdfa;border:1px solid #ccfbf1;border-radius:16px;padding:16px;max-height:430px;overflow:auto;white-space:pre-wrap}
+    .matrix{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,255,255,.7)}.matrix th,.matrix td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:13px;text-align:left;vertical-align:top;font-size:15px;line-height:1.52}.matrix th{background:rgba(37,99,235,.08);color:#1e3a8a}.matrix tr:last-child td{border-bottom:0}.matrix td:last-child,.matrix th:last-child{border-right:0}
+    .wire-hifi{display:grid;grid-template-columns:1fr 1fr;gap:18px}.mock{min-height:380px;border:1px solid var(--line);border-radius:24px;padding:18px;background:#f8fafc}.mock.low{background:#fff}.wire-block{border:2px solid #94a3b8;border-radius:14px;background:transparent;height:64px;margin:10px 0}.wire-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hifi-hero{height:108px;border-radius:20px;background:linear-gradient(135deg,#2563eb,#06b6d4,#22c55e);margin-bottom:12px}.hifi-card{height:74px;border:1px solid #dbeafe;border-radius:16px;background:white;margin:10px 0;box-shadow:0 10px 24px rgba(37,99,235,.08)}
+    .rule-stack{display:grid;grid-template-columns:240px 1fr;gap:20px}.rule-rail{display:grid;gap:10px}.rule-rail div{border:1px solid var(--line);border-radius:14px;padding:13px;background:white;font-weight:950;color:#334155}.rule-content{border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,#0f172a,#1e293b);color:white;padding:24px;min-height:420px}.rule-content p{color:#cbd5e1}
+    .workflow{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.wf{border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.72);padding:16px;min-height:160px;position:relative}.wf:after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);font-size:22px;font-weight:950;color:var(--blue)}.wf:last-child:after{display:none}.num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--cyan));color:white;font-weight:950;margin-bottom:10px}.wf b{display:block;margin-bottom:7px}.wf span{font-size:13px;color:var(--soft);line-height:1.48}
+    .code{font-family:"SFMono-Regular",Consolas,monospace;color:#0f766e;font-size:14px;line-height:1.7;white-space:pre-wrap;background:#f0fdfa;max-height:520px;overflow:auto}
+    .demo-link{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:white;background:linear-gradient(135deg,var(--blue),var(--green));border-radius:999px;padding:12px 18px;font-weight:950;margin-top:14px}
+    .controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:95;border:1px solid var(--line);background:rgba(255,255,255,.88);backdrop-filter:blur(14px);padding:10px;border-radius:999px;box-shadow:0 18px 48px rgba(15,23,42,.15)}
+    button{border:0;border-radius:999px;padding:10px 16px;font-weight:950;background:linear-gradient(135deg,var(--blue),var(--cyan));color:white;cursor:pointer}button.secondary{background:rgba(255,255,255,.78);color:var(--soft);border:1px solid var(--line)}.page-no{color:var(--soft);font-size:13px;min-width:62px;text-align:center}
+    .note-trigger,.draw-toggle{position:fixed;bottom:24px;z-index:98;border:1px solid var(--line);background:rgba(255,255,255,.92);color:#1f2937;box-shadow:0 16px 44px rgba(15,23,42,.14)}.note-trigger{right:24px;width:42px;height:42px;padding:0;font-size:20px}.draw-toggle{right:78px}
+    #drawCanvas{position:fixed;inset:0;z-index:70;pointer-events:none}body.drawing #drawCanvas{pointer-events:auto;cursor:crosshair}
+    .draw-toolbar{position:fixed;right:24px;top:90px;z-index:96;display:none;gap:8px;align-items:center;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);padding:9px;box-shadow:0 16px 44px rgba(15,23,42,.14)}body.drawing .draw-toolbar{display:flex}.color-btn{width:30px;height:30px;border-radius:50%;border:2px solid rgba(17,24,39,.18);padding:0}.color-btn.active{outline:3px solid rgba(37,99,235,.18)}.red{background:#ef4444}.yellow{background:#facc15}.blue-pen{background:#2563eb}
+    .note-modal{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,.40)}.note-modal.open{display:flex}.note-box{width:min(700px,100%);border:1px solid var(--line);border-radius:20px;background:#fff;padding:24px;box-shadow:0 28px 90px rgba(15,23,42,.28)}.note-box p{font-size:16px}.note-actions{display:flex;justify-content:flex-end;margin-top:18px}
+    @media(max-width:980px){.inner,.inner.full,.grid-2,.grid-3,.grid-4,.route,.value-map,.doc-stack,.wire-hifi,.rule-stack,.workflow{grid-template-columns:1fr;padding:30px}.wf:after{display:none}h1{font-size:40px}.hint{display:none}.time-chip{position:static;display:inline-flex;margin-bottom:12px}}
+  </style>
+</head>
+<body>
+  <canvas id="drawCanvas"></canvas>
+  <div class="topbar"><div class="topbar-inner"><span class="dot"></span><div class="brand">AI 增强型产品经理 <small>Chapter 3 · 原型设计</small></div><div class="spacer"></div><div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页 · 标注时也可翻页</div></div><div class="progress"><span id="bar"></span></div></div>
+  <main class="deck">
+    <section class="slide cover active" data-note="讲师提示：开场先把这一节定位成“从需求到可点击原型”的能力，而不是单纯介绍某个工具。">
+      <div class="time-chip">00:00 - 01:30</div>
+      <div class="inner">
+        <div><div class="tag">Prototype Design</div><h1>用 AI 把需求变成<br><span class="hl">可点击的产品原型</span></h1><p>这一节从小程序移动端原型切入，讲清楚 Cursor、Codex 和 Skills 在原型设计里的分工：既要快，也要稳，还要能持续迭代。</p><div class="focus">核心目标：不是“让 AI 画几张页面”，而是搭建一套可以复用、可约束、可交付的原型工作流。</div></div>
+        <div class="cover-visual"><div class="float-card fc1">需求输入<small>场景 / 用户 / 任务</small></div><div class="float-card fc2">项目规则<small>一致性约束</small></div><div class="float-card fc3">高低保真<small>不同阶段不同精度</small></div><div class="float-card fc4">可点击原型<small>移动端 + 后台</small></div><div class="proto-phone"><div class="proto-screen"><div class="mini-top"></div><div class="mini-line"></div><div class="mini-line"></div><div class="mini-grid"><div></div><div></div><div></div><div></div></div></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这里承接学员过去使用 Axure/Figma/墨刀的经验，指出 AI 时代改变的是迭代速度和交付形态。">
+      <div class="time-chip">01:30 - 03:30</div>
+      <div class="inner">
+        <div><div class="tag">Why</div><h1>原型设计的难点，已经不只是“画出来”</h1><p>现在很多 AI 工具都能生成界面，但真正的产品原型要解决的是：需求是否讲清楚、交互是否能跑通、团队是否能理解、后续迭代是否不跑偏。</p></div>
+        <div class="grid-2"><div class="panel rose"><h3>过去的痛点</h3><ul><li>画图快，改全局慢</li><li>页面像，但流程断</li><li>需求口径容易漂移</li><li>很难和真实开发衔接</li></ul></div><div class="panel green"><h3>AI 后的新机会</h3><ul><li>从需求直接生成页面</li><li>通过代码快速复用组件</li><li>用规则文件保持一致性</li><li>让原型更接近可交付 Demo</li></ul></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这一页要把课程价值讲高一点：不是学一个工具，而是学会让 AI 输出可评审、可协作、可持续迭代的原型资产。">
+      <div class="time-chip">03:30 - 06:00</div>
+      <div class="inner">
+        <div><div class="tag">Value</div><h1>这节课的价值：把原型变成<span class="hl">需求协作资产</span></h1><p>学员真正要带走的，不是“会让 AI 生成几个页面”，而是学会把需求、规则、交互、数据和交付说明打包成一个可复用的工作流。</p><div class="focus">AI 原型设计的核心价值：更快澄清需求，更早暴露问题，更稳定地推进多轮迭代。</div></div>
+        <div class="value-map"><div class="value-card"><b>需求澄清</b><span>把模糊需求变成页面、流程和状态，让业务方更容易判断“是不是我要的”。</span></div><div class="value-card"><b>团队对齐</b><span>研发、设计、运营看到同一个可点击版本，减少口头理解偏差。</span></div><div class="value-card"><b>迭代约束</b><span>通过项目规则和用户规则约束 AI，避免改一个功能带偏整个系统。</span></div><div class="value-card"><b>交付沉淀</b><span>原型、规则、提示词、验收清单都能沉淀为下一次项目的起点。</span></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这页给出总览，不急着深入工具细节，让学员知道为什么 Cursor 适合有项目包的场景。">
+      <div class="time-chip">06:00 - 08:30</div>
+      <div class="inner full">
+        <div><div class="tag">Routes</div><h1>三种路线：Cursor、Codex、Skills</h1><div class="route"><div class="panel blue"><div class="route-num">1</div><h3>Cursor：基于项目包改原型</h3><p>适合你已经有小程序、H5、后台项目包。AI 能读懂项目结构，直接改页面、组件和交互。</p><span class="pill">最适合本节实操</span></div><div class="panel green"><div class="route-num">2</div><h3>Codex：从零做可运行原型</h3><p>适合快速生成 HTML 原型、后台 Demo、课程展示页，边聊边改，迭代速度很快。</p><span class="pill">适合无代码包起步</span></div><div class="panel amber"><div class="route-num">3</div><h3>Skills：沉淀标准流程</h3><p>把输入、规则、产出格式固定下来，让 AI 按同一套方法生成低保真、高保真和交付说明。</p><span class="pill">适合团队复用</span></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这一页用作承接，说明 Cursor + 提示词适合快速做一个能演示的原型，尤其是简单场景或第一版探索。">
+      <div class="time-chip">08:30 - 11:00</div>
+      <div class="inner">
+        <div><div class="tag">Cursor Method</div><h1>先从简单方法开始：Cursor + 提示词快速出原型</h1><p>对于基础场景，最容易上手的方法是：把页面布局、导航、手机模拟器、核心页面和交互一次说清楚，让 Cursor 直接生成一个 HTML 单页原型。</p><div class="focus">适用场景：快速验证想法、做汇报演示、给业务方看第一版体验，不适合直接替代复杂系统的长期迭代规则。</div></div>
+        <div class="article-shot"><img src="assets/mobile-prototype-reference.png" alt="Cursor 移动端原型参考图"></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：强调提示词的价值不是神奇咒语，而是把页面结构、内容、交互和技术约束讲完整。">
+      <div class="time-chip">11:00 - 13:30</div>
+      <div class="inner">
+        <div><div class="tag">Prompt Value</div><h1>提示词的价值：把“我要原型”拆成可执行任务</h1><div class="prompt-list"><div class="prompt-item"><b>先定义布局</b><span>左侧导航 + 右侧手机屏，让多页面演示有稳定容器。</span></div><div class="prompt-item"><b>再定义页面</b><span>首页、分类、购物车、订单、个人中心，每个页面写清楚模块。</span></div><div class="prompt-item"><b>补交互要求</b><span>点击导航切换页面，轮播、加购、弹窗、表单都可以逐轮追加。</span></div><div class="prompt-item"><b>最后迭代修正</b><span>截图给 AI，描述 bug，让它继续修视觉、交互和响应式。</span></div></div></div>
+        <div class="prompt-code">请扮演资深前端开发工程师和 UI 设计师，生成一个 HTML 单页面移动端 App 原型。
+
+整体布局：
+- 左栏作为导航区域，固定宽度，展示：首页、商品分类、购物车、我的订单、个人中心。
+- 右栏模拟手机屏幕，宽度 375px，高度 667px，居中显示。
+
+页面与交互：
+- 首页包含轮播图、分类入口、热门推荐商品。
+- 商品分类页左侧一级分类，右侧展示二级分类或商品。
+- 购物车页包含商品、数量增减、合计金额和结算按钮。
+- 点击左侧导航时，右侧手机区域平滑切换内容，不刷新页面。
+
+视觉风格：
+- 简洁、现代、美观，符合主流移动端 App 设计趋势。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：强调规则文件是重系统迭代的关键，不是可有可无的说明文档。">
+      <div class="time-chip">13:30 - 16:00</div>
+      <div class="inner">
+        <div><div class="tag">Rules</div><h1>重系统原型，必须先有项目规则</h1><p>如果每次都只让 AI “帮我改一下页面”，很容易改 A 功能时带歪 B 功能。真正可持续的做法，是把产品规则、UI 规则、交互规则、数据规则写进项目约束。</p><div class="focus">规则不是限制创造力，而是让 AI 在同一个产品世界里持续工作。</div></div>
+        <div class="rule-stack"><div class="rule-rail"><div>产品定位</div><div>信息架构</div><div>组件规范</div><div>交互状态</div><div>命名与目录</div></div><div class="rule-content"><h3 style="color:white">项目规则应该约束什么？</h3><p>页面新增前，先判断属于哪个业务域；组件新增前，先查是否已有同类组件；交互改动前，确认入口、状态、空态、异常态和下一步路径。</p><p>这类规则可以放进 `AGENTS.md`、`.cursorrules`、`CLAUDE.md` 或单独的 prototype-rules 文档里。</p></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这里要讲清楚规则不是一句提示词，而是一组可以放进项目里的文档。">
+      <div class="time-chip">16:00 - 18:00</div>
+      <div class="inner full">
+        <div><div class="tag">Rules Kit</div><h1>不要只给 AI 提示词，还要给它规则系统</h1><p>对于原型设计，规则系统通常由四类文档组成：项目规则、用户偏好规则、业务字典、验收清单。它们让 AI 知道什么能改、什么不能乱改、每次迭代要检查什么。</p><div class="doc-stack"><div class="doc-card"><code>AGENTS.md</code><h3>项目规则</h3><p>约束目录、组件、业务对象、交互状态和输出格式。</p></div><div class="doc-card"><code>.cursorrules</code><h3>工具规则</h3><p>给 Cursor 读取，约束代码风格、原型保真度和修改流程。</p></div><div class="doc-card"><code>user-rules.md</code><h3>个人偏好</h3><p>沉淀你对后台、小程序、课程页面的审美和交付要求。</p></div><div class="doc-card"><code>checklist.md</code><h3>验收清单</h3><p>每轮修改后检查页面、路径、状态、数据和边界条件。</p></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这页讲低保真和高保真的取舍，避免学员一上来追求精美页面。">
+      <div class="time-chip">18:00 - 20:30</div>
+      <div class="inner full">
+        <div><div class="tag">Fidelity</div><h1>低保真和高保真，不是审美差异，是阶段差异</h1><div class="wire-hifi"><div class="mock low"><h3>低保真：先验证结构</h3><p>适合早期讨论：页面有哪些、入口在哪里、主流程是否闭环。</p><div class="wire-block"></div><div class="wire-row"><div class="wire-block"></div><div class="wire-block"></div></div><div class="wire-block"></div></div><div class="mock"><h3>高保真：再验证体验</h3><p>适合评审和演示：品牌感、状态反馈、按钮层级、真实内容密度。</p><div class="hifi-hero"></div><div class="hifi-card"></div><div class="hifi-card"></div><div class="hifi-card"></div></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这里讲原型作为需求传递载体，要把用户路径、业务规则和边界条件带进去。">
+      <div class="time-chip">20:30 - 23:30</div>
+      <div class="inner">
+        <div><div class="tag">Carrier</div><h1>原型是需求传递的载体，不只是界面截图</h1><p>一个好原型要让研发、设计、业务方都能看懂：用户从哪里来，要完成什么任务，系统给什么反馈，异常情况怎么处理。</p></div>
+        <div class="grid-2"><div class="panel blue"><h3>用户路径</h3><p>入口、关键操作、下一步去向。</p></div><div class="panel green"><h3>交互状态</h3><p>默认、加载、成功、失败、空态。</p></div><div class="panel amber"><h3>业务规则</h3><p>权限、校验、额度、流程限制。</p></div><div class="panel rose"><h3>交付说明</h3><p>页面清单、字段说明、验收点。</p></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这里要强调小程序和后台是两个项目，不要混在一个页面里做，这样更接近真实交付。">
+      <div class="time-chip">23:30 - 26:00</div>
+      <div class="inner">
+        <div><div class="tag">Demo</div><h1>本节样例拆成两个项目</h1><p>小程序端负责用户体验：手机壳居中、左侧抽屉导航、一级/二级功能、高低保真切换。后台端负责运营管理：登录注册、工作台、商品、订单、会员、门店和系统设置。</p><a class="demo-link" href="miniapp_prototype.html" target="_blank">打开小程序原型</a> <a class="demo-link" href="admin_operations_prototype.html" target="_blank">打开后台原型</a></div>
+        <div class="phone-card"><table class="matrix"><thead><tr><th>项目</th><th>重点</th><th>为什么分开</th></tr></thead><tbody><tr><td>小程序</td><td>用户路径、页面层级、端上交互、真实内容密度</td><td>它是给用户看的，重点是体验闭环。</td></tr><tr><td>后台</td><td>登录注册、权限、配置、数据、审核、运营动作</td><td>它是给团队用的，重点是管理闭环。</td></tr><tr><td>共同规则</td><td>同一套商品、订单、会员、活动口径</td><td>避免两个原型说的不是同一个业务。</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这一页先讲 Codex 从零做 Demo 的路径，后面拿到 Cursor 项目包后再讲基于项目包迭代。">
+      <div class="time-chip">26:00 - 29:00</div>
+      <div class="inner full">
+        <div><div class="tag">Codex Workflow</div><h1>用 Codex 从零做原型的推荐流程</h1><div class="workflow"><div class="wf"><span class="num">1</span><b>先拆项目</b><span>小程序和后台分别建 HTML。</span></div><div class="wf"><span class="num">2</span><b>定义信息架构</b><span>一级功能、二级功能、导航规则。</span></div><div class="wf"><span class="num">3</span><b>先做低保真</b><span>验证结构、路径和状态。</span></div><div class="wf"><span class="num">4</span><b>再做高保真</b><span>补图形、内容、按钮和反馈。</span></div><div class="wf"><span class="num">5</span><b>补可交互点</b><span>轮播、切换、加购、登录。</span></div><div class="wf"><span class="num">6</span><b>写交付说明</b><span>同步规则、提示词和验收点。</span></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这里给一份可复制给 Codex 或 Cursor 的提示词，重点是先要求计划，再要求实现。">
+      <div class="time-chip">29:00 - 32:00</div>
+      <div class="inner">
+        <div><div class="tag">Prompt</div><h1>提示词：让 AI 先拆清楚，再动手</h1><p>不要只说“帮我做一个原型”。要把项目拆分、保真度、导航层级、交互点和输出文件说清楚。</p></div>
+        <div class="code">请做两个独立原型项目：
+1. 小程序端：miniapp_prototype.html
+2. 后台运营端：admin_operations_prototype.html
+
+业务：咖啡点单产品 CityCup。
+
+小程序要求：
+- 手机壳居中，使用接近真实 iPhone Pro Max 的外观。
+- 左侧是可收起抽屉导航，包含一级功能和多个二级功能。
+- 顶部要有小程序胶囊按钮样式。
+- 支持高保真 / 低保真切换。
+- 首页轮播、换一批、菜单分类、加购、商品规格、订单、会员都要能点击。
+
+后台要求：
+- 单独 HTML，包含登录、注册和进入管理台。
+- 包含运营总览、活动配置、商品管理、订单履约、会员运营、门店管理、系统设置。
+- 支持高保真 / 低保真切换。
+
+请先输出实现计划，再开始写代码。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这一页讲项目规则，一定要和前面的两个 Demo 联系起来：两个项目要共享业务口径。">
+      <div class="time-chip">32:00 - 34:30</div>
+      <div class="inner">
+        <div><div class="tag">Rules</div><h1>项目规则：保证两个原型讲的是同一个业务</h1><p>小程序和后台分开做以后，最容易出现的问题是：端上叫“券包”，后台叫“优惠活动”；端上有“取餐码”，后台没有核销状态。规则文件就是用来避免这种口径漂移。</p></div>
+        <div class="code"># Prototype Project Rules
+
+统一业务对象：
+- 商品：名称、价格、规格、库存、上下架
+- 订单：支付、制作、取餐、退款、异常
+- 会员：等级、积分、券包、成长值
+- 活动：首页轮播、专题、优惠券、资源位
+
+统一交互要求：
+- 小程序端所有一级入口必须有返回路径。
+- 后台端所有配置项必须能对应到小程序展示位置。
+- 高保真展示真实内容密度，低保真只保留结构。
+- 新增二级功能时，必须同步更新导航、页面标题、状态和验收点。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这一页讲踩坑，可以帮助学员建立判断力，不只是复制提示词。">
+      <div class="time-chip">34:30 - 36:30</div>
+      <div class="inner full">
+        <div><div class="tag">Pitfalls</div><h1>容易踩的坑：AI 原型不是越花越好</h1><div class="grid-4"><div class="panel rose"><h3>项目混在一起</h3><p>小程序和后台放进同一页，看起来热闹，但不利于真实交付。</p></div><div class="panel amber"><h3>只有一级页面</h3><p>没有二级功能，原型很像截图，不能展示真实流程。</p></div><div class="panel blue"><h3>高低保真混乱</h3><p>早期过度追求视觉，反而掩盖结构问题。</p></div><div class="panel green"><h3>规则没有沉淀</h3><p>每次靠口头提醒，下一轮修改就容易失控。</p></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：讲部署时不要展开太深，突出“评审方能打开、能评论、能回看版本”。">
+      <div class="time-chip">36:30 - 38:00</div>
+      <div class="inner">
+        <div><div class="tag">Deploy</div><h1>原型最好能部署成一个链接</h1><p>AI 原型的交付价值，不只是你电脑上能跑，而是业务方、设计、研发都能打开同一个版本，围绕同一个页面讨论。</p></div>
+        <div class="grid-2"><div class="panel blue"><h3>本地预览</h3><p>适合个人快速迭代。用 `localhost` 验证交互，不适合作为最终评审地址。</p></div><div class="panel green"><h3>静态部署</h3><p>HTML 原型可用 GitHub Pages、Vercel、Netlify 或内部静态服务托管。</p></div><div class="panel amber"><h3>小程序预览</h3><p>小程序项目可用开发者工具生成预览码，适合移动端真实体验。</p></div><div class="panel rose"><h3>版本留痕</h3><p>每轮评审保留版本号、变更点和待确认问题，避免口头共识丢失。</p></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这一页把“怎么评价一个原型”讲成检查清单，帮助学员建立质量标准。">
+      <div class="time-chip">38:00 - 40:00</div>
+      <div class="inner full">
+        <div><div class="tag">Checklist</div><h1>一个 AI 原型是否合格，看这 8 个点</h1><table class="matrix"><thead><tr><th>检查项</th><th>要看什么</th><th>为什么重要</th></tr></thead><tbody><tr><td>目标清楚</td><td>页面服务哪个用户任务</td><td>避免为了好看而堆界面</td></tr><tr><td>路径闭环</td><td>入口、操作、反馈、退出</td><td>能真实演示用户完成任务</td></tr><tr><td>状态完整</td><td>空态、异常态、成功态</td><td>研发评估时不会漏边界</td></tr><tr><td>规则一致</td><td>组件、颜色、命名、字段</td><td>多轮迭代不跑偏</td></tr><tr><td>数据可信</td><td>文案和字段像真实业务</td><td>评审时更容易做判断</td></tr><tr><td>端侧联动</td><td>小程序和后台能对应</td><td>看见完整业务链路</td></tr><tr><td>可部署</td><td>能打开、能分享、能回看</td><td>降低沟通成本</td></tr><tr><td>可继续改</td><td>代码结构和说明清晰</td><td>下一轮 AI 还能接着做</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：结尾自然承接到下一步实操，打开项目包或互动 Demo 都可以。">
+      <div class="time-chip">40:00 - 41:00</div>
+      <div class="inner">
+        <div><div class="tag">Review</div><h1>回顾重点：AI 原型设计有什么价值</h1><p>第一，它能把需求更快变成可点击体验。</p><p>第二，它能通过规则文件保证长期一致性。</p><p>第三，它能同时支持低保真讨论和高保真评审。</p><p>第四，它能把小程序、后台和交付说明连成一个完整链路。</p><div class="focus">接下来进入实操环节：用项目包和规则文件，跑一遍小程序原型的生成与迭代。</div></div>
+        <div class="panel green"><h3>一句话带走</h3><p style="font-size:28px;line-height:1.45;font-weight:950;color:#064e3b">好的 AI 原型，不是一次生成，而是可约束、可评审、可继续迭代。</p></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls"><button class="secondary" id="prev">上一页</button><span class="page-no" id="pageNo">1 / 12</span><button id="next">下一页</button></div>
+  <button class="draw-toggle" id="drawToggle">标注</button><button class="note-trigger" id="noteBtn">?</button>
+  <div class="draw-toolbar"><button class="color-btn red active" data-color="#ef4444" title="红色"></button><button class="color-btn yellow" data-color="#facc15" title="黄色"></button><button class="color-btn blue-pen" data-color="#2563eb" title="蓝色"></button><button class="secondary" id="clearDraw">清空</button><button class="secondary" id="exitDraw">退出</button></div>
+  <div class="note-modal" id="noteModal"><div class="note-box"><h3>讲师备注</h3><p id="noteText"></p><div class="note-actions"><button id="closeNote">关闭</button></div></div></div>
+  <script>
+    const slides=[...document.querySelectorAll('.slide')],bar=document.getElementById('bar'),pageNo=document.getElementById('pageNo'),noteText=document.getElementById('noteText'),noteModal=document.getElementById('noteModal');let current=0;
+    function show(i){current=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,idx)=>s.classList.toggle('active',idx===current));bar.style.width=`${((current+1)/slides.length)*100}%`;pageNo.textContent=`${current+1} / ${slides.length}`;noteText.textContent=slides[current].dataset.note||'这一页没有额外备注。'}
+    document.getElementById('prev').onclick=()=>show(current-1);document.getElementById('next').onclick=()=>show(current+1);
+    document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')show(current-1);if(e.key==='ArrowRight'||e.key===' ')show(current+1);if(e.key==='Escape')noteModal.classList.remove('open')});
+    document.getElementById('noteBtn').onclick=()=>{noteText.textContent=slides[current].dataset.note||'这一页没有额外备注。';noteModal.classList.add('open')};document.getElementById('closeNote').onclick=()=>noteModal.classList.remove('open');noteModal.onclick=e=>{if(e.target===noteModal)noteModal.classList.remove('open')};show(0);
+    const canvas=document.getElementById('drawCanvas'),ctx=canvas.getContext('2d');let drawing=false,pen='#ef4444';
+    function resize(){const img=ctx.getImageData(0,0,canvas.width||1,canvas.height||1);canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.putImageData(img,0,0);ctx.scale(devicePixelRatio,devicePixelRatio);ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=5}
+    resize();addEventListener('resize',resize);
+    canvas.addEventListener('pointerdown',e=>{drawing=true;ctx.beginPath();ctx.moveTo(e.clientX,e.clientY)});
+    canvas.addEventListener('pointermove',e=>{if(!drawing)return;ctx.strokeStyle=pen;ctx.lineTo(e.clientX,e.clientY);ctx.stroke()});
+    ['pointerup','pointerleave','pointercancel'].forEach(evt=>canvas.addEventListener(evt,()=>drawing=false));
+    document.getElementById('drawToggle').onclick=()=>{document.body.classList.toggle('drawing');document.getElementById('drawToggle').textContent=document.body.classList.contains('drawing')?'标注中':'标注'};
+    document.getElementById('exitDraw').onclick=()=>{document.body.classList.remove('drawing');document.getElementById('drawToggle').textContent='标注'};
+    document.getElementById('clearDraw').onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
+    document.querySelectorAll('.color-btn').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.color-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');pen=btn.dataset.color});
+  </script>
+</body>
+</html>

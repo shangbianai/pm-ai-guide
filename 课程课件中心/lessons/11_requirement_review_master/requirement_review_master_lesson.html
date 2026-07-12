@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>需求评审大师 · AI 产品经理课程</title>
+  <style>
+    :root{
+      --bg:#081018;--panel:#101b27;--panel2:#142536;--ink:#f6fbff;--soft:#c4d3df;--muted:#7890a4;
+      --cyan:#3ce6d4;--blue:#6aa8ff;--amber:#f0b35a;--red:#ff6b7a;--green:#79e29a;--purple:#c79bff;
+      --line:rgba(211,235,255,.16);--shadow:0 28px 90px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      background:
+        radial-gradient(900px 580px at 15% 8%,rgba(60,230,212,.18),transparent 62%),
+        radial-gradient(760px 520px at 88% 5%,rgba(106,168,255,.15),transparent 60%),
+        linear-gradient(180deg,#071018,#0b1420 55%,#060b12);
+      overflow-x:hidden;
+    }
+    body:before{
+      content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px),
+        linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px);
+      background-size:52px 52px;mask-image:linear-gradient(180deg,#000,transparent 85%);
+    }
+    .topbar{position:sticky;top:0;z-index:80;background:rgba(6,12,20,.84);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:1520px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:14px}
+    .sig{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--cyan),var(--blue));box-shadow:0 0 34px rgba(60,230,212,.28);display:grid;place-items:center;color:#061018;font-weight:950}
+    .brand{font-weight:950;font-size:21px;line-height:1.05}.brand small{display:block;margin-top:5px;color:var(--muted);font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:900}
+    .spacer{flex:1}.hint{font-size:13px;color:var(--muted)}kbd{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:7px;padding:1px 7px;color:var(--soft)}
+    .progress{height:4px;background:rgba(255,255,255,.06)}.progress span{display:block;width:7.69%;height:100%;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--amber));transition:.25s}
+    .deck{max-width:1520px;margin:0 auto;padding:24px 24px 108px}.slide{display:none;position:relative;overflow:hidden;min-height:790px;border:1px solid var(--line);border-radius:28px;background:linear-gradient(145deg,rgba(16,27,39,.96),rgba(8,16,26,.94));box-shadow:var(--shadow)}
+    .slide.active{display:block;animation:in .28s ease}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .slide:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 20%,rgba(60,230,212,.12),transparent 26%),radial-gradient(circle at 88% 75%,rgba(240,179,90,.10),transparent 24%);pointer-events:none}
+    .inner{position:relative;z-index:1;min-height:790px;padding:58px 64px;display:grid;grid-template-columns:1.02fr .98fr;gap:44px;align-items:center}.inner.full{grid-template-columns:1fr}
+    .time-chip{position:absolute;right:28px;top:24px;z-index:5;border:1px solid var(--line);background:rgba(255,255,255,.07);border-radius:999px;padding:7px 12px;font-size:12px;color:var(--muted);font-weight:900}
+    .tag{display:inline-flex;gap:9px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:999px;padding:8px 14px;margin-bottom:18px;color:var(--soft);font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:950}
+    .tag:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 18px var(--cyan)}
+    h1{font-size:58px;line-height:1.08;margin:0 0 18px;letter-spacing:0;font-weight:950}h2{font-size:38px;line-height:1.18;margin:0 0 16px}h3{font-size:21px;margin:0 0 10px}
+    p{font-size:19px;line-height:1.72;color:var(--soft);margin:0 0 12px}.hl{background:linear-gradient(120deg,var(--cyan),var(--blue),var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .focus{margin-top:18px;border:1px solid rgba(60,230,212,.34);border-left:5px solid var(--cyan);border-radius:17px;padding:16px 18px;background:linear-gradient(90deg,rgba(60,230,212,.12),rgba(106,168,255,.08));font-size:17px;font-weight:900;line-height:1.55;color:#dffefa}
+    .panel,.code{border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.045));padding:22px;box-shadow:0 14px 36px rgba(0,0,0,.16)}
+    .panel p,.panel li{font-size:16px}.panel.cyan{border-color:rgba(60,230,212,.35)}.panel.blue{border-color:rgba(106,168,255,.34)}.panel.amber{border-color:rgba(240,179,90,.36)}.panel.red{border-color:rgba(255,107,122,.35)}.panel.green{border-color:rgba(121,226,154,.35)}.panel.purple{border-color:rgba(199,155,255,.35)}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.grid-6{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+    ul{margin:10px 0 0 20px;padding:0}li{margin:7px 0;color:var(--soft);font-size:16px;line-height:1.58}
+    .war-room{min-height:570px;border:1px solid var(--line);border-radius:32px;background:radial-gradient(circle at 50% 44%,rgba(60,230,212,.18),transparent 32%),linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));padding:28px;position:relative;overflow:hidden}
+    .tabletop{position:absolute;left:50%;top:50%;width:300px;height:190px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(60,230,212,.38);background:rgba(60,230,212,.08);box-shadow:0 0 80px rgba(60,230,212,.13);display:grid;place-items:center;text-align:center;font-weight:950;color:#eaffff}
+    .seat{position:absolute;width:130px;border:1px solid var(--line);border-radius:17px;background:rgba(6,14,22,.74);padding:13px;text-align:center}.seat b{display:block}.seat span{display:block;font-size:12px;color:var(--muted);margin-top:4px}.s1{left:36px;top:55px}.s2{right:40px;top:58px}.s3{left:30px;bottom:72px}.s4{right:36px;bottom:74px}.s5{left:50%;top:30px;transform:translateX(-50%)}.s6{left:50%;bottom:38px;transform:translateX(-50%)}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;align-items:stretch}.step{position:relative;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.06);padding:18px}.step:after{content:"";position:absolute;right:-12px;top:50%;width:10px;height:2px;background:var(--cyan)}.step:last-child:after{display:none}.step strong{display:block;color:var(--cyan);font-size:25px;margin-bottom:10px}.step p{font-size:15px;line-height:1.55}
+    .role-board{display:grid;grid-template-columns:240px 1fr;gap:18px}.role-tabs{display:grid;gap:10px}.role-tab{border:1px solid var(--line);background:rgba(255,255,255,.055);color:var(--soft);border-radius:14px;padding:13px;text-align:left}.role-tab.active{background:linear-gradient(90deg,rgba(60,230,212,.18),rgba(106,168,255,.10));color:#fff;border-color:rgba(60,230,212,.45)}
+    .role-card{min-height:400px}.role-card .q{border-left:4px solid var(--amber);padding:9px 0 9px 14px;margin-top:13px;color:var(--soft);font-size:17px;line-height:1.58}
+    .mode-tabs{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}.mode-tab{border:1px solid var(--line);background:rgba(255,255,255,.055);color:var(--soft);border-radius:999px;padding:10px 15px;font-weight:950}.mode-tab.active{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#061018}.mode-content{display:none}.mode-content.active{display:block}
+    table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,255,255,.045)}th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:13px;text-align:left;vertical-align:top;font-size:15px;line-height:1.52;color:var(--soft)}th{background:rgba(60,230,212,.10);color:#eaffff}tr:last-child td{border-bottom:0}td:last-child,th:last-child{border-right:0}
+    .code{font-family:"SFMono-Regular",Consolas,monospace;color:#b9fff5;font-size:15px;line-height:1.74;white-space:pre-wrap;background:#07131d;max-height:540px;overflow:auto}.badge{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:12px;font-weight:950;color:var(--soft);margin:4px}.dot-red:before,.dot-amber:before,.dot-green:before{content:"";width:8px;height:8px;border-radius:50%;margin-right:7px}.dot-red:before{background:var(--red)}.dot-amber:before{background:var(--amber)}.dot-green:before{background:var(--green)}
+    .controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;gap:10px;align-items:center;z-index:95;border:1px solid var(--line);background:rgba(6,14,22,.82);backdrop-filter:blur(14px);padding:10px;border-radius:999px;box-shadow:0 18px 48px rgba(0,0,0,.28)}
+    button{border:0;border-radius:999px;padding:10px 16px;font-weight:950;background:linear-gradient(135deg,var(--cyan),var(--blue));color:#061018;cursor:pointer}button.secondary{background:rgba(255,255,255,.08);color:var(--soft);border:1px solid var(--line)}.page-no{color:var(--soft);font-size:13px;min-width:62px;text-align:center}
+    .note-trigger,.draw-toggle{position:fixed;bottom:24px;z-index:98;border:1px solid var(--line);background:rgba(6,14,22,.88);color:var(--ink);box-shadow:0 16px 44px rgba(0,0,0,.24)}.note-trigger{right:24px;width:42px;height:42px;padding:0;font-size:20px}.draw-toggle{right:78px}
+    #drawCanvas{position:fixed;inset:0;z-index:70;pointer-events:none}body.drawing #drawCanvas{pointer-events:auto;cursor:crosshair}.controls,.note-trigger,.draw-toggle,.draw-toolbar{pointer-events:auto}.draw-toolbar{position:fixed;right:24px;top:90px;z-index:96;display:none;gap:8px;align-items:center;border:1px solid var(--line);border-radius:999px;background:rgba(6,14,22,.9);padding:9px;box-shadow:0 16px 44px rgba(0,0,0,.28)}body.drawing .draw-toolbar{display:flex}.color-btn{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.24);padding:0}.color-btn.active{outline:3px solid rgba(60,230,212,.22)}.red{background:#ef4444}.yellow{background:#facc15}.blue-pen{background:#38bdf8}
+    .note-modal{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.56)}.note-modal.open{display:flex}.note-box{width:min(720px,100%);border:1px solid var(--line);border-radius:20px;background:#0d1722;padding:24px;box-shadow:0 28px 90px rgba(0,0,0,.42)}.note-box p{font-size:16px}.note-actions{display:flex;justify-content:flex-end;margin-top:18px}
+    @media(max-width:980px){.inner,.inner.full,.grid-2,.grid-3,.grid-6,.flow,.role-board{grid-template-columns:1fr}.inner{padding:34px}.time-chip{position:static;display:inline-flex;margin:18px}.hint{display:none}h1{font-size:40px}.war-room{min-height:680px}.seat{position:static;margin:10px auto}.tabletop{position:static;transform:none;margin:20px auto}.step:after{display:none}}
+  </style>
+</head>
+<body>
+  <canvas id="drawCanvas"></canvas>
+  <div class="topbar"><div class="topbar-inner"><div class="sig">R</div><div class="brand">AI 增强型产品经理 <small>Chapter 3 · 需求评审 Skills</small></div><div class="spacer"></div><div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页 · 标注自动清空</div></div><div class="progress"><span id="bar"></span></div></div>
+  <main class="deck">
+    <section class="slide active" data-note="开场把评审会从压力场景转成可准备的系统化动作。">
+      <div class="time-chip">00:00 - 01:30</div>
+      <div class="inner">
+        <div><div class="tag">Review Master</div><h1>需求评审不是被动挨问，而是<span class="hl">提前演练</span></h1><p>这一节讲 `pm-review` Skill：用 AI 在评审前模拟前端、后端、设计、测试、业务方、老板 6 个角色，提前发现 PRD 或原型里的漏洞。</p><div class="focus">核心价值：不是替代评审会，而是让你在评审会上更专业、更从容。</div></div>
+        <div class="war-room"><div class="tabletop">需求评审<br/>预演中心</div><div class="seat s1"><b>前端</b><span>交互与状态</span></div><div class="seat s2"><b>后端</b><span>数据与接口</span></div><div class="seat s3"><b>测试</b><span>边界与异常</span></div><div class="seat s4"><b>业务方</b><span>价值与流程</span></div><div class="seat s5"><b>设计</b><span>体验与一致性</span></div><div class="seat s6"><b>老板</b><span>ROI 与资源</span></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="强调评审会的难点不是被问，而是问题在会上才第一次暴露。">
+      <div class="time-chip">01:30 - 04:00</div>
+      <div class="inner">
+        <div><div class="tag">Pain Point</div><h1>很多评审会的问题，不是需求差，而是<span class="hl">准备不够立体</span></h1><p>PRD 通常从产品视角出发，但评审会上每个角色关注点完全不同：研发关心可实现性，测试关心边界，业务关心流程，老板关心投入产出。</p></div>
+        <div class="grid-2"><div class="panel red"><h3>会中才暴露</h3><ul><li>接口和字段没想清楚</li><li>异常状态没有设计</li><li>权限边界不明确</li><li>老板追问价值和优先级</li></ul></div><div class="panel green"><h3>会前先演练</h3><ul><li>提前模拟角色提问</li><li>把阻塞问题先补齐</li><li>准备专业回应话术</li><li>把评审变成确认和对齐</li></ul></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲 Skill 的一句话定义和输入输出。">
+      <div class="time-chip">04:00 - 06:30</div>
+      <div class="inner full">
+        <div><div class="tag">Skill Overview</div><h1>`pm-review` Skill 能做什么？</h1><div class="grid-3"><div class="panel cyan"><h3>输入</h3><p>PRD、需求文档、HTML 原型，或者两者一起提供。</p></div><div class="panel blue"><h3>评审</h3><p>自动选择评审模式，模拟 6 个角色，识别问题并分级。</p></div><div class="panel amber"><h3>输出</h3><p>问题清单、应对方案、追问预判、兜底话术和改进清单。</p></div></div><div class="focus">它不是只挑毛病，而是帮产品经理把“可能被挑战的问题”和“应该怎么回应”一起准备好。</div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="解释三个模式，特别是只有原型也可以评审。">
+      <div class="time-chip">06:30 - 09:30</div>
+      <div class="inner full">
+        <div><div class="tag">Three Modes</div><h1>三种评审模式：有多少资料，就做多少预审</h1><table><thead><tr><th>模式</th><th>输入</th><th>评审重点</th><th>适合场景</th></tr></thead><tbody><tr><td>模式 A：原型评审</td><td>仅 HTML 原型</td><td>页面、跳转、交互、四态、场景走查</td><td>原型先行，还没有完整 PRD</td></tr><tr><td>模式 B：PRD 评审</td><td>仅 PRD / 需求文档</td><td>6 角色模拟提问、问题分级、应对方案</td><td>正式需求评审前</td></tr><tr><td>模式 C：一致性评审</td><td>PRD + 原型</td><td>文档与原型交叉比对，找遗漏和冲突</td><td>准备进入研发前</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲 Skill 的内部工作流。">
+      <div class="time-chip">09:30 - 12:30</div>
+      <div class="inner full">
+        <div><div class="tag">Workflow</div><h1>这个 Skill 的底层流程</h1><div class="flow"><div class="step"><strong>01</strong><h3>识别输入</h3><p>判断是 PRD、原型，还是两者都有。</p></div><div class="step"><strong>02</strong><h3>结构解析</h3><p>提取功能、页面、流程、角色和数据。</p></div><div class="step"><strong>03</strong><h3>角色模拟</h3><p>按 6 个角色生成具体问题。</p></div><div class="step"><strong>04</strong><h3>分级应对</h3><p>标注阻塞、重要、建议，并给方案。</p></div><div class="step"><strong>05</strong><h3>生成报告</h3><p>输出 MD，并按需生成 DOCX 或 HTML。</p></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页可通过角色按钮演示每个角色关注点。">
+      <div class="time-chip">12:30 - 16:30</div>
+      <div class="inner full">
+        <div><div class="tag">Role Playbook</div><h1>6 个角色，会从 6 个角度挑战你</h1><div class="role-board"><div class="role-tabs"><button class="role-tab active" data-role="frontend">前端开发</button><button class="role-tab" data-role="backend">后端开发</button><button class="role-tab" data-role="design">设计师</button><button class="role-tab" data-role="qa">测试 QA</button><button class="role-tab" data-role="biz">业务方</button><button class="role-tab" data-role="boss">老板</button></div><div class="panel role-card" id="roleCard"></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲原型评审的特殊价值：从页面和交互反推需求漏洞。">
+      <div class="time-chip">16:30 - 19:30</div>
+      <div class="inner">
+        <div><div class="tag">Prototype Review</div><h1>只有 HTML 原型，也能做有效评审</h1><p>原型里其实藏着很多需求信息：页面清单、核心元素、跳转关系、表单、列表、弹窗、数据展示和操作路径。</p><div class="focus">Skill 会强制检查加载态、空状态、错误态、成功态，这是原型评审最容易被忽略的地方。</div></div>
+        <div class="panel"><h3>四态覆盖检查</h3><table><thead><tr><th>状态</th><th>常见缺口</th><th>评审问题</th></tr></thead><tbody><tr><td>加载态</td><td>白屏无反馈</td><td>数据请求慢时用户看到什么？</td></tr><tr><td>空状态</td><td>列表空白</td><td>无数据时是否给行动引导？</td></tr><tr><td>错误态</td><td>只有技术报错</td><td>网络失败能否重试？</td></tr><tr><td>成功态</td><td>无明确反馈</td><td>操作完成后下一步去哪？</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="交互演示三种模式各自输出差异。">
+      <div class="time-chip">19:30 - 22:30</div>
+      <div class="inner full">
+        <div><div class="tag">Mode Switch</div><h1>不同输入，报告结构也不一样</h1><div class="mode-tabs"><button class="mode-tab active" data-mode="a">模式 A 原型</button><button class="mode-tab" data-mode="b">模式 B PRD</button><button class="mode-tab" data-mode="c">模式 C 一致性</button></div><div id="modeA" class="mode-content active"><div class="grid-3"><div class="panel cyan"><h3>原型解析摘要</h3><p>页面清单、跳转关系、交互组件、数据展示。</p></div><div class="panel blue"><h3>业务场景评审</h3><p>模拟真实用户任务，找断头路和信息缺口。</p></div><div class="panel amber"><h3>交互自查结果</h3><p>四态、表单、导航、数据展示和批量操作。</p></div></div></div><div id="modeB" class="mode-content"><div class="grid-3"><div class="panel cyan"><h3>需求摘要</h3><p>功能清单、核心流程、数据模型、角色权限。</p></div><div class="panel blue"><h3>角色评审详情</h3><p>6 个角色分别提出 3-5 个具体问题。</p></div><div class="panel amber"><h3>应对方案</h3><p>方案、追问预判、兜底话术和改进清单。</p></div></div></div><div id="modeC" class="mode-content"><div class="grid-3"><div class="panel red"><h3>一致性问题</h3><p>PRD 写了但原型没体现，或原型有但 PRD 没写。</p></div><div class="panel blue"><h3>PRD 评审</h3><p>从角色角度检查文档完整度和业务判断。</p></div><div class="panel green"><h3>原型评审</h3><p>从页面、交互、状态和场景走查体验漏洞。</p></div></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲应对话术框架，不是只输出问题。">
+      <div class="time-chip">22:30 - 25:30</div>
+      <div class="inner">
+        <div><div class="tag">Response</div><h1>真正有用的是：问题后面还有<span class="hl">应对话术</span></h1><p>评审准备不是把问题列出来吓自己，而是准备“怎么回应、怎么推进、会后谁跟进”。</p><div class="focus">核心原则：先认可问题，再给方向；不在会上空转，把不确定项落到下一步动作。</div></div>
+        <div class="grid-2"><div class="panel cyan"><h3>PREP</h3><p>观点 → 理由 → 例子 → 重申。适合说服对方接受方案。</p></div><div class="panel blue"><h3>SPIN</h3><p>场景 → 问题 → 影响 → 收益。适合回应价值质疑。</p></div><div class="panel amber"><h3>3C</h3><p>背景 → 对比 → 选择。适合多个方案取舍。</p></div><div class="panel green"><h3>兜底动作</h3><p>承认缺口，给方向，指定责任人和下一步。</p></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="展示仓库结构，让学员知道 Skill 是如何组织的。">
+      <div class="time-chip">25:30 - 28:00</div>
+      <div class="inner">
+        <div><div class="tag">Implementation</div><h1>这个 Skill 是怎么实现的？</h1><p>主指令文件定义评审模式和流程，references 放角色手册、话术框架、输出模板，scripts 负责把 Markdown 报告转成 Word 文档。</p></div>
+        <div class="code">07_需求评审大师核心Skills/
+├── README.md
+├── guide/index.html
+├── skills/pm-review/
+│   ├── SKILL.md
+│   ├── references/
+│   │   ├── role-playbook.md
+│   │   ├── response-frameworks.md
+│   │   ├── output-template.md
+│   │   └── html-template.html
+│   └── scripts/generate-docx.py
+└── 需求评审报告-示例.md / .html / .docx</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲使用方式，方便承接实操。">
+      <div class="time-chip">28:00 - 31:00</div>
+      <div class="inner">
+        <div><div class="tag">How To Use</div><h1>实操时怎么用？</h1><p>安装 Skill 后，输入 `/pm-review`，再把 PRD 文档、HTML 原型路径或两者一起交给 AI。它会自动选择评审模式。</p><div class="focus">建议输入越具体越好：产品名称、评审目标、资料路径、关注角色、希望输出格式。</div></div>
+        <div class="code">/pm-review
+
+产品名称：
+评审目标：
+资料类型：PRD / HTML 原型 / PRD + 原型
+PRD 路径：
+原型路径：
+重点关注角色：前端、后端、设计、测试、业务方、老板
+输出格式：md / docx / html / 全部
+
+请先输出评审概览，再给出阻塞问题、重要问题、建议问题和应对话术。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲输出物的价值，尤其是会前和会后都能用。">
+      <div class="time-chip">31:00 - 33:30</div>
+      <div class="inner full">
+        <div><div class="tag">Deliverables</div><h1>最终拿到什么？</h1><div class="grid-3"><div class="panel cyan"><h3>评审概览</h3><p>问题总数、分级分布、涉及功能点、应对覆盖率。</p><span class="badge dot-red">阻塞</span><span class="badge dot-amber">重要</span><span class="badge dot-green">建议</span></div><div class="panel blue"><h3>角色问题库</h3><p>按前端、后端、设计、测试、业务方、老板拆分问题。</p></div><div class="panel amber"><h3>应对话术库</h3><p>每个关键问题给方案、追问预判和兜底话术。</p></div><div class="panel green"><h3>改进清单</h3><p>按优先级排序，方便更新 PRD、原型和评审纪要。</p></div><div class="panel purple"><h3>HTML 报告</h3><p>适合屏幕展示，支持按角色和严重度筛选。</p></div><div class="panel"><h3>Word 报告</h3><p>适合打印、分发、归档和跨团队评审。</p></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="结尾自然承接实操。">
+      <div class="time-chip">33:30 - 35:00</div>
+      <div class="inner">
+        <div><div class="tag">Review</div><h1>回顾重点：这节课的价值</h1><p>第一，把需求评审从“现场被问”变成“会前预演”。</p><p>第二，用 6 个角色补齐产品经理容易忽略的视角。</p><p>第三，不只发现问题，还准备应对方案和现场话术。</p><div class="focus">接下来进入实操环节：用 `pm-review` 对一份 PRD 或 HTML 原型做一次完整需求预审。</div></div>
+        <div class="panel green"><h3>一句话带走</h3><p style="font-size:30px;line-height:1.48;font-weight:950;color:#eafff0">真正成熟的 PM，不是评审会上什么都能答，而是会前就知道别人会问什么。</p></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls"><button class="secondary" id="prev">上一页</button><span class="page-no" id="pageNo">1 / 13</span><button id="next">下一页</button></div>
+  <button class="draw-toggle" id="drawToggle">标注</button><button class="note-trigger" id="noteBtn">?</button>
+  <div class="draw-toolbar"><button class="color-btn red active" data-color="#ef4444" title="红色"></button><button class="color-btn yellow" data-color="#facc15" title="黄色"></button><button class="color-btn blue-pen" data-color="#38bdf8" title="蓝色"></button><button class="secondary" id="clearDraw">清空</button><button class="secondary" id="exitDraw">退出</button></div>
+  <div class="note-modal" id="noteModal"><div class="note-box"><h3>讲师备注</h3><p id="noteText"></p><div class="note-actions"><button id="closeNote">关闭</button></div></div></div>
+  <script>
+    const slides=[...document.querySelectorAll('.slide')],bar=document.getElementById('bar'),pageNo=document.getElementById('pageNo'),noteText=document.getElementById('noteText'),noteModal=document.getElementById('noteModal');let current=0;
+    const canvas=document.getElementById('drawCanvas'),ctx=canvas.getContext('2d');let drawing=false,pen='#ef4444';function clearDraw(){ctx.clearRect(0,0,canvas.width,canvas.height)}
+    function show(i){current=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,idx)=>s.classList.toggle('active',idx===current));bar.style.width=`${((current+1)/slides.length)*100}%`;pageNo.textContent=`${current+1} / ${slides.length}`;noteText.textContent=slides[current].dataset.note||'这一页没有额外备注。';clearDraw()}
+    document.getElementById('prev').onclick=()=>show(current-1);document.getElementById('next').onclick=()=>show(current+1);document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')show(current-1);if(e.key==='ArrowRight'||e.key===' ')show(current+1);if(e.key==='Escape')noteModal.classList.remove('open')});
+    document.getElementById('noteBtn').onclick=()=>{noteText.textContent=slides[current].dataset.note||'这一页没有额外备注。';noteModal.classList.add('open')};document.getElementById('closeNote').onclick=()=>noteModal.classList.remove('open');noteModal.onclick=e=>{if(e.target===noteModal)noteModal.classList.remove('open')};
+    function resize(){canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=5}resize();addEventListener('resize',resize);
+    canvas.addEventListener('pointerdown',e=>{drawing=true;ctx.beginPath();ctx.moveTo(e.clientX,e.clientY)});canvas.addEventListener('pointermove',e=>{if(!drawing)return;ctx.strokeStyle=pen;ctx.lineTo(e.clientX,e.clientY);ctx.stroke()});['pointerup','pointerleave','pointercancel'].forEach(evt=>canvas.addEventListener(evt,()=>drawing=false));
+    document.getElementById('drawToggle').onclick=()=>{document.body.classList.toggle('drawing');document.getElementById('drawToggle').textContent=document.body.classList.contains('drawing')?'标注中':'标注'};document.getElementById('exitDraw').onclick=()=>{document.body.classList.remove('drawing');document.getElementById('drawToggle').textContent='标注'};document.getElementById('clearDraw').onclick=clearDraw;document.querySelectorAll('.color-btn').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.color-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');pen=btn.dataset.color});
+    const roleData={
+      frontend:['交互实现、组件复用、状态管理、前端性能','加载态、空状态、错误态、成功态是否都有设计？','前端需要调几个接口？接口数据结构是否确定？','列表数据量大时是否需要分页、虚拟滚动或缓存？'],
+      backend:['数据模型、API、性能、安全、数据一致性','并发操作时如何保证数据一致性？','接口是否支持分页、排序、筛选和批量操作？','敏感数据是否需要脱敏，操作是否需要审计日志？'],
+      design:['视觉一致性、交互规范、可用性、信息架构','页面是否遵循现有设计系统？','操作后的反馈方式是什么，toast、弹窗还是页面跳转？','字段内容极长、空数据、多个错误时怎么展示？'],
+      qa:['测试覆盖、边界条件、异常路径、兼容性','核心流程和异常流程是否都有测试场景？','最大值、最小值、空值、特殊字符怎么处理？','这个功能对现有功能的回归影响范围是什么？'],
+      biz:['业务逻辑、用户价值、运营效率、上线策略','这个逻辑是否和实际业务流程一致？','上线后怎么验证效果，核心指标是什么？','运营后台、客服话术、用户迁移是否需要配套？'],
+      boss:['战略对齐、资源投入、时间规划、风险控制','为什么要现在做，和当前战略目标有什么关系？','预计投入多少人天，如果延期影响什么？','有没有更简单的方案可以达到同样目的？']
+    };
+    const roleNames={frontend:'前端开发',backend:'后端开发',design:'设计师',qa:'测试 QA',biz:'业务方',boss:'老板'};
+    function renderRole(key){const d=roleData[key];document.getElementById('roleCard').innerHTML=`<h2>${roleNames[key]}</h2><p>${d[0]}</p><div class="q">${d[1]}</div><div class="q">${d[2]}</div><div class="q">${d[3]}</div>`}
+    document.querySelectorAll('.role-tab').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.role-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderRole(btn.dataset.role)});renderRole('frontend');
+    document.querySelectorAll('.mode-tab').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.mode-tab').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.mode-content').forEach(c=>c.classList.remove('active'));btn.classList.add('active');document.getElementById('mode'+btn.dataset.mode.toUpperCase()).classList.add('active')});
+    show(0);
+  </script>
+</body>
+</html>

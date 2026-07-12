@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoC 变需求池 · 用 pm-requirements Skill 输出功能清单</title>
+  <style>
+    :root{
+      --bg:#070b0d;
+      --panel:#0e1718;
+      --ink:#f6fbf8;
+      --soft:#c9d8d2;
+      --muted:#8aa39a;
+      --line:rgba(255,255,255,.13);
+      --mint:#34d399;
+      --cyan:#22d3ee;
+      --lime:#a3e635;
+      --amber:#fbbf24;
+      --rose:#fb7185;
+      --shadow:0 28px 80px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(800px 480px at 8% 0%,rgba(34,211,238,.18),transparent 60%),
+        radial-gradient(760px 480px at 105% 2%,rgba(163,230,53,.14),transparent 62%),
+        linear-gradient(180deg,#070b0d 0%,#0d1416 100%);
+      overflow-x:hidden;
+    }
+    .topbar{position:sticky;top:0;z-index:10;background:rgba(7,11,13,.82);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:1360px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
+    .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--mint),var(--lime));box-shadow:0 0 22px rgba(163,230,53,.6)}
+    .brand{font-weight:900;letter-spacing:.02em}
+    .brand small{display:block;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+    .spacer{flex:1}
+    .hint{color:var(--muted);font-size:13px}
+    kbd{font-family:inherit;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:6px;padding:1px 6px;color:var(--soft)}
+    .progress{height:3px;background:rgba(255,255,255,.06)}
+    .progress span{display:block;height:100%;width:7.14%;background:linear-gradient(90deg,var(--cyan),var(--mint),var(--lime));transition:.25s}
+    .deck{max-width:1360px;margin:0 auto;padding:24px 24px 100px}
+    .slide{
+      display:none;
+      min-height:720px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:linear-gradient(180deg,rgba(14,23,24,.94),rgba(7,13,15,.90));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .slide.active{display:block;animation:in .35s ease}
+    @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .slide:before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+        linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(180deg,black,transparent 82%);
+    }
+    .inner{position:relative;z-index:1;padding:54px;min-height:720px;display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center}
+    .inner.full{grid-template-columns:1fr}
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--soft);
+      border-radius:999px;
+      padding:6px 12px;
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-weight:900;
+      margin-bottom:18px;
+    }
+    .tag:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 14px var(--mint)}
+    h1{font-size:54px;line-height:1.08;margin:0 0 18px;letter-spacing:-.02em}
+    h2{font-size:38px;line-height:1.18;margin:0 0 16px;letter-spacing:-.01em}
+    h3{margin:0 0 10px;font-size:21px}
+    p{font-size:19px;line-height:1.72;color:var(--soft);margin:0}
+    b{color:white}
+    .hl{background:linear-gradient(120deg,var(--cyan),var(--mint),var(--lime));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .mark{
+      display:inline;color:#fff;font-weight:900;padding:2px 7px 3px;margin:0 2px;
+      border:2px solid rgba(52,211,153,.9);border-radius:7px;
+      background:rgba(52,211,153,.08);
+      box-shadow:0 0 0 1px rgba(52,211,153,.18),0 0 18px rgba(52,211,153,.12);
+      box-decoration-break:clone;-webkit-box-decoration-break:clone;
+    }
+    .mark.amber{border-color:rgba(251,191,36,.9);background:rgba(251,191,36,.10);box-shadow:0 0 0 1px rgba(251,191,36,.18),0 0 18px rgba(251,191,36,.12)}
+    .mark.rose{border-color:rgba(251,113,133,.9);background:rgba(251,113,133,.10);box-shadow:0 0 0 1px rgba(251,113,133,.18),0 0 18px rgba(251,113,133,.12)}
+    .focus-line{
+      margin-top:18px;border:1px solid rgba(34,211,238,.34);border-left:5px solid var(--cyan);
+      border-radius:14px;padding:14px 16px;
+      background:linear-gradient(90deg,rgba(34,211,238,.13),rgba(52,211,153,.07));
+      color:#ecfeff;font-size:17px;font-weight:850;line-height:1.55;
+    }
+    .panel,.hero-card,.code,.doc{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+      border-radius:18px;
+      padding:22px;
+    }
+    .hero-card{min-height:470px;display:flex;flex-direction:column;justify-content:space-between}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .panel p,.panel li{font-size:16px;color:var(--soft);line-height:1.62}
+    .panel.focus{border-color:rgba(52,211,153,.45);background:linear-gradient(180deg,rgba(52,211,153,.10),rgba(255,255,255,.025))}
+    .panel.key{border-color:rgba(251,191,36,.45);background:linear-gradient(180deg,rgba(251,191,36,.10),rgba(255,255,255,.025))}
+    .panel.warn{border-color:rgba(251,113,133,.45);background:linear-gradient(180deg,rgba(251,113,133,.10),rgba(255,255,255,.025))}
+    .panel.cyan{border-color:rgba(34,211,238,.45);background:linear-gradient(180deg,rgba(34,211,238,.10),rgba(255,255,255,.025))}
+    .panel h3{display:flex;align-items:center;gap:8px}
+    .panel h3:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 12px var(--mint)}
+    .panel.key h3:before{background:var(--amber);box-shadow:0 0 12px var(--amber)}
+    .panel.warn h3:before{background:var(--rose);box-shadow:0 0 12px var(--rose)}
+    .panel.cyan h3:before{background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+    ul{margin:10px 0 0 20px;padding:0}
+    li{margin:6px 0}
+    li.hot{color:#fff;font-weight:850}
+    li.hot::marker{color:var(--rose)}
+    li.good{color:#fff;font-weight:850}
+    li.good::marker{color:var(--mint)}
+    .pill{display:inline-flex;align-items:center;border-radius:999px;border:1px solid var(--line);padding:5px 10px;margin:4px 4px 0 0;background:rgba(255,255,255,.055);color:var(--soft);font-size:13px;font-weight:800}
+    .pill.mint{color:#bbf7d0;border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.1)}
+    .pill.cyan{color:#a5f3fc;border-color:rgba(34,211,238,.35);background:rgba(34,211,238,.1)}
+    .pill.amber{color:#fde68a;border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.1)}
+    .pill.rose{color:#fecdd3;border-color:rgba(251,113,133,.35);background:rgba(251,113,133,.1)}
+    .metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .metric{border:1px solid var(--line);border-radius:16px;padding:18px;background:rgba(255,255,255,.045)}
+    .metric strong{display:block;font-size:30px;color:var(--lime);line-height:1}
+    .metric span{display:block;color:var(--soft);font-size:14px;line-height:1.45;margin-top:7px}
+    .cover-slide{
+      background:
+        linear-gradient(135deg,rgba(34,211,238,.28),transparent 36%),
+        linear-gradient(315deg,rgba(163,230,53,.20),transparent 38%),
+        linear-gradient(180deg,rgba(14,23,24,.96),rgba(7,11,13,.94));
+    }
+    .cover-inner{position:relative;z-index:1;min-height:720px;padding:50px 58px 92px;display:grid;grid-template-columns:1.05fr .95fr;gap:42px;align-items:center}
+    .cover-kicker{font-size:13px;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:#a7f3d0;margin-bottom:18px}
+    .cover-title{font-size:66px;line-height:1.02;margin:0 0 20px;font-weight:950;letter-spacing:-.03em}
+    .cover-subtitle{font-size:22px;line-height:1.65;color:#effff7;max-width:720px}
+    .kanban{
+      min-height:440px;border:1px solid rgba(255,255,255,.18);border-radius:22px;padding:22px;
+      background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.035));
+      display:grid;grid-template-columns:repeat(3,1fr);gap:14px;box-shadow:0 24px 80px rgba(0,0,0,.32);
+    }
+    .lane{border:1px solid var(--line);border-radius:16px;padding:14px;background:rgba(7,11,13,.42)}
+    .lane-title{font-size:13px;color:var(--muted);font-weight:900;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+    .ticket{border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:12px;background:rgba(255,255,255,.055);font-size:14px;color:var(--soft);line-height:1.45;margin-bottom:10px}
+    .ticket b{display:block;color:#fff;margin-bottom:4px}
+    .mode-switch{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+    .switch-btn{border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--soft);border-radius:999px;padding:9px 14px;font-size:14px;font-weight:900}
+    .switch-btn.active{color:#07110d;border-color:rgba(163,230,53,.62);background:linear-gradient(135deg,var(--mint),var(--lime));box-shadow:0 0 24px rgba(163,230,53,.16)}
+    .mode-view{display:none;animation:in .25s ease}
+    .mode-view.active{display:block}
+    .workflow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+    .wf-step{border:1px solid var(--line);border-radius:16px;padding:16px;background:rgba(255,255,255,.045);min-height:158px;position:relative}
+    .wf-step:after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:var(--lime);font-size:22px;font-weight:900}
+    .wf-step:last-child:after{display:none}
+    .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:9px;background:linear-gradient(135deg,var(--cyan),var(--mint));font-weight:900;margin-bottom:12px;color:#062018}
+    .wf-step b{display:block;font-size:16px;margin-bottom:8px}
+    .wf-step span{display:block;color:var(--soft);font-size:14px;line-height:1.5}
+    .table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:16px;overflow:hidden;font-size:15px}
+    .table th,.table td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}
+    .table th{background:rgba(255,255,255,.08);color:#fff}
+    .table tr:last-child td{border-bottom:0}
+    .table th:last-child,.table td:last-child{border-right:0}
+    .score{display:inline-flex;min-width:48px;justify-content:center;border-radius:999px;background:rgba(163,230,53,.12);border:1px solid rgba(163,230,53,.35);color:#d9f99d;font-weight:900}
+    .code{font-family:"SFMono-Regular",Consolas,monospace;color:#d9f99d;font-size:14px;line-height:1.65;white-space:pre-wrap;max-height:530px;overflow:auto}
+    .terminal{border:1px solid rgba(34,211,238,.36);border-radius:18px;overflow:hidden;background:#07110d;box-shadow:0 22px 60px rgba(0,0,0,.28)}
+    .terminal-head{display:flex;align-items:center;gap:7px;padding:12px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.06)}
+    .terminal-head span{width:10px;height:10px;border-radius:50%;background:var(--rose)}
+    .terminal-head span:nth-child(2){background:var(--amber)}
+    .terminal-head span:nth-child(3){background:var(--mint)}
+    .terminal-code{font-family:"SFMono-Regular",Consolas,monospace;color:#d9f99d;font-size:14px;line-height:1.72;white-space:pre-wrap;padding:18px}
+    .output-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:22px}
+    .file-card{border:1px solid var(--line);border-radius:16px;padding:16px;background:rgba(255,255,255,.045);min-height:140px}
+    .file-card b{display:block;margin-bottom:8px}
+    .file-card span{display:block;color:var(--soft);font-size:14px;line-height:1.5}
+    .big-quote{font-size:30px;line-height:1.42;font-weight:900;color:white}
+    .controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:20;border:1px solid var(--line);background:rgba(7,11,13,.84);backdrop-filter:blur(14px);padding:10px;border-radius:999px}
+    button{border:0;border-radius:999px;padding:10px 16px;font-weight:900;background:linear-gradient(135deg,var(--mint),var(--lime));color:#07110d;cursor:pointer}
+    button.secondary{background:rgba(255,255,255,.08);color:var(--soft);border:1px solid var(--line)}
+    .page-no{color:var(--soft);font-size:13px;min-width:58px;text-align:center}
+    .note-trigger{position:fixed;right:24px;bottom:24px;z-index:25;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(7,11,13,.86);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:950;box-shadow:0 16px 44px rgba(0,0,0,.34)}
+    .note-modal{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.50)}
+    .note-modal.open{display:flex}
+    .note-box{width:min(620px,100%);border:1px solid rgba(255,255,255,.18);border-radius:18px;background:#0c1515;box-shadow:0 28px 90px rgba(0,0,0,.55);padding:24px}
+    .note-box h3{margin-bottom:12px}
+    .note-box p{font-size:16px}
+    .note-actions{margin-top:18px;display:flex;justify-content:flex-end}
+    @media(max-width:980px){
+      .inner,.inner.full,.cover-inner,.grid-2,.grid-3,.grid-4,.workflow,.output-grid{grid-template-columns:1fr;padding:28px}
+      .kanban{grid-template-columns:1fr}
+      .wf-step:after{display:none}
+      h1{font-size:38px}.cover-title{font-size:46px}h2{font-size:30px}.hint{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="dot"></span>
+      <div class="brand">AI 增强型产品经理 <small>Chapter 2 · 需求调研 Skills</small></div>
+      <div class="spacer"></div>
+      <div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页</div>
+    </div>
+    <div class="progress"><span id="bar"></span></div>
+  </div>
+
+  <main class="deck">
+    <section class="slide cover-slide active" data-note="开场只建立目标：这节课不是讲需求管理理论，而是把真实的客户声音转成可维护的功能清单和需求池。">
+      <div class="cover-inner">
+        <div>
+          <div class="cover-kicker">pm-requirements Skill</div>
+          <h1 class="cover-title">把用户声音<br><span class="hl">变成需求池</span></h1>
+          <p class="cover-subtitle">输入客户访谈、用户反馈、业务方想法，让 AI 帮你做需求澄清、真伪判断、场景归类和优先级排序，最后输出功能清单与需求池。</p>
+          <div style="margin-top:26px">
+            <span class="pill cyan">VoC</span>
+            <span class="pill mint">功能清单</span>
+            <span class="pill amber">需求池</span>
+            <span class="pill rose">优先级</span>
+          </div>
+        </div>
+        <div class="kanban">
+          <div class="lane">
+            <div class="lane-title">Voice</div>
+            <div class="ticket"><b>客户说</b>每天统计门店数据很费事</div>
+            <div class="ticket"><b>老板说</b>手机上随时看经营数据</div>
+            <div class="ticket"><b>销售说</b>客户又提了新需求</div>
+          </div>
+          <div class="lane">
+            <div class="lane-title">Clarify</div>
+            <div class="ticket"><b>场景</b>谁在什么情况下使用</div>
+            <div class="ticket"><b>价值</b>覆盖度、业务影响、紧迫程度</div>
+            <div class="ticket"><b>冲突</b>重复、范围蔓延、依赖风险</div>
+          </div>
+          <div class="lane">
+            <div class="lane-title">Backlog</div>
+            <div class="ticket"><b>P0</b>必须进入 MVP</div>
+            <div class="ticket"><b>P1/P2</b>排进后续版本</div>
+            <div class="ticket"><b>Rejected</b>拒绝也要留痕</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="强调这节课的实际交付物：不是把反馈总结一下，而是输出可交给研发和业务继续讨论的需求体系。">
+      <div class="inner">
+        <div>
+          <div class="tag">Lesson Goal</div>
+          <h1>这节课解决一个 PM 高频问题</h1>
+          <p>现实里的需求输入很少是干净的：客户访谈、群聊截图、老板口头补充、销售反馈，常常混在一起。</p>
+          <p style="margin-top:14px">这个 Skill 的核心价值，是把混乱输入转成<span class="mark">功能清单</span>、<span class="mark amber">需求池</span>和<span class="mark rose">版本决策记录</span>。</p>
+          <div class="focus-line">一句话：让 AI 帮你把“用户说了什么”整理成“产品到底要做什么”。</div>
+        </div>
+        <div class="hero-card">
+          <h3>本节课最终交付</h3>
+          <div class="metric-grid">
+            <div class="metric"><strong>Mode A</strong><span>第一次整理：从零建立功能清单和需求池</span></div>
+            <div class="metric"><strong>Mode B</strong><span>新需求进来：评估冲突、影响并更新版本</span></div>
+            <div class="metric"><strong>4维</strong><span>覆盖度、业务影响、紧迫程度、技术风险</span></div>
+            <div class="metric"><strong>5类</strong><span>接受、推迟、合并、拒绝、待确认</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里讲为什么它不只是整理，而是需求判断系统。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Why Skill</div>
+          <h2>为什么需求整理不能只靠普通摘要？</h2>
+          <p>普通摘要会把所有声音压成“客户想要什么”。但产品经理真正要判断的是：<span class="mark">这是真需求吗？谁提的？解决什么场景？值不值得进当前版本？</span></p>
+          <div class="grid-3" style="margin-top:28px">
+            <div class="panel warn"><h3>普通总结的问题</h3><ul><li class="hot">所有需求看起来都重要</li><li>重复需求被反复讨论</li><li>口头需求没有来源记录</li><li class="hot">拒绝的需求没有留痕</li></ul></div>
+            <div class="panel focus"><h3>Skill 固化的判断</h3><ul><li class="good">真伪与质量校验</li><li>KANO 分类</li><li>四维度评分</li><li class="good">冲突和范围蔓延提醒</li></ul></div>
+            <div class="panel key"><h3>PM 要抓住什么</h3><ul><li class="hot">用户故事是否成立</li><li>验收标准是否可量化</li><li>是否影响当前版本边界</li><li class="hot">最终仍由 PM 决策</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这页介绍安装和第一次调用，适合在进入实操前快速扫一遍。">
+      <div class="inner">
+        <div>
+          <div class="tag">How To Use</div>
+          <h2>实操前先知道：怎么安装、怎么调用？</h2>
+          <p>把 `pm-requirements` 放进 Claude Code 的 skills 目录后，在对话里明确说“使用 pm-requirements skill”，再提供客户访谈、用户反馈或业务方需求。</p>
+          <div class="focus-line">触发词很自然：需求整理、功能清单、需求池、新需求进来了、需求变了、做 PRD。</div>
+        </div>
+        <div class="terminal">
+          <div class="terminal-head"><span></span><span></span><span></span></div>
+          <div class="terminal-code"># 1. 克隆课程仓库
+gh repo clone shangbianai/pm-ai-guide
+
+# 2. 创建 Claude Code skills 目录
+mkdir -p ~/.claude/skills
+
+# 3. 安装 pm-requirements skill
+cp -R "pm-ai-guide/第2章_需求调研/01_把用户声音VoC变成需求池/skills/pm-requirements" \
+  ~/.claude/skills/pm-requirements</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页讲清楚用户真正复制使用的第一段输入，不要复杂，能跑起来最重要。">
+      <div class="inner">
+        <div>
+          <div class="tag">First Prompt</div>
+          <h2>第一次使用：直接把材料交给 Skill</h2>
+          <p>你不需要把需求提前整理干净。真实工作里，客户文档、会议纪要、口头补充可以一起输入，让 Skill 先做解析、归类和排序。</p>
+          <div class="focus-line">关键是告诉 AI：这是第一次整理，需要输出功能清单和需求池。</div>
+        </div>
+        <div class="code">请使用 pm-requirements skill，帮我把下面这些需求材料整理成功能清单和需求池。
+
+产品：连锁门店运营管理系统
+资料：客户需求文档、会议纪要、业务方口头补充
+目标：输出 v1.0 功能清单，并建立可持续维护的需求池
+
+补充说明：
+- 先判断哪些是 MVP 必须做的
+- 对不清楚或有冲突的需求标出来
+- 输出功能清单、需求池和待确认事项</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="双模式是这节课的核心：第一次从零整理，后续增量维护。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Two Modes</div>
+          <h2>这个 Skill 最关键：自动区分两种模式</h2>
+          <p>它执行前会先检查 `_pm_context/requirements/feature-list.md` 是否存在。没有就初始化，有就进入增量更新。</p>
+          <div class="mode-switch" style="margin-top:24px">
+            <button class="switch-btn active" onclick="switchMode('a', this)">Mode A 初始化</button>
+            <button class="switch-btn" onclick="switchMode('b', this)">Mode B 增量更新</button>
+          </div>
+          <div class="mode-view active" id="mode-a">
+            <div class="workflow">
+              <div class="wf-step"><span class="num">1</span><b>解析输入</b><span>从文档、聊天、口头补充里提取功能点、场景、痛点。</span></div>
+              <div class="wf-step"><span class="num">2</span><b>归类校验</b><span>KANO 分类，检查真实性、价值和一致性。</span></div>
+              <div class="wf-step"><span class="num">3</span><b>评分排序</b><span>按覆盖度、业务影响、紧迫程度、技术风险打分。</span></div>
+              <div class="wf-step"><span class="num">4</span><b>输出文件</b><span>生成 feature-list.md 和 requirement-pool.md。</span></div>
+              <div class="wf-step"><span class="num">5</span><b>确认文档</b><span>确认后生成 Word / Excel 版本。</span></div>
+            </div>
+          </div>
+          <div class="mode-view" id="mode-b">
+            <div class="workflow">
+              <div class="wf-step"><span class="num">1</span><b>读取现状</b><span>读取已有功能清单和需求池。</span></div>
+              <div class="wf-step"><span class="num">2</span><b>理解新需求</b><span>提取描述、提出人、背景和紧迫程度。</span></div>
+              <div class="wf-step"><span class="num">3</span><b>影响分析</b><span>判断无冲突、增强、重复、冲突或范围蔓延。</span></div>
+              <div class="wf-step"><span class="num">4</span><b>处置建议</b><span>接受、推迟、合并或拒绝。</span></div>
+              <div class="wf-step"><span class="num">5</span><b>版本更新</b><span>更新需求池，必要时升级 feature-list 到 v1.1。</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这页解释需求质量校验，让学员知道 AI 不是盲目收需求。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Quality Gate</div>
+          <h2>先判断真伪，再进入优先级排序</h2>
+          <p>这个 Skill 不会把所有声音都当成需求。它会先做质量校验：有没有角色、场景、行为、结果，有没有价值信号，有没有定位冲突。</p>
+          <div class="grid-3" style="margin-top:26px">
+            <div class="panel focus"><h3>真实性</h3><p>是否能识别出用户、场景、行为和结果。缺失就标记待确认。</p></div>
+            <div class="panel key"><h3>价值性</h3><p>是否有可衡量指标、受益规模、发生频率。价值不明不硬排优先级。</p></div>
+            <div class="panel warn"><h3>一致性</h3><p>是否重复、范围蔓延或与产品定位冲突。冲突必须提示 PM 决策。</p></div>
+          </div>
+          <div class="focus-line">重点：AI 可以给建议，但不能替 PM 偷偷把冲突藏起来。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里讲优先级模型，不需要展开太深，重点是让排序有依据。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Priority Matrix</div>
+          <h2>优先级怎么排：四个维度共同打分</h2>
+          <p>评分不是凭感觉，而是把用户覆盖度、业务影响、紧迫程度和技术风险放到同一张表里。</p>
+          <table class="table" style="margin-top:24px">
+            <tr><th>维度</th><th>权重</th><th>核心问题</th><th>例子</th></tr>
+            <tr><td>用户覆盖度</td><td><span class="score">30%</span></td><td>多少用户、多高频使用？</td><td>所有门店每天都要录入。</td></tr>
+            <tr><td>业务影响</td><td><span class="score">30%</span></td><td>对收入、效率、体验影响多大？</td><td>减少总部统计时间和出错率。</td></tr>
+            <tr><td>紧迫程度</td><td><span class="score">20%</span></td><td>现在不做损失多大？</td><td>库存断货已经反复发生。</td></tr>
+            <tr><td>技术风险</td><td><span class="score">20%</span></td><td>实现难度和依赖风险多高？</td><td>是否依赖外部 API 或复杂集成。</td></tr>
+          </table>
+          <div class="focus-line">P0 不是越多越好：Skill 约束 P0 不超过总功能数的 30%。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页明确最终产物，帮助学员理解输出不是一段文字，而是一套文件。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Outputs</div>
+          <h2>最终输出：功能清单 + 需求池</h2>
+          <p>这个 Skill 的交付物不是聊天窗口里的一段答案，而是一套可以持续维护的需求资产。</p>
+          <div class="output-grid">
+            <div class="file-card"><b>feature-list.md</b><span>功能清单源文件，始终保持最新版本。</span></div>
+            <div class="file-card"><b>requirement-pool.md</b><span>需求池源文件，记录所有进入评估的需求。</span></div>
+            <div class="file-card"><b>功能清单_vX.X.docx</b><span>团队日常阅读和评审用的 Word 版本。</span></div>
+            <div class="file-card"><b>功能概览表_vX.X.xlsx</b><span>功能概览和需求池的表格版本。</span></div>
+            <div class="file-card"><b>需求池.xlsx</b><span>持续追加的需求流水表，拒绝和推迟也记录。</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页给学员看功能清单应该长什么样，重点是用户故事和验收标准。">
+      <div class="inner">
+        <div>
+          <div class="tag">Feature List</div>
+          <h2>功能清单不是功能名列表</h2>
+          <p>每个功能都要写成用户故事，并给出可验证的验收标准。这样后面写 PRD、评审和排期才有基础。</p>
+          <div class="focus-line">模板要求：作为 X，我需要 Y，以便 Z。</div>
+        </div>
+        <div class="code">### F-001：门店销售数据录入
+- 用户故事：作为门店店长，我需要录入每日营业额、客单价和翻台率，以便总部及时掌握经营情况。
+- Kano 类型：基本型
+- 优先级：P0
+- 综合评分：4.6
+- 归属版本：v1.0
+- 验收标准：
+  - [ ] 店长可在手机端完成当日数据录入
+  - [ ] 总部可按门店和日期查看汇总
+  - [ ] 数据支持导出 Excel
+- 依赖：用户登录、门店权限</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页强调需求池记录决策过程，特别是拒绝和推迟也要留痕。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Requirement Pool</div>
+          <h2>需求池的价值：把“为什么不做”也记录下来</h2>
+          <p>很多团队的问题不是没有需求，而是同一个需求每周都被重新讨论。需求池记录来源、状态、处置意见和归属版本，减少反复扯皮。</p>
+          <table class="table" style="margin-top:24px">
+            <tr><th>需求</th><th>提出人</th><th>类型</th><th>处置</th><th>备注</th></tr>
+            <tr><td>会员积分系统</td><td>张总</td><td>新功能</td><td>已推迟</td><td>有价值，但超出 v1.0 门店经营核心范围。</td></tr>
+            <tr><td>美团订单同步</td><td>张总</td><td>集成</td><td>待确认</td><td>依赖美团 API，可先进入需求池。</td></tr>
+            <tr><td>微信小程序看数据</td><td>老板</td><td>移动端</td><td>已接受</td><td>作为移动端方案之一，服务核心看板。</td></tr>
+            <tr><td>用友财务打通</td><td>财务</td><td>集成</td><td>已推迟</td><td>技术依赖高，建议 v2.0 评估。</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="增量页用于说明第二次新需求进来时，不是重新整理，而是基于已有清单做影响评估。">
+      <div class="inner">
+        <div>
+          <div class="tag">Incremental Update</div>
+          <h2>新需求来了：不要重写，做增量评估</h2>
+          <p>当 `feature-list.md` 已存在，Skill 会进入 Mode B：读取现有功能清单，判断新需求是新增、合并、重复、冲突还是范围蔓延。</p>
+          <div class="focus-line">这一步最像真实产品工作：不是收集需求，而是维护需求体系。</div>
+        </div>
+        <div class="grid-2">
+          <div class="panel focus"><h3>合并</h3><p>“代打卡”并入考勤打卡，但要补数据真实性规则。</p></div>
+          <div class="panel cyan"><h3>升级</h3><p>“按财务模板导出”升级原来的数据导出功能。</p></div>
+          <div class="panel key"><h3>新增</h3><p>“差评预警”新增，但依赖美团/点评数据接口。</p></div>
+          <div class="panel warn"><h3>影响范围</h3><p>“跨门店排班”会影响排班和员工数据模型。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里总结这个 Skill 的优势，避免讲成工具炫技。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Advantages</div>
+          <h2>这个 Skill 好在哪里？</h2>
+          <p>它不是替 PM 做最终决定，而是把混乱输入、隐含需求、冲突关系和优先级依据整理出来，让 PM 决策更稳。</p>
+          <div class="grid-3" style="margin-top:26px">
+            <div class="panel focus"><h3>从乱到清</h3><p>把聊天、文档、口头补充统一成结构化功能清单。</p></div>
+            <div class="panel cyan"><h3>从一次性到持续</h3><p>需求池持续追加，版本变更有痕。</p></div>
+            <div class="panel key"><h3>从主观到有依据</h3><p>评分维度明确，P0 不再全靠拍脑袋。</p></div>
+            <div class="panel warn"><h3>从隐藏冲突到显性决策</h3><p>重复、冲突、范围蔓延都会被标出来。</p></div>
+            <div class="panel focus"><h3>从功能名到用户故事</h3><p>每个功能都有场景、目标和验收标准。</p></div>
+            <div class="panel key"><h3>从老板一句话到需求资产</h3><p>拒绝、推迟和待确认也进入需求池。</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="结尾承接到实操，下一步打开仓库和测试输入，跑 Mode A，再跑 Mode B。">
+      <div class="inner">
+        <div>
+          <div class="tag">Summary</div>
+          <h2>这节课你能获得什么</h2>
+          <p>第一，知道如何用 AI 把 VoC、访谈和业务方需求整理成功能清单。</p>
+          <p style="margin-top:12px">第二，掌握 Mode A 初始化和 Mode B 增量更新两种工作流。</p>
+          <p style="margin-top:12px">第三，理解需求真伪判断、场景归类、优先级排序和版本留痕。</p>
+          <div class="focus-line">接下来，我们进入实操环节：安装 pm-requirements skill，跑一遍从客户声音到需求池的完整流程。</div>
+        </div>
+        <div class="hero-card">
+          <div class="big-quote">需求管理的第一步，不是把所有需求收进来，而是把每个声音变成可以判断、可以排序、可以追踪的产品决策。</div>
+          <div>
+            <span class="pill cyan">客户访谈</span>
+            <span class="pill mint">功能清单</span>
+            <span class="pill amber">需求池</span>
+            <span class="pill rose">版本留痕</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls">
+    <button class="secondary" onclick="prevSlide()">上一页</button>
+    <span class="page-no" id="pageNo">1 / 14</span>
+    <button onclick="nextSlide()">下一页</button>
+  </div>
+
+  <button class="note-trigger" onclick="openNote()" aria-label="讲师备注">?</button>
+  <div class="note-modal" id="noteModal" onclick="closeNote(event)">
+    <div class="note-box" role="dialog" aria-modal="true" aria-labelledby="noteTitle">
+      <h3 id="noteTitle">讲师备注</h3>
+      <p id="noteText"></p>
+      <div class="note-actions"><button class="secondary" onclick="closeNote()">关闭</button></div>
+    </div>
+  </div>
+
+  <script>
+    const slides=[...document.querySelectorAll('.slide')];
+    const bar=document.getElementById('bar');
+    const pageNo=document.getElementById('pageNo');
+    const noteModal=document.getElementById('noteModal');
+    const noteText=document.getElementById('noteText');
+    let idx=0;
+    function show(i){
+      idx=Math.max(0,Math.min(slides.length-1,i));
+      slides.forEach((s,n)=>s.classList.toggle('active',n===idx));
+      bar.style.width=((idx+1)/slides.length*100)+'%';
+      pageNo.textContent=(idx+1)+' / '+slides.length;
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    function nextSlide(){show(idx+1)}
+    function prevSlide(){show(idx-1)}
+    function switchMode(view, btn){
+      const slide=btn.closest('.slide');
+      slide.querySelectorAll('.switch-btn').forEach(b=>b.classList.toggle('active',b===btn));
+      slide.querySelectorAll('.mode-view').forEach(v=>v.classList.toggle('active',v.id==='mode-'+view));
+    }
+    function openNote(){
+      noteText.textContent=slides[idx].dataset.note||'这一页暂无备注。';
+      noteModal.classList.add('open');
+    }
+    function closeNote(event){
+      if(event&&event.target!==noteModal)return;
+      noteModal.classList.remove('open');
+    }
+    window.addEventListener('keydown',e=>{
+      if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ')nextSlide();
+      if(e.key==='ArrowLeft'||e.key==='PageUp')prevSlide();
+      if(e.key==='Escape')closeNote();
+    });
+    show(0);
+  </script>
+</body>
+</html>

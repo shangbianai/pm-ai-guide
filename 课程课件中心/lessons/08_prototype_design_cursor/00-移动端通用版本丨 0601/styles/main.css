@@ -1,0 +1,1364 @@
+/* ===== 主题变量 ===== */
+:root {
+    --iphone-screen-w: 360px;
+    --iphone-screen-h: 760px;
+    --mp-safe-top: 88px;
+    --mp-tabbar-height: 56px;
+    --mp-safe-bottom: calc(var(--mp-tabbar-height) + 18px);
+
+    /* 亮色 · 简约高级 */
+    --bg-page: #ececee;
+    --bg-page-gradient: linear-gradient(160deg, #f2f2f4 0%, #e4e4e8 45%, #ededf0 100%);
+    --bg-sidebar: rgba(255, 255, 255, 0.94);
+    --sidebar-border: #e5e5ea;
+    --sidebar-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+    --text-primary: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-muted: #86868b;
+    --accent: #1d1d1f;
+    --accent-light: #424245;
+    --accent-gradient: linear-gradient(135deg, #2c2c2e 0%, #1a1a1c 100%);
+    --accent-soft: rgba(29, 29, 31, 0.07);
+    --accent-glow: rgba(29, 29, 31, 0.18);
+    --accent-text-on: #ffffff;
+
+    --mobile-bg: #f5f5f7;
+    --mobile-header-bg: linear-gradient(160deg, #1a1a1c 0%, #2d2d30 100%);
+    --mobile-header-text: #ffffff;
+    --mobile-card-bg: #ffffff;
+    --mobile-card-border: #e8e8ed;
+    --mobile-card-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    --mobile-text: #1d1d1f;
+    --mobile-text-secondary: #6e6e73;
+    --stat-color: #1d1d1f;
+    --price-color: #1d1d1f;
+    --btn-primary-bg: linear-gradient(135deg, #2c2c2e, #1a1a1c);
+    --btn-primary-shadow: rgba(0, 0, 0, 0.22);
+    --btn-secondary-bg: #f5f5f7;
+    --btn-secondary-text: #1d1d1f;
+    --btn-secondary-border: #d2d2d7;
+    --list-icon-bg: linear-gradient(135deg, #3a3a3c, #1d1d1f);
+    --list-hover-bg: rgba(29, 29, 31, 0.04);
+    --list-divider: #f0f0f2;
+    --input-bg: #ffffff;
+    --input-border: #d2d2d7;
+    --input-focus: #1d1d1f;
+    --input-focus-ring: rgba(29, 29, 31, 0.08);
+    --tabbar-bg: rgba(255, 255, 255, 0.97);
+    --tabbar-border: rgba(0, 0, 0, 0.06);
+    --tabbar-text: #8a8a8e;
+    --tabbar-active: #1d1d1f;
+    --modal-bg: #ffffff;
+    --modal-handle: #d1d1d6;
+    --tag-bg: #f0f0f2;
+    --tag-color: #1d1d1f;
+    --chart-placeholder-bg: linear-gradient(135deg, #f5f5f7, #ebebed);
+    --chart-placeholder-text: #6e6e73;
+}
+
+[data-theme="dark"] {
+    --bg-page: #08080a;
+    --bg-page-gradient: linear-gradient(160deg, #0a0a0c 0%, #141418 40%, #0d0d10 100%);
+    --bg-sidebar: rgba(22, 22, 24, 0.96);
+    --sidebar-border: rgba(255, 255, 255, 0.07);
+    --sidebar-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    --text-primary: #f5f5f7;
+    --text-secondary: #a1a1a6;
+    --text-muted: #6e6e73;
+    --accent: #c9a962;
+    --accent-light: #e0c989;
+    --accent-gradient: linear-gradient(135deg, #d4b872 0%, #a68b4b 100%);
+    --accent-soft: rgba(201, 169, 98, 0.12);
+    --accent-glow: rgba(201, 169, 98, 0.28);
+    --accent-text-on: #1a1a1c;
+
+    --mobile-bg: #000000;
+    --mobile-header-bg: linear-gradient(180deg, #161618 0%, #0a0a0c 100%);
+    --mobile-header-text: #f5f5f7;
+    --mobile-card-bg: #1c1c1e;
+    --mobile-card-border: rgba(255, 255, 255, 0.07);
+    --mobile-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    --mobile-text: #f5f5f7;
+    --mobile-text-secondary: #a1a1a6;
+    --stat-color: #c9a962;
+    --price-color: #c9a962;
+    --btn-primary-bg: linear-gradient(135deg, #d4b872, #a68b4b);
+    --btn-primary-shadow: rgba(201, 169, 98, 0.35);
+    --btn-secondary-bg: #2c2c2e;
+    --btn-secondary-text: #f5f5f7;
+    --btn-secondary-border: rgba(255, 255, 255, 0.1);
+    --list-icon-bg: linear-gradient(135deg, #3a3a3c, #2c2c2e);
+    --list-hover-bg: rgba(201, 169, 98, 0.06);
+    --list-divider: rgba(255, 255, 255, 0.06);
+    --input-bg: #2c2c2e;
+    --input-border: rgba(255, 255, 255, 0.1);
+    --input-focus: #c9a962;
+    --input-focus-ring: rgba(201, 169, 98, 0.15);
+    --tabbar-bg: rgba(22, 22, 24, 0.98);
+    --tabbar-border: rgba(255, 255, 255, 0.06);
+    --tabbar-text: #6e6e73;
+    --tabbar-active: #c9a962;
+    --modal-bg: #1c1c1e;
+    --modal-handle: #48484a;
+    --tag-bg: rgba(201, 169, 98, 0.12);
+    --tag-color: #c9a962;
+    --chart-placeholder-bg: linear-gradient(135deg, #1c1c1e, #2c2c2e);
+    --chart-placeholder-text: #a1a1a6;
+}
+
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg-page-gradient);
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: var(--text-primary);
+    transition: background 0.4s ease, color 0.3s ease;
+}
+
+/* 原型容器 */
+.prototype-container {
+    display: flex;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 30px;
+}
+
+/* 侧边栏样式 */
+.sidebar {
+    width: 280px;
+    background: var(--bg-sidebar);
+    backdrop-filter: blur(16px);
+    border-radius: 20px;
+    border: 1px solid var(--sidebar-border);
+    box-shadow: var(--sidebar-shadow);
+    padding: 20px;
+    transition: all 0.3s ease, background 0.4s ease, border-color 0.3s ease;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.sidebar.collapsed {
+    width: 80px;
+    padding: 20px 10px;
+}
+
+.sidebar.collapsed .sidebar-header h3 {
+    display: none;
+}
+
+.sidebar.collapsed .nav-item span {
+    display: none;
+}
+
+.sidebar.collapsed .nav-item .arrow {
+    display: none;
+}
+
+.sidebar.collapsed .sub-menu {
+    display: none;
+}
+
+.sidebar.collapsed .nav-item {
+    justify-content: center;
+    padding: 12px 8px;
+}
+
+.sidebar.collapsed .nav-item i:first-child {
+    margin-right: 0;
+    font-size: 18px;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--sidebar-border);
+}
+
+.sidebar-header h3 {
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.sidebar-header h3 i {
+    margin-right: 8px;
+    color: var(--accent);
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--accent);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+    background: var(--accent-soft);
+}
+
+/* 主题切换 */
+.theme-switcher {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--sidebar-border);
+}
+
+.theme-switcher-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.theme-switcher-label i {
+    margin-right: 6px;
+    color: var(--accent);
+}
+
+.theme-toggle {
+    display: flex;
+    gap: 6px;
+    padding: 4px;
+    background: var(--accent-soft);
+    border-radius: 12px;
+    border: 1px solid var(--sidebar-border);
+}
+
+.theme-toggle-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.theme-toggle-btn i {
+    font-size: 14px;
+}
+
+.theme-toggle-btn:hover {
+    color: var(--text-primary);
+}
+
+.theme-toggle-btn.active {
+    background: var(--accent-gradient);
+    color: var(--accent-text-on);
+    box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+.sidebar.collapsed .theme-switcher {
+    display: none;
+}
+
+/* 导航菜单样式 */
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-section {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 2px 0;
+    position: relative;
+}
+
+.nav-item {
+    color: var(--text-primary);
+}
+
+.nav-item:hover {
+    background: var(--accent-soft);
+    transform: translateX(5px);
+}
+
+.nav-item.active {
+    background: var(--accent-gradient);
+    color: var(--accent-text-on);
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.nav-item i {
+    margin-right: 12px;
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.nav-item span {
+    flex: 1;
+    font-weight: 500;
+}
+
+.nav-item .arrow {
+    margin-left: auto;
+    margin-right: 0;
+    transition: transform 0.3s ease;
+}
+
+.nav-item.expanded .arrow {
+    transform: rotate(180deg);
+}
+
+.sub-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: var(--accent-soft);
+    border-radius: 8px;
+    margin: 0 8px;
+}
+
+.sub-menu.expanded {
+    max-height: 200px;
+}
+
+.sub-item {
+    padding: 10px 16px 10px 48px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.sub-item:hover {
+    background: var(--accent-soft);
+    color: var(--text-primary);
+}
+
+.sub-item.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* iPhone Max 手机壳样式 */
+.phone-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.iphone-device {
+    position: relative;
+    width: calc(var(--iphone-screen-w) + 24px);
+    height: calc(var(--iphone-screen-h) + 24px);
+    padding: 12px;
+    border-radius: 52px;
+    background:
+        linear-gradient(155deg, #5a5a5e 0%, #2a2a2c 18%, #1a1a1c 42%, #3d3d40 68%, #6e6e73 100%);
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 0 0 2px rgba(0, 0, 0, 0.6),
+        0 30px 60px rgba(0, 0, 0, 0.45),
+        0 60px 120px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.iphone-device::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 49px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+}
+
+.iphone-bezel {
+    width: 100%;
+    height: 100%;
+    border-radius: 44px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.iphone-screen {
+    width: var(--iphone-screen-w);
+    height: var(--iphone-screen-h);
+    background: #000;
+    border-radius: 42px;
+    overflow: hidden;
+    position: relative;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.iphone-screen::-webkit-scrollbar {
+    display: none;
+}
+
+/* 侧边物理按键 */
+.iphone-button {
+    position: absolute;
+    background: linear-gradient(90deg, #4a4a4e, #2c2c2e, #4a4a4e);
+    border-radius: 2px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    z-index: 5;
+}
+
+.iphone-button-silent {
+    left: -3px;
+    top: 104px;
+    width: 3px;
+    height: 26px;
+}
+
+.iphone-button-vol-up {
+    left: -3px;
+    top: 150px;
+    width: 3px;
+    height: 48px;
+}
+
+.iphone-button-vol-down {
+    left: -3px;
+    top: 210px;
+    width: 3px;
+    height: 48px;
+}
+
+.iphone-button-power {
+    right: -3px;
+    top: 168px;
+    width: 3px;
+    height: 66px;
+}
+
+/* Dynamic Island */
+.dynamic-island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 126px;
+    height: 37px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 300;
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.04),
+        inset 0 1px 4px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 14px;
+}
+
+.dynamic-island-camera {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #1a3a5c, #0a0a12 60%, #000);
+    box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+/* 小程序顶部 Chrome */
+.mp-chrome {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 250;
+    pointer-events: none;
+}
+
+.mp-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    padding: 14px 24px 0;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+}
+
+.mp-status-icons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.mp-signal {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5px;
+    height: 12px;
+}
+
+.mp-signal i {
+    display: block;
+    width: 3px;
+    background: #fff;
+    border-radius: 1px;
+}
+
+.mp-signal i:nth-child(1) { height: 4px; }
+.mp-signal i:nth-child(2) { height: 6px; }
+.mp-signal i:nth-child(3) { height: 8px; }
+.mp-signal i:nth-child(4) { height: 12px; }
+
+.mp-wifi {
+    width: 16px;
+    height: 12px;
+    position: relative;
+    margin-left: 2px;
+}
+
+.mp-wifi::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.mp-wifi::after {
+    content: '';
+    position: absolute;
+    bottom: 1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 7px;
+    border: 2px solid #fff;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+}
+
+.mp-battery {
+    width: 25px;
+    height: 12px;
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+    position: relative;
+    margin-left: 2px;
+}
+
+.mp-battery::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: 3px;
+    width: 2px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 0 1px 1px 0;
+}
+
+.mp-battery-level {
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    bottom: 2px;
+    width: 70%;
+    background: #fff;
+    border-radius: 1px;
+}
+
+/* 微信小程序胶囊按钮 */
+.mp-capsule {
+    position: absolute;
+    top: 48px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 10px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    pointer-events: auto;
+}
+
+.mp-capsule-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
+.mp-capsule-more {
+    gap: 3px;
+}
+
+.mp-capsule-more span {
+    display: block;
+    width: 4px;
+    height: 4px;
+    background: #1a1a1a;
+    border-radius: 50%;
+}
+
+.mp-capsule-sep {
+    width: 0.5px;
+    height: 18px;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.mp-close-ring {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid #1a1a1a;
+    border-radius: 50%;
+    position: relative;
+}
+
+.mp-close-ring::before,
+.mp-close-ring::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 1.5px;
+    background: #1a1a1a;
+    border-radius: 1px;
+}
+
+.mp-close-ring::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.mp-close-ring::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.mp-capsule-btn:hover {
+    opacity: 0.7;
+}
+
+/* 底部 Tab 导航 */
+.mp-tabbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 260;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    height: calc(var(--mp-tabbar-height) + 18px);
+    padding: 6px 4px 18px;
+    background: var(--tabbar-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 0.5px solid var(--tabbar-border);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+    transition: background 0.4s ease, border-color 0.3s ease;
+}
+
+.mp-tabbar-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 4px 0;
+    color: var(--tabbar-text);
+    transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.mp-tabbar-item i {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.mp-tabbar-item span {
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.mp-tabbar-item.active {
+    color: var(--tabbar-active);
+}
+
+.mp-tabbar-item.active i {
+    transform: scale(1.05);
+}
+
+.mp-tabbar-item:hover {
+    color: var(--tabbar-active);
+}
+
+/* 底部 Home 指示条 */
+.iphone-home-bar {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 5px;
+    background: rgba(0, 0, 0, 0.22);
+    border-radius: 3px;
+    z-index: 270;
+    pointer-events: none;
+}
+
+.phone-content {
+    width: 100%;
+    height: 100%;
+    background: var(--mobile-bg);
+    overflow: hidden;
+    position: relative;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    transition: background 0.4s ease;
+}
+
+.phone-content::-webkit-scrollbar {
+    display: none;
+}
+
+/* 移动端页面通用样式 */
+.mobile-page {
+    height: 100%;
+    min-height: 100%;
+    background: var(--mobile-bg);
+    position: relative;
+    overflow-y: auto;
+    padding-bottom: var(--mp-safe-bottom);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    transition: background 0.4s ease;
+}
+
+/* 隐藏Webkit浏览器的滚动条 */
+.mobile-page::-webkit-scrollbar {
+    display: none;
+}
+
+.mobile-header {
+    background: var(--mobile-header-bg);
+    color: var(--mobile-header-text);
+    padding: 0 20px 18px;
+    padding-top: var(--mp-safe-top);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
+    transition: background 0.4s ease;
+}
+
+.mobile-header h1 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+    padding-right: 80px;
+    line-height: 32px;
+}
+
+.mobile-header .subtitle {
+    font-size: 13px;
+    opacity: 0.9;
+    margin-top: 6px;
+    text-align: center;
+    padding-right: 80px;
+}
+
+/* 浅色页面顶栏时，状态栏文字切换为深色 */
+.mp-chrome.mp-chrome--light .mp-status-bar {
+    color: #1a1a1a;
+}
+
+.mp-chrome.mp-chrome--light .mp-signal i {
+    background: #1a1a1a;
+}
+
+.mp-chrome.mp-chrome--light .mp-wifi::before {
+    background: #1a1a1a;
+}
+
+.mp-chrome.mp-chrome--light .mp-wifi::after {
+    border-color: #1a1a1a;
+}
+
+.mp-chrome.mp-chrome--light .mp-battery {
+    border-color: rgba(26, 26, 26, 0.9);
+}
+
+.mp-chrome.mp-chrome--light .mp-battery::after {
+    background: rgba(26, 26, 26, 0.9);
+}
+
+.mp-chrome.mp-chrome--light .mp-battery-level {
+    background: #1a1a1a;
+}
+
+.mobile-content {
+    padding: 20px;
+}
+
+.mobile-footer {
+    background: var(--mobile-card-bg);
+    border-top: 1px solid var(--mobile-card-border);
+    padding: 15px 20px;
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+}
+
+/* 卡片样式 */
+.card {
+    background: var(--mobile-card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: var(--mobile-card-shadow);
+    border: 1px solid var(--mobile-card-border);
+    transition: background 0.4s ease, border-color 0.3s ease;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--mobile-text);
+}
+
+.card-subtitle {
+    font-size: 14px;
+    color: var(--mobile-text-secondary);
+    margin-top: 5px;
+}
+
+/* 按钮样式 */
+.btn {
+    background: var(--btn-primary-bg);
+    color: var(--accent-text-on);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--btn-primary-shadow);
+}
+
+.btn-secondary {
+    background: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+    border: 1px solid var(--btn-secondary-border);
+}
+
+.btn-secondary:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 列表样式 */
+.list-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--list-divider);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.list-item:hover {
+    background: var(--list-hover-bg);
+    padding-left: 10px;
+    border-radius: 8px;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--list-icon-bg);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mobile-header-text);
+    margin-right: 15px;
+    font-size: 16px;
+}
+
+.list-item-icon.accent-icon {
+    background: var(--accent-gradient);
+    color: var(--accent-text-on);
+}
+
+.list-item-content {
+    flex: 1;
+}
+
+.list-item-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--mobile-text);
+    margin-bottom: 4px;
+}
+
+.list-item-subtitle {
+    font-size: 14px;
+    color: var(--mobile-text-secondary);
+}
+
+.list-item-arrow {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* 表单样式 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--mobile-text);
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 16px;
+    background: var(--input-bg);
+    color: var(--mobile-text);
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px var(--input-focus-ring);
+}
+
+/* 统计卡片样式 */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: var(--mobile-card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--mobile-card-shadow);
+    border: 1px solid var(--mobile-card-border);
+    transition: background 0.4s ease;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--stat-color);
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: var(--mobile-text-secondary);
+}
+
+/* 通用工具类 */
+.accent-text {
+    color: var(--accent);
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--accent-gradient);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-text-on);
+    font-size: 32px;
+}
+
+.chart-placeholder {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--chart-placeholder-text);
+    background: var(--chart-placeholder-bg);
+    border-radius: 8px;
+    margin: 15px 0;
+    border: 1px solid var(--mobile-card-border);
+}
+
+.chart-placeholder-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+    color: var(--accent);
+}
+
+.info-row {
+    margin-bottom: 10px;
+    color: var(--mobile-text);
+}
+
+.info-row strong {
+    color: var(--mobile-text-secondary);
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .prototype-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .sidebar {
+        width: 100%;
+        max-width: 600px;
+        position: static;
+    }
+    
+    .phone-container {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .prototype-container {
+        padding: 10px;
+    }
+    
+    :root {
+        --iphone-screen-w: 300px;
+        --iphone-screen-h: 620px;
+        --mp-safe-top: 76px;
+        --mp-tabbar-height: 50px;
+        --mp-safe-bottom: calc(var(--mp-tabbar-height) + 16px);
+    }
+
+    .iphone-device {
+        border-radius: 46px;
+    }
+
+    .dynamic-island {
+        width: 100px;
+        height: 30px;
+        top: 9px;
+    }
+
+    .mp-capsule {
+        top: 42px;
+        right: 8px;
+        height: 28px;
+        padding: 0 8px;
+    }
+
+    .mp-status-bar {
+        font-size: 13px;
+        height: 38px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 手机壳内弹窗 */
+.phone-modal {
+    position: absolute;
+    inset: 0;
+    z-index: 400;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    pointer-events: none;
+    visibility: hidden;
+    transition: visibility 0.3s ease;
+}
+
+.phone-modal.is-open {
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.phone-modal-mask {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.phone-modal.is-open .phone-modal-mask {
+    opacity: 1;
+}
+
+.phone-modal-panel {
+    position: relative;
+    width: 100%;
+    max-height: 82%;
+    background: var(--modal-bg);
+    border-radius: 20px 20px 0 0;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), background 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.phone-modal.is-open .phone-modal-panel {
+    transform: translateY(0);
+}
+
+.phone-modal-handle {
+    width: 36px;
+    height: 4px;
+    background: var(--modal-handle);
+    border-radius: 2px;
+    margin: 10px auto 0;
+    flex-shrink: 0;
+}
+
+.phone-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: var(--accent-soft);
+    border-radius: 50%;
+    color: var(--mobile-text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: background 0.2s ease;
+}
+
+.phone-modal-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.phone-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 20px 24px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.phone-modal-body::-webkit-scrollbar {
+    display: none;
+}
+
+.product-detail-hero {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0 20px;
+    border-bottom: 1px solid var(--list-divider);
+}
+
+.product-detail-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    background: var(--list-icon-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mobile-header-text);
+    font-size: 28px;
+    flex-shrink: 0;
+}
+
+.product-detail-meta h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--mobile-text);
+    margin: 0 0 6px;
+}
+
+.product-detail-price {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--price-color);
+    margin-bottom: 6px;
+}
+
+.product-detail-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.product-detail-tag {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--tag-color);
+}
+
+.product-detail-tag.status-on {
+    background: #e8f8ef;
+    color: #28a745;
+}
+
+.product-detail-section {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--list-divider);
+}
+
+.product-detail-section:last-child {
+    border-bottom: none;
+}
+
+.product-detail-section h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mobile-text);
+    margin: 0 0 10px;
+}
+
+.product-detail-section p {
+    font-size: 13px;
+    color: var(--mobile-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.product-detail-specs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.product-detail-spec {
+    background: var(--accent-soft);
+    border-radius: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--mobile-card-border);
+}
+
+.product-detail-spec label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.product-detail-spec span {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--mobile-text);
+}
+
+.product-detail-actions {
+    display: flex;
+    gap: 10px;
+    padding-top: 16px;
+}
+
+.product-detail-actions .btn {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mobile-page {
+    animation: fadeIn 0.3s ease;
+}
+
+ 

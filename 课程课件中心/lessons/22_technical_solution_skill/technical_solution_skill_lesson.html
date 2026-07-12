@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>超长文档（建设方案）Skill</title>
+<style>
+:root{--accent:#5eead4;--accent2:#60a5fa;--bg:#061015;--ink:#f6fbff;--muted:#b9c7cd;--line:rgba(255,255,255,.16)}*{box-sizing:border-box}body{margin:0;overflow:hidden;background:radial-gradient(circle at 14% 10%,rgba(94,234,212,.2),transparent 30%),radial-gradient(circle at 82% 12%,rgba(96,165,250,.18),transparent 28%),linear-gradient(135deg,#041015,#081827 58%,#10151f);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink)}body:before{content:"";position:fixed;inset:84px 0 0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:66px 66px;pointer-events:none;mask-image:linear-gradient(to bottom,transparent,#000 10%,#000 90%,transparent)}.top{height:84px;padding:0 42px;border-bottom:1px solid var(--line);background:rgba(3,12,16,.84);display:flex;align-items:center;justify-content:space-between;position:relative;z-index:90;backdrop-filter:blur(16px)}.brand{display:flex;gap:16px;align-items:center}.dot{width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 30px rgba(94,234,212,.5)}.brand b{font-size:24px}.brand span{display:block;color:#a8b6bc;font-size:13px;font-weight:900;letter-spacing:7px;margin-top:4px}.arrows{display:flex;align-items:center;gap:12px}.arrows button{width:42px;height:42px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.08);color:white;font-size:22px;font-weight:900;cursor:pointer}.deck{height:calc(100vh - 84px);display:flex;align-items:center;justify-content:center;padding:30px 34px 92px;position:relative;z-index:2}.slide{display:none;width:min(1500px,calc(100vw - 72px));height:min(800px,calc(100vh - 185px));border:1px solid var(--line);border-radius:32px;padding:50px 58px;background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.035));box-shadow:0 28px 70px rgba(0,0,0,.36);overflow:hidden}.slide.active{display:block;animation:in .32s ease both}@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}.content{height:100%;display:grid;grid-template-columns:1fr 1fr;gap:42px;align-items:center}.full{grid-column:1/-1}i{display:inline-flex;gap:10px;align-items:center;font-style:normal;padding:10px 20px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.08);letter-spacing:6px;font-weight:950;color:#e6fbff;margin-bottom:22px}i:before{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent)}h1{font-size:66px;line-height:1.05;margin:0 0 22px}h2{font-size:50px;line-height:1.1;margin:0 0 18px}h3{font-size:22px;margin:0 0 9px}p,li{font-size:21px;line-height:1.66;color:#d4e1e6;font-weight:760}ul{padding-left:1.15em}li{margin:8px 0}a{color:#b8fff4;text-decoration:underline;text-underline-offset:5px;font-weight:950}code{font-family:"SFMono-Regular",Consolas,monospace}.chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}.chips span,.tabs button{padding:9px 16px;border-radius:999px;border:1px solid rgba(94,234,212,.55);background:rgba(94,234,212,.14);font-weight:950;color:#ecfffb}.dash,.cards,.codebox{border:1px solid var(--line);border-radius:28px;background:rgba(255,255,255,.075);box-shadow:inset 0 1px rgba(255,255,255,.08);padding:24px}.dash{display:grid;grid-template-columns:1fr 1fr;gap:16px}.metric{min-height:116px;border:1px solid var(--line);background:rgba(0,0,0,.23);border-radius:22px;padding:20px}.metric b{display:block;font-size:36px;color:var(--accent)}.metric em{display:block;font-style:normal;color:#c7d5da;font-weight:850;margin-top:8px}.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cards.onecol{grid-template-columns:1fr}.card{border:1px solid var(--line);border-radius:22px;background:rgba(0,0,0,.16);padding:20px}.card p{font-size:17px;margin:0;color:#c9d7dc}.steps{display:grid;gap:11px}.step{display:grid;grid-template-columns:52px 1fr;gap:15px;align-items:start;border:1px solid var(--line);background:rgba(0,0,0,.18);border-radius:20px;padding:16px}.num{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#041015;display:grid;place-items:center;font-weight:1000;font-size:19px}.tabs{display:flex;gap:12px;margin-bottom:16px}.tabs button{cursor:pointer}.tabs .active{background:var(--accent);color:#041015}pre{font-family:"SFMono-Regular",Consolas,monospace;white-space:pre-wrap;line-height:1.52}.pane{display:none;margin:0;color:#d7fff6;font-size:18px}.pane.active{display:block}.prompt{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:22px;padding:20px;color:#d9fff6;font-size:16px;max-height:390px;overflow:auto}table{width:100%;border-collapse:separate;border-spacing:0 10px}th{text-align:left;color:#fff;font-size:17px;padding:0 16px 5px}td{background:rgba(255,255,255,.08);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:13px 15px;font-size:17px;color:#d7e4e8;font-weight:760}td:first-child{border-left:1px solid var(--line);border-radius:15px 0 0 15px;color:#fff;font-weight:950}td:last-child{border-right:1px solid var(--line);border-radius:0 15px 15px 0}.nav{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:100;display:flex;gap:12px;align-items:center;padding:9px 13px;border-radius:999px;background:rgba(6,16,20,.78);border:1px solid var(--line);backdrop-filter:blur(16px)}.nav button{height:40px;min-width:86px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.1);color:#fff;font-weight:950;cursor:pointer}.nav .primary{background:var(--accent);color:#041015;border:0}.page{min-width:62px;text-align:center;font-weight:950}.draw-toggle,.draw-tools{position:fixed;right:42px;top:104px;z-index:105;align-items:center;border-radius:999px;background:rgba(6,16,20,.78);border:1px solid var(--line);backdrop-filter:blur(16px)}.draw-toggle{display:inline-flex;justify-content:center;height:38px;min-width:82px;padding:0 18px;color:#fff;font-size:14px;font-weight:950;cursor:pointer}.draw-tools{display:none;gap:8px;padding:8px}body.drawing .draw-toggle{display:none}body.drawing .draw-tools{display:flex}.swatch{width:28px;height:28px;border:2px solid rgba(255,255,255,.72);border-radius:50%;cursor:pointer}.clear{height:28px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.1);color:white;padding:0 11px;font-weight:950;cursor:pointer}.help{position:fixed;right:42px;bottom:22px;z-index:105;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:rgba(6,16,20,.78);color:white;font-size:24px;font-weight:950;cursor:pointer}#drawCanvas{position:fixed;inset:84px 0 0;z-index:70;pointer-events:none}body.drawing #drawCanvas{pointer-events:auto;cursor:crosshair}.top,.nav,.draw-toggle,.draw-tools,.help,.modal{pointer-events:auto}.modal{display:none;position:fixed;inset:0;z-index:130;align-items:center;justify-content:center;background:rgba(0,0,0,.44);padding:28px}.modal.active{display:flex}.modal-card{width:min(860px,92vw);max-height:76vh;overflow:auto;background:white;color:#172326;border-radius:24px;padding:34px}.modal-card h3{font-size:30px;margin:0 0 14px}.modal-card p{white-space:pre-wrap;font-size:18px;color:#26383c}@media(max-width:1100px){.content,.cards{grid-template-columns:1fr}h1{font-size:42px}h2{font-size:36px}p,li{font-size:18px}.slide{padding:34px}}
+.structure-slide{padding:34px 54px}.structure-slide .content{align-items:start}.structure-head{display:grid;grid-template-columns:1fr auto;gap:22px;align-items:end;margin-bottom:16px}.structure-head h2{font-size:44px}.structure-head p{font-size:18px;margin:0}.structure-grid{display:grid;grid-template-columns:1.36fr .9fr;gap:18px;align-items:stretch}.repo-map{height:455px;padding:20px 24px;overflow:hidden}.repo-map .pane{font-size:15px;line-height:1.34;white-space:pre}.repo-notes{display:grid;gap:12px}.repo-notes .card{padding:16px 18px}.repo-notes h3{font-size:19px}.repo-notes p{font-size:15px;line-height:1.5}.repo-notes code{color:#cafff8}@media(max-width:1100px){.structure-grid,.structure-head{grid-template-columns:1fr}.repo-map{height:auto;overflow:auto}.repo-map .pane{white-space:pre-wrap}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><div class="dot"></div><div><b>AI 增强型产品经理</b><span>LONG DOCUMENT · BUILD PLAN</span></div></div><div class="arrows"><button onclick="prevSlide()">‹</button><button onclick="nextSlide()">›</button><b>翻页</b></div></header>
+<canvas id="drawCanvas"></canvas>
+<main class="deck">
+<section class="slide active" data-note="开场定位：这不是让产品经理变成文档机器，而是让产品经理能把 200 多页建设方案的生产过程管理起来。"><div class="content"><div><i>PROPOSAL MASTER</i><h1>超长文档（建设方案）：把 200 页方案写成流程</h1><p>从需求澄清、大纲、素材清单、分模块写作，到内容审查和 docx 排版，帮助产品经理稳定产出 200 多页的建设方案、申报材料、投标文件和可研报告。</p><div class="chips"><span>超长文档</span><span>建设方案</span><span>投标申报</span><span>docx 排版</span></div></div><aside class="dash"><div class="metric"><b>16页</b><em>从场景到实操</em></div><div class="metric"><b>0-8</b><em>逐阶段闸门</em></div><div class="metric"><b>docx</b><em>pandoc + 脚本</em></div><div class="metric"><b>PM</b><em>管结构、管协作、管交付</em></div></aside></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>WHY</i><h2>产品经理为什么要懂超长建设方案？</h2><p>很多 200 多页的建设方案，不是某个人靠灵感写完的。它同时涉及业务目标、建设内容、实施路径、组织分工、风险控制和交付承诺。</p><ul><li>对外：方案是让客户、评委、领导相信项目可行。</li><li>对内：方案是把产品、研发、交付、商务对齐。</li><li>对自己：方案能倒逼产品经理讲清楚边界和取舍。</li></ul></div><div class="cards"><div class="card"><h3>不是写细节</h3><p>而是把建设目标、实施路径和交付边界讲成各方能理解的方案。</p></div><div class="card"><h3>不是堆材料</h3><p>而是围绕读者决策组织证据。</p></div><div class="card"><h3>不是一次写完</h3><p>而是大纲、素材、正文、审查、排版分阶段推进。</p></div><div class="card"><h3>不是 AI 全包</h3><p>数据真实性、商务承诺、最终拍板仍然由人负责。</p></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>PAIN</i><h2>传统写超长建设方案，最容易卡在四个地方</h2><p>问题通常不是不会写字，而是信息不完整、结构不稳定、多人协作断层、最后排版返工。</p></div><div class="cards"><div class="card"><h3>一上来就写正文</h3><p>大纲没确认，后面越写越偏。</p></div><div class="card"><h3>素材到处散落</h3><p>资质、图片、数据、案例不知道放哪。</p></div><div class="card"><h3>多人写不一致</h3><p>术语、数字、时间节点前后打架。</p></div><div class="card"><h3>docx 排版很耗时</h3><p>字体、目录、页码、图片、表格经常反复修。</p></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>GITHUB</i><h2>GitHub 地址和安装指令</h2><p>本节使用的是超长文档生成 Skill。GitHub 仓库原名叫“技术方案Skill”，但这节课我们按“超长文档（建设方案）”来理解和使用。</p></div><div class="cards onecol"><div class="card"><h3>GitHub 地址</h3><p><a href="https://github.com/shangbianai/pm-ai-guide/tree/main/技术方案Skill" target="_blank" rel="noopener">https://github.com/shangbianai/pm-ai-guide/tree/main/技术方案Skill</a></p></div><div class="card"><h3>Skill 安装指令</h3><pre class="prompt">帮我安装这个 skills：
+https://github.com/shangbianai/pm-ai-guide/tree/main/技术方案Skill</pre></div><div class="card"><h3>触发方式</h3><p>安装后使用 <code>/proposal-master</code> 触发，或直接提出“写方案、写标书、做可研、生成完整 docx”等需求。</p></div></div></div></section>
+<section class="slide structure-slide" data-note=""><div class="content"><div class="full"><div class="structure-head"><div><i>STRUCTURE</i><h2>GitHub 文件结构：主指令、参考、脚本分层</h2><p>这一页重点看真实仓库里有什么文件，以及每一类文件在超长建设方案生成流程里负责什么。</p></div><div class="tabs"><button onclick="showTab(this,'repo')" class="active">仓库结构</button><button onclick="showTab(this,'scripts')">脚本职责</button><button onclick="showTab(this,'refs')">参考文档</button></div></div><div class="structure-grid"><div class="codebox repo-map"><pre id="repo" class="pane active">技术方案Skill/（GitHub 原始目录名）
+├─ README.md
+├─ SKILL.md
+├─ references/
+│  ├─ formatting-spec.md
+│  ├─ pandoc-guide.md
+│  └─ examples.md
+├─ scripts/
+│  ├─ make_reference.py
+│  ├─ strip_reference.py
+│  ├─ fix_quotes.py
+│  ├─ renumber_h3.py
+│  ├─ apply_postprocess.py
+│  └─ add_cover.py
+└─ evals/
+   └─ evals.json</pre><pre id="scripts" class="pane">scripts/
+├─ make_reference.py
+│  生成中文字体 reference.docx
+├─ strip_reference.py
+│  从已有 docx 提取样式
+├─ fix_quotes.py
+│  处理中文配对引号
+├─ renumber_h3.py
+│  统一三级标题编号
+├─ apply_postprocess.py
+│  处理图片、表格、字体等 docx 后处理
+└─ add_cover.py
+   将封面插入目录之前</pre><pre id="refs" class="pane">references/
+├─ formatting-spec.md
+│  公文/建设方案排版规范：
+│  字体、标题、表格、图片、页码、目录
+├─ pandoc-guide.md
+│  Markdown 转 docx 的常见问题：
+│  中文字体、目录、封面、图片、引用
+└─ examples.md
+   阶段 0-8 的交互示例：
+   需求澄清、大纲、素材清单、内容审查</pre></div><div class="repo-notes"><div class="card"><h3>入口文件：<code>SKILL.md</code></h3><p>定义 0-8 阶段流程、门禁规则、输出格式和人机分工，是整个 Skill 的主控说明。</p></div><div class="card"><h3>方法说明：<code>references/</code></h3><p>沉淀排版规范、pandoc 转换经验和阶段示例，让模型不是凭感觉写，而是按规则写。</p></div><div class="card"><h3>交付脚本：<code>scripts/</code></h3><p>负责把 Markdown 内容进一步整理成更稳定的 docx，包括字体、目录、封面、表格、图片等。</p></div><div class="card"><h3>测试样例：<code>evals/</code></h3><p>用于验证 Skill 的关键流程是否能稳定触发，避免后续迭代把核心行为改坏。</p></div></div></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>PRINCIPLE</i><h2>核心原则一：需求澄清是门禁</h2><p>缺少文档类型、用途受众、主题、篇幅格式中的关键项时，不应该直接生成正式大纲。</p><ul><li>缺 2 项及以上：只能提问或输出待确认清单。</li><li>用户坚持先出：进入假设驱动模式，明确假设和边界。</li><li>信息基本齐：回显理解，请用户确认。</li></ul></div><div class="cards onecol"><div class="card"><h3>为什么重要？</h3><p>超长建设方案一旦方向错，后面几十页、上百页都会跟着偏。先确认读者和用途，才能决定章节骨架、论证重点和表达口径。</p></div><div class="card"><h3>PM 的动作</h3><p>不要一开始就催 AI 写正文，先让它帮你锁定“这是给谁看的、要促成什么决策”。</p></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>FLOW</i><h2>核心原则二：逐阶段闸门</h2><p>这套 Skill 不追求一次性跑完，而是每个阶段交付一类产物，确认后再进入下一步。</p></div><div class="steps"><div class="step"><div class="num">0</div><div><h3>需求澄清</h3><p>确认类型、用途、主题、格式。</p></div></div><div class="step"><div class="num">1</div><div><h3>大纲生成</h3><p>产出两级结构和章节侧重点。</p></div></div><div class="step"><div class="num">2</div><div><h3>任务拆解</h3><p>生成素材准备清单和图片清单。</p></div></div><div class="step"><div class="num">3</div><div><h3>写作提示词</h3><p>按模块拆成可并行写作的提示词。</p></div></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div class="steps"><div class="step"><div class="num">4</div><div><h3>分模块写作</h3><p>按章节生成文字素材。</p></div></div><div class="step"><div class="num">5</div><div><h3>图片管理</h3><p>整理架构图、流程图、真实截图和占位。</p></div></div><div class="step"><div class="num">6</div><div><h3>内容审查</h3><p>检查冲突、遗漏、术语、数据和交叉引用。</p></div></div><div class="step"><div class="num">7-8</div><div><h3>合成与排版</h3><p>Markdown 合并、pandoc 转 docx、脚本后处理。</p></div></div></div><div><i>STAGE</i><h2>阶段 4-8：从内容到交付文件</h2><p>后半段重点是把内容变成可交付文档。这里尤其要注意：审查不能省，排版不是最后手工硬调。</p><ul><li>文字素材要有模块目录。</li><li>图片要有清单和命名规则。</li><li>最终 docx 之前要做内容审查。</li></ul></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>DOC TYPES</i><h2>不同文档，骨架不一样</h2><p>这个 Skill 会根据文档类型选择不同骨架，不会把 200 页建设方案、投标文件、申报书都套成同一种模板。</p></div><div class="cards"><div class="card"><h3>建设方案</h3><p>建设背景、目标范围、建设内容、实施路径、保障机制。</p></div><div class="card"><h3>投标文件</h3><p>招标响应、评分点映射、偏离表、资质案例、商务条款。</p></div><div class="card"><h3>申报书</h3><p>政策匹配、必要性、创新性、实施基础、预算、绩效指标。</p></div><div class="card"><h3>可研报告</h3><p>现状问题、方案比选、投资估算、效益分析、风险。</p></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div class="full"><i>HUMAN IN LOOP</i><h2>人机分工：AI 负责初稿，人负责判断</h2><p>方案文档是对外承诺的一部分，不能把真实性和商业责任交给 AI。</p><table><thead><tr><th>事项</th><th>AI 能做</th><th>人必须确认</th></tr></thead><tbody><tr><td>大纲/正文</td><td>起草、改写、控字数、查一致性</td><td>战略取舍、最终拍板</td></tr><tr><td>数据</td><td>标注待核实、检查前后一致</td><td>金额、指标、市场数据真实性</td></tr><tr><td>图片</td><td>架构图、流程图、示意图</td><td>真实照片、现场截图、真实数据图表</td></tr><tr><td>排版</td><td>pandoc + 脚本出 docx 初稿</td><td>封面美化、特殊格式、最终校对</td></tr></tbody></table></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>MATERIALS</i><h2>素材准备清单，是 PM 最该盯住的一页</h2><p>真正能提高效率的不是 AI 先写，而是先让 AI 帮你列清楚：缺什么、放哪里、谁负责。</p><ul><li>已有素材：列出现路径，直接可用。</li><li>需用户准备：给出具体文件名和目录。</li><li>AI 可生成：先让用户选择，不默认代替。</li><li>只能用户提供：真实照片、证书、现场截图等。</li></ul></div><div class="cards onecol"><div class="card"><h3>课堂金句</h3><p>方案写作的效率，不取决于 AI 写得多快，而取决于素材边界有没有先讲清楚。</p></div><div class="card"><h3>PM 的动作</h3><p>让 AI 输出清单后，先组织人补材料，再进入正文生成。</p></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>REVIEW</i><h2>内容审查不能省</h2><p>长文档最常见的问题，是不同章节之间数据、术语、人名、时间节点互相冲突。</p></div><div class="cards"><div class="card"><h3>术语统一</h3><p>同一概念全文用同一个词。</p></div><div class="card"><h3>参数一致</h3><p>硬件数量、型号、金额跨模块一致。</p></div><div class="card"><h3>时间对齐</h3><p>里程碑、实施周期、交付节点不能打架。</p></div><div class="card"><h3>引用准确</h3><p>章节交叉引用、图表编号、附件编号要对应。</p></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>DOCX</i><h2>排版自动化：pandoc + 后处理脚本</h2><p>很多方案写完后卡在 docx：中文字体、目录、封面、三线表、图片行高、标题编号。这个 Skill 把这些坑收进脚本里。</p><ul><li><code>make_reference.py</code> 生成中文字体样式。</li><li><code>apply_postprocess.py</code> 处理表格、图片、字体。</li><li><code>add_cover.py</code> 把封面放到目录之前。</li><li><code>fix_quotes.py</code> 处理中文引号。</li></ul></div><div class="cards onecol"><div class="card"><h3>为什么对产品经理重要？</h3><p>当你能稳定交付 docx 初稿，文档工作就从“手工排版”变成“可控流水线”。</p></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>CASE</i><h2>实操案例：AI 客服系统建设方案</h2><p>这一段可以直接作为测试输入，跑阶段 0 和阶段 1。重点是先确认建设范围和读者，而不是直接写正文。</p><pre class="prompt">请使用 proposal-master，帮我写一份《AI 客服工单智能分派系统建设方案（200页版）》。
+
+用途和受众：给公司管理层、业务负责人和交付团队看，用来确认建设范围、投入计划和推进节奏。
+篇幅：希望最终 200 页左右，输出完整 docx；先从大纲、素材清单和写作任务拆解开始。
+背景：当前客服工单靠人工分派，处理慢、错派多、无法按优先级调度。
+目标：建设一个能自动识别工单类型、判断紧急程度、推荐处理人并沉淀知识库的系统。
+已有材料：业务流程说明、客服分类表、历史工单样例、初步原型。
+要求：先不要直接写正文，先给需求澄清和大纲。</pre></div><div class="cards onecol"><div class="card"><h3>观察点</h3><p>它是否先做阶段 0 门禁，而不是直接写正文。</p></div><div class="card"><h3>观察点</h3><p>它是否把材料拆成素材清单和图片清单。</p></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>INPUT</i><h2>通用输入模板</h2><p>以后遇到任何长方案，都可以按这个结构先喂给 Skill。</p><pre class="prompt">文档类型：
+用途和受众：
+主题 / 项目名称：
+篇幅与格式：
+是否有模板 / 评分表 / 甲方要求：
+已有材料：
+希望产出：
+特殊要求：
+
+请先进入阶段 0，判断信息是否足够；如果足够，再进入阶段 1 生成大纲。</pre></div><div class="cards onecol"><div class="card"><h3>提醒</h3><p>如果你已经有大纲，可以直接说“已有大纲，进入阶段 2”。如果已有正文，可以直接进入阶段 6 或阶段 7。</p></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>SUMMARY</i><h2>回顾重点：这节课你能获得什么</h2><p>你要带走的不是一份固定模板，而是一套超长建设方案的生产方法：先确认需求，再拆任务，再写内容，最后审查和排版。</p><ul><li>知道 200 多页建设方案为什么必须流程化。</li><li>掌握 proposal-master 的 0-8 阶段。</li><li>知道哪些内容 AI 能做、哪些必须人确认。</li><li>能用测试案例跑出大纲和素材清单。</li></ul></div><div class="cards"><div class="card"><h3>结构更稳</h3><p>大纲先行，避免跑偏。</p></div><div class="card"><h3>协作更清</h3><p>素材、图片、正文都有目录。</p></div><div class="card"><h3>交付更快</h3><p>docx 合成和排版自动化。</p></div></div></div></section>
+</main>
+<div class="nav"><button onclick="prevSlide()">上一页</button><div class="page"><span id="pageNo">1</span> / 16</div><button class="primary" onclick="nextSlide()">下一页</button></div>
+<button class="draw-toggle" onclick="enterDraw()">标注</button>
+<div class="draw-tools"><button class="swatch" style="background:#ff3b30" onclick="setPen('#ff3b30')"></button><button class="swatch" style="background:#ffd60a" onclick="setPen('#ffd60a')"></button><button class="swatch" style="background:#30d158" onclick="setPen('#30d158')"></button><button class="clear" onclick="clearDraw()">清空</button><button class="clear" onclick="exitDraw()">退出</button></div>
+<button class="help" onclick="openNote()">?</button>
+<div class="modal" id="noteModal" onclick="closeModal(event)"><div class="modal-card"><h3>讲师备注</h3><p id="modalText"></p></div></div>
+<script>
+function showTab(btn,id){btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');btn.closest('.slide').querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
+const slides=Array.from(document.querySelectorAll('.slide'));let current=0;const pageNo=document.getElementById('pageNo'),modal=document.getElementById('noteModal'),modalText=document.getElementById('modalText');
+function showSlide(i){slides[current].classList.remove('active');current=(i+slides.length)%slides.length;slides[current].classList.add('active');pageNo.textContent=current+1;clearDraw();drawing=false}
+function nextSlide(){showSlide(current+1)}function prevSlide(){showSlide(current-1)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')nextSlide();if(e.key==='ArrowLeft')prevSlide();if(e.key==='Escape')modal.classList.remove('active')});
+function openNote(){modalText.textContent=slides[current].dataset.note||'这一页没有额外备注。';modal.classList.add('active')}function closeModal(e){if(e.target.id==='noteModal')modal.classList.remove('active')}
+const canvas=document.getElementById('drawCanvas'),ctx=canvas.getContext('2d');let drawing=false,pen='#ff3b30';
+function resizeCanvas(){const dpr=devicePixelRatio||1;canvas.width=innerWidth*dpr;canvas.height=(innerHeight-84)*dpr;canvas.style.width=innerWidth+'px';canvas.style.height=(innerHeight-84)+'px';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.lineCap='round';ctx.lineJoin='round'}
+resizeCanvas();addEventListener('resize',resizeCanvas);
+function enterDraw(){document.body.classList.add('drawing')}function setPen(c){pen=c;enterDraw()}function exitDraw(){drawing=false;document.body.classList.remove('drawing')}
+function pos(e){return{x:e.clientX,y:e.clientY-84}}
+canvas.addEventListener('pointerdown',e=>{drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)});
+canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e);ctx.strokeStyle=pen;ctx.lineWidth=4;ctx.lineTo(p.x,p.y);ctx.stroke()});
+addEventListener('pointerup',()=>drawing=false);
+function clearDraw(){ctx.clearRect(0,0,canvas.width,canvas.height)}
+</script>
+</body>
+</html>

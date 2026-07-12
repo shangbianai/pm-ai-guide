@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>靠谱向上管理 Skill · AI 产品经理课程</title>
+  <style>
+    :root{
+      --bg:#f7f5ef;--paper:#fffdf7;--ink:#20212a;--soft:#5d6171;--muted:#9699a5;--line:rgba(32,33,42,.14);
+      --navy:#1d2b53;--gold:#c99a2e;--blue:#2f6fdd;--red:#cf5149;--green:#248f67;--violet:#745bd9;
+      --shadow:0 30px 90px rgba(42,36,24,.14);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;color:var(--ink);
+      background:
+        radial-gradient(900px 540px at 8% 6%,rgba(201,154,46,.16),transparent 60%),
+        radial-gradient(800px 520px at 92% 12%,rgba(47,111,221,.12),transparent 58%),
+        linear-gradient(180deg,#fbfaf6,#ece7dc);
+      overflow-x:hidden;
+    }
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.55;background:linear-gradient(90deg,rgba(29,43,83,.045) 1px,transparent 1px),linear-gradient(rgba(29,43,83,.04) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(180deg,#000,transparent 86%)}
+    .topbar{position:sticky;top:0;z-index:80;background:rgba(255,253,247,.86);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:1520px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:14px}
+    .mark{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,var(--navy),var(--gold));box-shadow:0 16px 34px rgba(29,43,83,.22);display:grid;place-items:center;color:#fff;font-weight:950}
+    .brand{font-size:21px;font-weight:950;line-height:1.05}.brand small{display:block;margin-top:5px;color:var(--muted);font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:900}
+    .spacer{flex:1}.hint{font-size:13px;color:var(--muted)}kbd{border:1px solid var(--line);background:#fff;border-radius:7px;padding:1px 7px;color:var(--soft)}
+    .progress{height:4px;background:rgba(32,33,42,.07)}.progress span{display:block;width:14.28%;height:100%;background:linear-gradient(90deg,var(--navy),var(--gold),var(--blue));transition:.25s}
+    .deck{max-width:1520px;margin:0 auto;padding:24px 24px 108px}.slide{display:none;position:relative;overflow:hidden;min-height:790px;border:1px solid var(--line);border-radius:30px;background:linear-gradient(150deg,rgba(255,253,247,.98),rgba(250,247,239,.96));box-shadow:var(--shadow)}
+    .slide.active{display:block;animation:in .28s ease}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .slide:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 16% 18%,rgba(201,154,46,.12),transparent 28%),radial-gradient(circle at 84% 78%,rgba(47,111,221,.10),transparent 26%)}
+    .inner{position:relative;z-index:1;min-height:790px;padding:58px 64px;display:grid;grid-template-columns:1.03fr .97fr;gap:44px;align-items:center}.inner.full{grid-template-columns:1fr}
+    .time-chip{position:absolute;right:28px;top:24px;z-index:5;border:1px solid var(--line);background:rgba(255,255,255,.76);border-radius:999px;padding:7px 12px;font-size:12px;color:var(--muted);font-weight:900}
+    .tag{display:inline-flex;gap:9px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.72);border-radius:999px;padding:8px 14px;margin-bottom:18px;color:var(--soft);font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:950}
+    .tag:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 20px rgba(201,154,46,.5)}
+    h1{font-size:58px;line-height:1.08;margin:0 0 18px;letter-spacing:0;font-weight:950}h2{font-size:38px;line-height:1.18;margin:0 0 16px}h3{font-size:21px;margin:0 0 10px}
+    p{font-size:19px;line-height:1.72;color:var(--soft);margin:0 0 12px}.hl{background:linear-gradient(120deg,var(--navy),var(--blue),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .focus{margin-top:18px;border:1px solid rgba(201,154,46,.32);border-left:5px solid var(--gold);border-radius:17px;padding:16px 18px;background:linear-gradient(90deg,rgba(201,154,46,.11),rgba(47,111,221,.07));font-size:17px;font-weight:900;line-height:1.55;color:#59421a}
+    .panel,.code{border:1px solid var(--line);border-radius:21px;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.66));padding:22px;box-shadow:0 14px 36px rgba(42,36,24,.06)}
+    .panel p,.panel li{font-size:16px}.panel.gold{border-color:rgba(201,154,46,.35)}.panel.blue{border-color:rgba(47,111,221,.28)}.panel.red{border-color:rgba(207,81,73,.28)}.panel.green{border-color:rgba(36,143,103,.28)}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    ul{margin:10px 0 0 20px;padding:0}li{margin:7px 0;color:var(--soft);font-size:16px;line-height:1.58}
+    .mentor-board{min-height:570px;border:1px solid var(--line);border-radius:34px;background:linear-gradient(135deg,#1d2b53,#353042);color:#fff;padding:30px;position:relative;overflow:hidden;box-shadow:0 26px 70px rgba(29,43,83,.24)}
+    .mentor-board:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(180deg,#000,transparent 88%)}
+    .mentor-card{position:relative;z-index:1;border:1px solid rgba(255,255,255,.18);border-radius:20px;background:rgba(255,255,255,.10);padding:18px;margin:14px 0}.mentor-card b{font-size:30px;display:block}.mentor-card span{display:block;margin-top:8px;color:rgba(255,255,255,.72);font-size:15px}
+    .flow{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.step{border:1px solid var(--line);border-radius:18px;background:#fff;padding:17px;min-height:170px}.step strong{display:block;color:var(--gold);font-size:24px;margin-bottom:8px}.step p{font-size:15px;line-height:1.55}
+    .scene-list{display:grid;gap:12px}.scene{display:grid;grid-template-columns:48px 1fr;gap:14px;align-items:start;border:1px solid var(--line);border-radius:18px;background:#fff;padding:16px}.badge{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;color:#fff;font-weight:950;background:linear-gradient(135deg,var(--navy),var(--gold))}
+    .code{font-family:"SFMono-Regular",Consolas,monospace;color:#26365f;font-size:15px;line-height:1.7;white-space:pre-wrap;background:#f9f6ec;max-height:540px;overflow:auto}
+    table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:13px;text-align:left;vertical-align:top;font-size:15px;line-height:1.5;color:var(--soft)}th{background:rgba(201,154,46,.10);color:#5a4217}tr:last-child td{border-bottom:0}td:last-child,th:last-child{border-right:0}
+    .controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;gap:10px;align-items:center;z-index:95;border:1px solid var(--line);background:rgba(255,253,247,.9);backdrop-filter:blur(14px);padding:10px;border-radius:999px;box-shadow:0 18px 48px rgba(42,36,24,.12)}
+    button{border:0;border-radius:999px;padding:10px 16px;font-weight:950;background:linear-gradient(135deg,var(--navy),var(--gold));color:#fff;cursor:pointer}button.secondary{background:#fff;color:var(--soft);border:1px solid var(--line)}.page-no{color:var(--soft);font-size:13px;min-width:62px;text-align:center}
+    .note-trigger,.draw-toggle{position:fixed;bottom:24px;z-index:98;border:1px solid var(--line);background:rgba(255,253,247,.94);color:var(--ink);box-shadow:0 16px 44px rgba(42,36,24,.12)}.note-trigger{right:24px;width:42px;height:42px;padding:0;font-size:20px}.draw-toggle{right:78px}
+    #drawCanvas{position:fixed;inset:0;z-index:70;pointer-events:none}body.drawing #drawCanvas{pointer-events:auto;cursor:crosshair}.controls,.note-trigger,.draw-toggle,.draw-toolbar{pointer-events:auto}.draw-toolbar{position:fixed;right:24px;top:90px;z-index:96;display:none;gap:8px;align-items:center;border:1px solid var(--line);border-radius:999px;background:rgba(255,253,247,.94);padding:9px;box-shadow:0 16px 44px rgba(42,36,24,.12)}body.drawing .draw-toolbar{display:flex}.color-btn{width:30px;height:30px;border-radius:50%;border:2px solid rgba(32,33,42,.15);padding:0}.color-btn.active{outline:3px solid rgba(201,154,46,.22)}.red-pen{background:#ef4444}.yellow{background:#facc15}.blue-pen{background:#2563eb}
+    .note-modal{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(32,33,42,.42)}.note-modal.open{display:flex}.note-box{width:min(720px,100%);border:1px solid var(--line);border-radius:20px;background:#fff;padding:24px;box-shadow:0 28px 90px rgba(42,36,24,.24)}.note-box p{font-size:16px}.note-actions{display:flex;justify-content:flex-end;margin-top:18px}
+    @media(max-width:980px){.inner,.inner.full,.grid-2,.grid-3,.grid-4,.flow{grid-template-columns:1fr}.inner{padding:34px}.time-chip{position:static;display:inline-flex;margin:18px}.hint{display:none}h1{font-size:40px}}
+  </style>
+</head>
+<body>
+  <canvas id="drawCanvas"></canvas>
+  <div class="topbar"><div class="topbar-inner"><div class="mark">K</div><div class="brand">AI 增强型产品经理 <small>Chapter 4 · 产品运营与管理</small></div><div class="spacer"></div><div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页 · 标注自动清空</div></div><div class="progress"><span id="bar"></span></div></div>
+  <main class="deck">
+    <section class="slide active" data-note="开场强调这节不是普通读书分享，而是把一本书蒸馏成可随时调用的工作导师。">
+      <div class="time-chip">00:00 - 02:00</div>
+      <div class="inner">
+        <div><div class="tag">Upward Management</div><h1>遇事不决，问<span class="hl">靠谱</span></h1><p>这一节讲向上管理：把《靠谱》里的咨询式工作基本功，蒸馏成一个可以随时调用的 AI Skill，帮我们处理汇报、请示、延期、要资源和风险预警。</p><div class="focus">重点不是复述一本书，而是让 AI 像一个靠谱导师一样，帮你把话说清楚、把事往前推。</div></div>
+        <div class="mentor-board"><div class="mentor-card"><b>先讲结论</b><span>领导先要知道判断和建议</span></div><div class="mentor-card"><b>事实数据</b><span>不要只讲感受，用证据支撑</span></div><div class="mentor-card"><b>行动建议</b><span>汇报最后要留下下一步</span></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="解释为什么向上管理需要靠谱，而不是会包装。">
+      <div class="time-chip">02:00 - 05:00</div>
+      <div class="inner">
+        <div><div class="tag">Why</div><h1>向上管理，不是讨好领导</h1><p>真正的向上管理，是让领导更快理解事实、更快看到风险、更快做出决策。你越能把复杂问题讲清楚，越像一个值得托付的人。</p><div class="focus">靠谱的核心：不绕弯、不甩锅、不堆材料，给结论、给依据、给方案。</div></div>
+        <div class="grid-2"><div class="panel red"><h3>不靠谱的汇报</h3><ul><li>讲了很多背景，没有结论</li><li>只有情绪，没有事实</li><li>只说困难，没有方案</li><li>报喜不报忧，风险后置</li></ul></div><div class="panel green"><h3>靠谱的汇报</h3><ul><li>先说结论和建议</li><li>事实、分析、行动分开</li><li>说明影响和取舍</li><li>给下一步和需要支持</li></ul></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲方法论蒸馏，六个核心动作即可。">
+      <div class="time-chip">05:00 - 08:00</div>
+      <div class="inner full">
+        <div><div class="tag">Framework</div><h1>把《靠谱》蒸馏成 6 个动作</h1><div class="flow"><div class="step"><strong>01</strong><h3>结论先行</h3><p>先回答完成/未完成、建议/不建议。</p></div><div class="step"><strong>02</strong><h3>直入主题</h3><p>坏消息也要清楚讲，不绕弯。</p></div><div class="step"><strong>03</strong><h3>事实数据</h3><p>用证据替代感受和猜测。</p></div><div class="step"><strong>04</strong><h3>云雨伞</h3><p>事实、分析、行动建议分开。</p></div><div class="step"><strong>05</strong><h3>对齐期待</h3><p>确认目标、范围、质量、时间。</p></div><div class="step"><strong>06</strong><h3>承诺推进</h3><p>给动作、负责人、时间点。</p></div></div><div class="focus">这 6 个动作就是 Skill 的判断框架，也是我们后面实操时的输出标准。</div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="展示 Skill 不是问答，而是工作导师。">
+      <div class="time-chip">08:00 - 11:00</div>
+      <div class="inner">
+        <div><div class="tag">Skill</div><h1>`kaopu-upward-management` 能做什么？</h1><p>它会把你的工作问题转成一版更适合向上沟通的话术，并告诉你还缺哪些事实、数据和决策点。</p><div class="focus">默认输出：一句话结论、可直接发给领导的话术、为什么靠谱、需要补充的数据、更强或更柔和版本。</div></div>
+        <div class="code">用户输入：项目延期了，怎么跟领导说？
+
+Skill 输出：
+1. 一句话结论
+2. 可直接发送的话术
+3. 事实 / 分析 / 行动建议
+4. 需要补充的数据
+5. 更强硬版 / 更柔和版</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="列举真实高频场景，帮助学员建立代入感。">
+      <div class="time-chip">11:00 - 14:00</div>
+      <div class="inner">
+        <div><div class="tag">Scenarios</div><h1>哪些场景最适合问它？</h1><p>越是你不知道怎么开口、怕被认为甩锅、怕讲不清楚的时候，越适合先让它帮你整理结构。</p></div>
+        <div class="scene-list"><div class="scene"><div class="badge">延</div><div><h3>项目延期</h3><p>先承认事实，再讲影响、原因、补救方案和新时间点。</p></div></div><div class="scene"><div class="badge">险</div><div><h3>风险预警</h3><p>用事实提醒风险，不做情绪化判断。</p></div></div><div class="scene"><div class="badge">资</div><div><h3>申请资源</h3><p>说明目标、缺口、不补资源的影响和推荐选项。</p></div></div><div class="scene"><div class="badge">报</div><div><h3>周报汇报</h3><p>把流水账变成结论、进展、风险和下一步。</p></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="给实操输入模板，方便下一步直接演示。">
+      <div class="time-chip">14:00 - 17:00</div>
+      <div class="inner">
+        <div><div class="tag">Prompt</div><h1>实操时可以这样输入</h1><p>输入越具体，输出越像真实可发的话术。至少给出场景、背景、目标和你担心的问题。</p><div class="focus">如果材料不完整，先让 Skill 给一版可用话术，再列出需要补充的事实。</div></div>
+        <div class="code">请你作为“靠谱向上管理导师”，帮我处理下面这个问题。
+
+场景：项目延期 / 风险汇报 / 要资源 / 周报
+背景：
+1. 
+2. 
+3. 
+
+目标：
+我希望领导理解……
+
+请输出：
+一句话结论、可发送话术、为什么靠谱、还缺哪些数据、替代版本。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="结尾承接实操，下一步可以现场用一个延期或风险汇报问题调用 Skill。">
+      <div class="time-chip">17:00 - 19:00</div>
+      <div class="inner">
+        <div><div class="tag">Review</div><h1>回顾重点：这节课的价值</h1><p>第一，把《靠谱》从一本书变成一个随时可用的工作导师。</p><p>第二，掌握向上管理的 6 个动作：结论、直说、事实、云雨伞、期待、承诺。</p><p>第三，用 Skill 辅助真实工作沟通，让汇报更清晰，让领导更容易做决策。</p><div class="focus">接下来进入实操环节：用 `kaopu-upward-management` 处理一个真实的向上汇报问题。</div></div>
+        <div class="panel gold"><h3>一句话带走</h3><p style="font-size:30px;line-height:1.48;font-weight:950;color:#5a4217">靠谱不是会说漂亮话，而是能把事实讲清楚，把问题往前推。</p></div>
+      </div>
+    </section>
+  </main>
+  <div class="controls"><button class="secondary" id="prev">上一页</button><span class="page-no" id="pageNo">1 / 7</span><button id="next">下一页</button></div>
+  <button class="draw-toggle" id="drawToggle">标注</button><button class="note-trigger" id="noteBtn">?</button>
+  <div class="draw-toolbar"><button class="color-btn red-pen active" data-color="#ef4444" title="红色"></button><button class="color-btn yellow" data-color="#facc15" title="黄色"></button><button class="color-btn blue-pen" data-color="#2563eb" title="蓝色"></button><button class="secondary" id="clearDraw">清空</button><button class="secondary" id="exitDraw">退出</button></div>
+  <div class="note-modal" id="noteModal"><div class="note-box"><h3>讲师备注</h3><p id="noteText"></p><div class="note-actions"><button id="closeNote">关闭</button></div></div></div>
+  <script>
+    const slides=[...document.querySelectorAll('.slide')],bar=document.getElementById('bar'),pageNo=document.getElementById('pageNo'),noteText=document.getElementById('noteText'),noteModal=document.getElementById('noteModal');let current=0;
+    const canvas=document.getElementById('drawCanvas'),ctx=canvas.getContext('2d');let drawing=false,pen='#ef4444';function clearDraw(){ctx.clearRect(0,0,canvas.width,canvas.height)}
+    function show(i){current=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,idx)=>s.classList.toggle('active',idx===current));bar.style.width=`${((current+1)/slides.length)*100}%`;pageNo.textContent=`${current+1} / ${slides.length}`;noteText.textContent=slides[current].dataset.note||'这一页没有额外备注。';clearDraw()}
+    document.getElementById('prev').onclick=()=>show(current-1);document.getElementById('next').onclick=()=>show(current+1);document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')show(current-1);if(e.key==='ArrowRight'||e.key===' ')show(current+1);if(e.key==='Escape')noteModal.classList.remove('open')});
+    document.getElementById('noteBtn').onclick=()=>{noteText.textContent=slides[current].dataset.note||'这一页没有额外备注。';noteModal.classList.add('open')};document.getElementById('closeNote').onclick=()=>noteModal.classList.remove('open');noteModal.onclick=e=>{if(e.target===noteModal)noteModal.classList.remove('open')};
+    function resize(){canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=5}resize();addEventListener('resize',resize);
+    canvas.addEventListener('pointerdown',e=>{drawing=true;ctx.beginPath();ctx.moveTo(e.clientX,e.clientY)});canvas.addEventListener('pointermove',e=>{if(!drawing)return;ctx.strokeStyle=pen;ctx.lineTo(e.clientX,e.clientY);ctx.stroke()});['pointerup','pointerleave','pointercancel'].forEach(evt=>canvas.addEventListener(evt,()=>drawing=false));
+    document.getElementById('drawToggle').onclick=()=>{document.body.classList.toggle('drawing');document.getElementById('drawToggle').textContent=document.body.classList.contains('drawing')?'标注中':'标注'};document.getElementById('exitDraw').onclick=()=>{document.body.classList.remove('drawing');document.getElementById('drawToggle').textContent='标注'};document.getElementById('clearDraw').onclick=clearDraw;document.querySelectorAll('.color-btn').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.color-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');pen=btn.dataset.color});
+    show(0);
+  </script>
+</body>
+</html>
+

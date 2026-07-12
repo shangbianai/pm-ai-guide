@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>产品架构图 · 工具盘点与 AI 绘制方法</title>
+  <style>
+    :root{
+      --bg:#fbf8f1;
+      --paper:#fffdf8;
+      --ink:#17151f;
+      --soft:#5f5b6b;
+      --muted:#8a8499;
+      --line:rgba(23,21,31,.14);
+      --navy:#16213e;
+      --teal:#14b8a6;
+      --red:#ef4444;
+      --yellow:#eab308;
+      --purple:#7c3aed;
+      --sky:#0ea5e9;
+      --orange:#f97316;
+      --shadow:0 28px 80px rgba(28,25,23,.18);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(760px 460px at 5% -6%,rgba(20,184,166,.18),transparent 60%),
+        radial-gradient(780px 480px at 102% 2%,rgba(249,115,22,.15),transparent 62%),
+        radial-gradient(640px 420px at 72% 88%,rgba(124,58,237,.10),transparent 60%),
+        linear-gradient(180deg,#fbf8f1 0%,#f1efe7 100%);
+      overflow-x:hidden;
+    }
+    .topbar{position:sticky;top:0;z-index:20;background:rgba(251,248,241,.86);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:1400px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
+    .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--orange));box-shadow:0 0 20px rgba(20,184,166,.45)}
+    .brand{font-weight:950;letter-spacing:.02em;color:var(--navy)}
+    .brand small{display:block;color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+    .spacer{flex:1}
+    .hint{color:var(--muted);font-size:13px}
+    kbd{font-family:inherit;border:1px solid var(--line);background:rgba(255,255,255,.7);border-radius:6px;padding:1px 6px;color:var(--soft)}
+    .progress{height:4px;background:rgba(23,21,31,.07)}
+    .progress span{display:block;height:100%;width:6.25%;background:linear-gradient(90deg,var(--teal),var(--sky),var(--orange));transition:.25s}
+    .deck{max-width:1460px;margin:0 auto;padding:18px 22px 104px}
+    .slide{
+      display:none;
+      min-height:780px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:linear-gradient(180deg,rgba(255,253,248,.96),rgba(255,252,244,.92));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .slide.active{display:block;animation:in .35s ease}
+    @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .slide:before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        linear-gradient(90deg,rgba(22,33,62,.055) 1px,transparent 1px),
+        linear-gradient(rgba(22,33,62,.055) 1px,transparent 1px);
+      background-size:44px 44px;
+      mask-image:linear-gradient(180deg,black,transparent 82%);
+    }
+    .inner{position:relative;z-index:1;padding:48px 58px;min-height:780px;display:grid;grid-template-columns:1fr 1fr;gap:42px;align-items:center}
+    .inner.full{grid-template-columns:1fr}
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
+      background:rgba(255,255,255,.72);color:var(--soft);border-radius:999px;padding:6px 12px;
+      font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:950;margin-bottom:18px;
+    }
+    .tag:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 12px rgba(20,184,166,.65)}
+    h1{font-size:54px;line-height:1.08;margin:0 0 18px;letter-spacing:-.02em;color:var(--navy)}
+    h2{font-size:38px;line-height:1.18;margin:0 0 16px;color:var(--navy)}
+    h3{margin:0 0 10px;font-size:21px;color:var(--navy)}
+    p{font-size:19px;line-height:1.72;color:var(--soft);margin:0}
+    b{color:var(--ink)}
+    .hl{background:linear-gradient(120deg,var(--teal),var(--sky),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .focus-line{margin-top:18px;border:1px solid rgba(20,184,166,.32);border-left:5px solid var(--teal);border-radius:14px;padding:14px 16px;background:linear-gradient(90deg,rgba(20,184,166,.12),rgba(249,115,22,.06));color:#134e4a;font-size:17px;font-weight:900;line-height:1.55}
+    .panel,.canvas-card,.code,.map-card{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(255,255,255,.50));
+      border-radius:18px;padding:22px;
+    }
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .panel p,.panel li{font-size:16px;color:var(--soft);line-height:1.62}
+    .panel.teal{border-color:rgba(20,184,166,.35);background:linear-gradient(180deg,rgba(20,184,166,.10),rgba(255,255,255,.62))}
+    .panel.orange{border-color:rgba(249,115,22,.35);background:linear-gradient(180deg,rgba(249,115,22,.11),rgba(255,255,255,.62))}
+    .panel.purple{border-color:rgba(124,58,237,.30);background:linear-gradient(180deg,rgba(124,58,237,.09),rgba(255,255,255,.62))}
+    .panel.sky{border-color:rgba(14,165,233,.32);background:linear-gradient(180deg,rgba(14,165,233,.09),rgba(255,255,255,.62))}
+    .panel h3{display:flex;align-items:center;gap:8px}
+    .panel h3:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--teal)}
+    .panel.orange h3:before{background:var(--orange)}.panel.purple h3:before{background:var(--purple)}.panel.sky h3:before{background:var(--sky)}
+    ul{margin:10px 0 0 20px;padding:0}
+    li{margin:6px 0}
+    .pill{display:inline-flex;align-items:center;border-radius:999px;border:1px solid var(--line);padding:5px 10px;margin:4px 4px 0 0;background:rgba(255,255,255,.72);color:var(--soft);font-size:13px;font-weight:850}
+    .pill.teal{color:#0f766e;border-color:rgba(20,184,166,.35);background:rgba(20,184,166,.10)}
+    .pill.orange{color:#c2410c;border-color:rgba(249,115,22,.35);background:rgba(249,115,22,.10)}
+    .pill.purple{color:#6d28d9;border-color:rgba(124,58,237,.30);background:rgba(124,58,237,.08)}
+    .pill.sky{color:#0369a1;border-color:rgba(14,165,233,.35);background:rgba(14,165,233,.09)}
+    .cover-slide{background:linear-gradient(135deg,rgba(20,184,166,.18),transparent 34%),linear-gradient(315deg,rgba(249,115,22,.16),transparent 42%),linear-gradient(180deg,#fffdf8,#f7f1e7)}
+    .cover-inner{position:relative;z-index:1;min-height:780px;padding:48px 62px 92px;display:grid;grid-template-columns:1.02fr .98fr;gap:42px;align-items:center}
+    .cover-kicker{font-size:13px;font-weight:950;letter-spacing:.22em;text-transform:uppercase;color:#0f766e;margin-bottom:18px}
+    .cover-title{font-size:66px;line-height:1.02;margin:0 0 20px;font-weight:980;letter-spacing:-.03em;color:var(--navy)}
+    .cover-subtitle{font-size:22px;line-height:1.65;color:#312e3f;max-width:720px}
+    .diagram-demo{min-height:520px;border:1px solid rgba(22,33,62,.20);border-radius:28px;background:linear-gradient(145deg,#111827,#16213e 48%,#0f766e 145%);position:relative;overflow:hidden;box-shadow:0 28px 90px rgba(22,33,62,.26)}
+    .diagram-demo:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px);background-size:34px 34px;mask-image:radial-gradient(circle at 50% 45%,black,transparent 78%)}
+    .diagram-demo:after{content:"";position:absolute;inset:-40%;background:conic-gradient(from 110deg,transparent,rgba(20,184,166,.20),transparent 24%,rgba(249,115,22,.16),transparent 46%);animation:slowSpin 14s linear infinite}
+    @keyframes slowSpin{to{transform:rotate(360deg)}}
+    .particle{position:absolute;z-index:2;width:6px;height:6px;border-radius:50%;background:#5eead4;box-shadow:0 0 20px #5eead4;animation:floatDot 5s ease-in-out infinite}
+    .pt1{left:18%;top:18%;animation-delay:.1s}.pt2{left:74%;top:20%;background:#fdba74;box-shadow:0 0 20px #fdba74;animation-delay:.8s}.pt3{left:28%;top:76%;background:#bae6fd;box-shadow:0 0 20px #bae6fd;animation-delay:1.3s}.pt4{left:84%;top:68%;animation-delay:2s}
+    @keyframes floatDot{0%,100%{transform:translateY(0);opacity:.65}50%{transform:translateY(-18px);opacity:1}}
+    .arch-svg{position:absolute;inset:0;z-index:3;width:100%;height:100%}
+    .arch-line{stroke-dasharray:7 10;animation:dashFlow 2.8s linear infinite}
+    @keyframes dashFlow{to{stroke-dashoffset:-68}}
+    .arch-node{filter:drop-shadow(0 12px 22px rgba(0,0,0,.28))}
+    .arch-label{font-weight:900;font-size:16px;fill:#fff}
+    .arch-sub{font-size:11px;fill:rgba(255,255,255,.68);font-weight:700}
+    .compare{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .side{border:1px solid var(--line);border-radius:18px;padding:20px;background:rgba(255,255,255,.66)}
+    .side h3{font-size:20px}
+    .stack{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+    .stack div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;color:var(--soft);font-weight:850}
+    .ai-stack div{background:linear-gradient(90deg,rgba(20,184,166,.10),rgba(14,165,233,.08));color:#164e63}
+    .switch-scene{display:grid;grid-template-columns:1fr 1.08fr;gap:28px;align-items:stretch}
+    .scene-copy{display:flex;flex-direction:column;justify-content:space-between;gap:18px}
+    .scene-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .compare-btn{border:1px solid var(--line);background:white;color:var(--soft);border-radius:999px;padding:10px 14px;font-weight:950;cursor:pointer}
+    .compare-btn.active{background:linear-gradient(135deg,var(--teal),var(--sky));color:white;border-color:transparent}
+    .scene-view{display:none}
+    .scene-view.active{display:block;animation:in .28s ease}
+    .scene-visual{position:relative;min-height:560px;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:linear-gradient(145deg,#fff7ed,#eff6ff);box-shadow:0 22px 70px rgba(28,25,23,.13)}
+    .scene-visual.dark{background:linear-gradient(145deg,#101827,#13213f 56%,#0f766e 150%);color:white}
+    .scene-visual:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(22,33,62,.06) 1px,transparent 1px),linear-gradient(rgba(22,33,62,.06) 1px,transparent 1px);background-size:36px 36px;opacity:.8}
+    .scene-visual.dark:before{background:linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px)}
+    .messy-board,.ai-board{position:absolute;inset:28px;z-index:1}
+    .old-way-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+    .old-way-overlay{position:absolute;left:22px;right:22px;bottom:22px;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .old-way-overlay span{border:1px solid rgba(255,255,255,.34);border-radius:14px;background:rgba(22,33,62,.68);backdrop-filter:blur(10px);color:white;padding:11px 12px;font-size:14px;font-weight:900;text-align:center}
+    .paper{position:absolute;border:1px solid rgba(22,33,62,.16);border-radius:10px;background:rgba(255,255,255,.76);box-shadow:0 16px 34px rgba(28,25,23,.10)}
+    .paper:before,.paper:after{content:"";position:absolute;left:14px;right:14px;height:2px;background:rgba(22,33,62,.12);border-radius:2px}
+    .paper:before{top:18px}.paper:after{top:32px}
+    .pa{left:14px;top:26px;width:140px;height:104px;transform:rotate(-6deg)}.pb{right:22px;top:38px;width:170px;height:118px;transform:rotate(5deg)}.pc{left:80px;bottom:24px;width:180px;height:120px;transform:rotate(4deg)}.pd{right:64px;bottom:36px;width:154px;height:104px;transform:rotate(-7deg)}
+    .sticky{position:absolute;width:74px;height:58px;border-radius:8px;background:#fde68a;box-shadow:0 12px 24px rgba(28,25,23,.14);transform:rotate(-8deg)}
+    .st1{left:205px;top:52px}.st2{right:186px;top:190px;background:#bfdbfe;transform:rotate(7deg)}.st3{left:286px;bottom:68px;background:#fed7aa;transform:rotate(5deg)}
+    .warning{position:absolute;right:120px;top:220px;width:84px;height:84px;border:5px solid #ef4444;border-radius:18px;color:#ef4444;display:flex;align-items:center;justify-content:center;font-size:54px;font-weight:950;background:rgba(255,255,255,.60)}
+    .scribble{position:absolute;border:2px dashed rgba(22,33,62,.35);border-radius:40%;transform:rotate(16deg)}
+    .sc1{left:210px;top:130px;width:250px;height:115px}.sc2{left:150px;bottom:145px;width:300px;height:130px;transform:rotate(-18deg)}
+    .desk-person{position:absolute;left:210px;bottom:8px;width:170px;height:160px;border-radius:80px 80px 22px 22px;background:#16213e;box-shadow:0 18px 40px rgba(22,33,62,.25)}
+    .desk-person:before{content:"";position:absolute;left:54px;top:-48px;width:72px;height:72px;border-radius:50%;background:#f1c7a8}
+    .desk-person:after{content:"";position:absolute;left:42px;top:-58px;width:90px;height:54px;border-radius:50% 50% 26px 26px;background:#17151f}
+    .pain-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    .pain-list div,.gain-list div{border:1px solid var(--line);border-radius:13px;padding:12px 13px;background:rgba(255,255,255,.72);font-size:15px;color:var(--soft);font-weight:850}
+    .gain-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    .ai-center{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:168px;height:168px;border-radius:32px;background:linear-gradient(135deg,rgba(20,184,166,.22),rgba(14,165,233,.20));border:2px solid rgba(94,234,212,.75);box-shadow:0 0 60px rgba(20,184,166,.35);display:flex;align-items:center;justify-content:center;color:white;font-size:28px;font-weight:950}
+    .ai-node{position:absolute;z-index:2;border:1.5px solid rgba(255,255,255,.28);border-radius:16px;padding:13px 15px;background:rgba(255,255,255,.08);backdrop-filter:blur(6px);color:white;font-weight:900;min-width:128px;text-align:center}
+    .ai-node small{display:block;color:rgba(255,255,255,.62);font-size:11px;margin-top:3px}
+    .an1{left:30px;top:56px;border-color:#5eead4}.an2{right:34px;top:62px;border-color:#fdba74}.an3{left:46px;bottom:72px;border-color:#93c5fd}.an4{right:42px;bottom:76px;border-color:#c4b5fd}
+    .ai-flow{position:absolute;inset:0;z-index:1}
+    .ai-flow path{fill:none;stroke:url(#aiGrad);stroke-width:3;stroke-dasharray:8 10;animation:dashFlow 2.4s linear infinite}
+    .advantage-strip{margin-top:18px;border:1px solid rgba(20,184,166,.28);border-radius:16px;padding:16px;background:linear-gradient(90deg,rgba(20,184,166,.12),rgba(14,165,233,.08));color:#134e4a;font-weight:950;line-height:1.6}
+    .tab-switch,.mode-switch{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+    .tab-btn,.switch-btn{border:1px solid var(--line);background:rgba(255,255,255,.76);color:var(--soft);border-radius:999px;padding:9px 14px;font-size:14px;font-weight:950;cursor:pointer}
+    .tab-btn.active,.switch-btn.active{color:white;border-color:transparent;background:linear-gradient(135deg,var(--teal),var(--sky));box-shadow:0 14px 30px rgba(20,184,166,.18)}
+    .tab-view,.mode-view{display:none;animation:in .25s ease}
+    .tab-view.active,.mode-view.active{display:block}
+    .workflow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+    .wf-step{border:1px solid var(--line);border-radius:16px;padding:16px;background:rgba(255,255,255,.72);min-height:158px;position:relative}
+    .wf-step:after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:var(--teal);font-size:22px;font-weight:950}
+    .wf-step:last-child:after{display:none}
+    .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:9px;background:linear-gradient(135deg,var(--teal),var(--sky));font-weight:950;margin-bottom:12px;color:white}
+    .wf-step b{display:block;font-size:16px;margin-bottom:8px;color:var(--navy)}
+    .wf-step span{display:block;color:var(--soft);font-size:14px;line-height:1.5}
+    .table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:16px;overflow:hidden;font-size:15px;background:rgba(255,255,255,.72)}
+    .table th,.table td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}
+    .table th{background:rgba(22,33,62,.08);color:var(--navy)}
+    .table tr:last-child td{border-bottom:0}.table th:last-child,.table td:last-child{border-right:0}
+    .code{font-family:"SFMono-Regular",Consolas,monospace;color:#134e4a;font-size:14px;line-height:1.65;white-space:pre-wrap;max-height:540px;overflow:auto;background:#f6fffb}
+    .tool-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .tool{border:1px solid var(--line);border-radius:16px;padding:18px;background:rgba(255,255,255,.75);min-height:170px}
+    .tool b{display:block;color:var(--navy);font-size:18px;margin-bottom:8px}.tool span{display:block;color:var(--soft);font-size:14px;line-height:1.55}
+    .big-quote{font-size:30px;line-height:1.42;font-weight:950;color:var(--navy)}
+    .reveal-board{border:1px solid var(--line);border-radius:22px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,.84),rgba(255,255,255,.52));min-height:520px;display:grid;grid-template-columns:220px 1fr;gap:22px}
+    .step-rail{display:flex;flex-direction:column;gap:10px}
+    .reveal-btn{border:1px solid var(--line);background:white;color:var(--soft);border-radius:14px;padding:13px 14px;text-align:left;font-weight:950;box-shadow:0 10px 20px rgba(28,25,23,.06)}
+    .reveal-btn.active{background:linear-gradient(135deg,var(--teal),var(--sky));color:white;border-color:transparent}
+    .reveal-stage{position:relative;border:1px solid rgba(22,33,62,.12);border-radius:18px;overflow:hidden;background:#16213e;min-height:470px;color:white}
+    .stage-grid{position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px);background-size:36px 36px;opacity:.7}
+    .reveal-card{position:absolute;display:none;left:34px;right:34px;top:34px;bottom:34px;align-content:center}
+    .reveal-card.active{display:grid;animation:in .28s ease}
+    .reveal-card h3{color:white;font-size:30px;margin-bottom:12px}
+    .reveal-card p{color:rgba(255,255,255,.78);font-size:18px;max-width:620px}
+    .mini-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:26px}
+    .mini-flow span{border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:12px 10px;text-align:center;background:rgba(255,255,255,.08);font-weight:900}
+    .skill-preview{min-height:520px;position:relative;border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,#13213f,#0f172a);overflow:hidden;padding:22px;color:white;box-shadow:0 20px 60px rgba(22,33,62,.22)}
+    .skill-preview:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px);background-size:38px 38px}
+    .skill-preview > *{position:relative;z-index:1}
+    .skill-row{display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:13px 14px;margin:12px 0;background:rgba(255,255,255,.07)}
+    .skill-row b{color:white}.skill-row span{color:rgba(255,255,255,.66);font-size:13px}
+    .skill-arrow{color:#5eead4;font-weight:950;text-align:center;font-size:22px;margin:2px 0}
+    .controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:30;border:1px solid var(--line);background:rgba(255,253,248,.88);backdrop-filter:blur(14px);padding:10px;border-radius:999px;box-shadow:0 18px 48px rgba(28,25,23,.18)}
+    button{border:0;border-radius:999px;padding:10px 16px;font-weight:950;background:linear-gradient(135deg,var(--teal),var(--sky));color:white;cursor:pointer}
+    button.secondary{background:rgba(255,255,255,.78);color:var(--soft);border:1px solid var(--line)}
+    .page-no{color:var(--soft);font-size:13px;min-width:58px;text-align:center}
+    .note-trigger{position:fixed;right:24px;bottom:24px;z-index:34;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(255,253,248,.90);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:950;box-shadow:0 16px 44px rgba(28,25,23,.18)}
+    .draw-toggle{position:fixed;right:78px;bottom:24px;z-index:34;border:1px solid var(--line);background:rgba(255,253,248,.90);color:var(--navy);box-shadow:0 16px 44px rgba(28,25,23,.18)}
+    .draw-toolbar{position:fixed;right:24px;top:92px;z-index:45;display:none;gap:8px;align-items:center;border:1px solid var(--line);border-radius:999px;background:rgba(255,253,248,.92);backdrop-filter:blur(14px);padding:9px;box-shadow:0 16px 44px rgba(28,25,23,.18)}
+    body.drawing .draw-toolbar{display:flex}
+    .color-btn{width:30px;height:30px;border-radius:50%;border:2px solid rgba(23,21,31,.18);padding:0}
+    .color-btn.active{outline:3px solid rgba(22,33,62,.18)}
+    .red{background:var(--red)}.yellow{background:var(--yellow)}
+    #drawCanvas{position:fixed;inset:0;z-index:40;pointer-events:none}
+    body.drawing #drawCanvas{pointer-events:auto;cursor:crosshair}
+    .note-modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(23,21,31,.42)}
+    .note-modal.open{display:flex}
+    .note-box{width:min(660px,100%);border:1px solid var(--line);border-radius:18px;background:#fffdf8;box-shadow:0 28px 90px rgba(28,25,23,.25);padding:24px}
+    .note-box p{font-size:16px}
+    .note-actions{margin-top:18px;display:flex;justify-content:flex-end}
+    @media(max-width:980px){
+      .inner,.inner.full,.cover-inner,.grid-2,.grid-3,.grid-4,.compare,.workflow,.tool-grid{grid-template-columns:1fr;padding:28px}
+      .wf-step:after{display:none}
+      h1{font-size:38px}.cover-title{font-size:46px}h2{font-size:30px}.hint{display:none}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="drawCanvas"></canvas>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="dot"></span>
+      <div class="brand">AI 增强型产品经理 <small>Chapter 3 · 产品设计</small></div>
+      <div class="spacer"></div>
+      <div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页</div>
+    </div>
+    <div class="progress"><span id="bar"></span></div>
+  </div>
+
+  <main class="deck">
+    <section class="slide cover-slide active" data-note="讲师提示：开场把架构图定义成沟通工具，不是技术同学专属产物。">
+      <div class="cover-inner">
+        <div>
+          <div class="cover-kicker">arch-diagram Skill</div>
+          <h1 class="cover-title">产品架构图：<br><span class="hl">从手工梳理到 AI 生成</span></h1>
+          <p class="cover-subtitle">这一节我们盘点画产品架构图的工具和方法，重点看 AI 如何把需求文档、功能清单和系统描述转成可交付的结构图。</p>
+          <div class="focus-line">核心问题：产品经理怎么画出一张别人看得懂、团队能对齐、后续还能迭代的产品架构图？</div>
+        </div>
+        <div class="diagram-demo">
+          <span class="particle pt1"></span><span class="particle pt2"></span><span class="particle pt3"></span><span class="particle pt4"></span>
+          <svg class="arch-svg" viewBox="0 0 620 520" aria-label="动态产品架构示意">
+            <defs>
+              <linearGradient id="flow" x1="0" x2="1">
+                <stop offset="0" stop-color="#5eead4"/><stop offset=".55" stop-color="#38bdf8"/><stop offset="1" stop-color="#fdba74"/>
+              </linearGradient>
+              <marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+                <path d="M0,0 L10,4 L0,8 Z" fill="#5eead4"/>
+              </marker>
+            </defs>
+            <path class="arch-line" d="M140 120 C230 68 350 68 458 120" fill="none" stroke="url(#flow)" stroke-width="3" marker-end="url(#arrow)"/>
+            <path class="arch-line" d="M140 120 C158 220 208 296 286 350" fill="none" stroke="url(#flow)" stroke-width="3" marker-end="url(#arrow)"/>
+            <path class="arch-line" d="M458 120 C438 224 386 300 286 350" fill="none" stroke="url(#flow)" stroke-width="3" marker-end="url(#arrow)"/>
+            <path class="arch-line" d="M286 350 C354 392 426 404 492 372" fill="none" stroke="url(#flow)" stroke-width="3" marker-end="url(#arrow)"/>
+            <g class="arch-node">
+              <rect x="58" y="76" width="156" height="82" rx="18" fill="rgba(20,184,166,.18)" stroke="#5eead4" stroke-width="2"/>
+              <text x="136" y="111" text-anchor="middle" class="arch-label">用户触点</text>
+              <text x="136" y="133" text-anchor="middle" class="arch-sub">小程序 / App / Web</text>
+            </g>
+            <g class="arch-node">
+              <rect x="382" y="76" width="156" height="82" rx="18" fill="rgba(249,115,22,.18)" stroke="#fdba74" stroke-width="2"/>
+              <text x="460" y="111" text-anchor="middle" class="arch-label">运营后台</text>
+              <text x="460" y="133" text-anchor="middle" class="arch-sub">配置 / 审批 / 看板</text>
+            </g>
+            <g class="arch-node">
+              <rect x="206" y="306" width="176" height="90" rx="20" fill="rgba(14,165,233,.18)" stroke="#7dd3fc" stroke-width="2"/>
+              <text x="294" y="344" text-anchor="middle" class="arch-label">业务服务层</text>
+              <text x="294" y="366" text-anchor="middle" class="arch-sub">权限 / 流程 / 数据规则</text>
+            </g>
+            <g class="arch-node">
+              <rect x="424" y="334" width="142" height="70" rx="16" fill="rgba(124,58,237,.18)" stroke="#c4b5fd" stroke-width="2"/>
+              <text x="495" y="363" text-anchor="middle" class="arch-label">外部系统</text>
+              <text x="495" y="383" text-anchor="middle" class="arch-sub">支付 / 消息 / API</text>
+            </g>
+            <text x="310" y="468" text-anchor="middle" fill="rgba(255,255,255,.50)" font-size="13" font-weight="700">从用户场景到系统边界，一张图讲清楚</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这一页先讲痛点，后面再给方法和工具，形成对比。">
+      <div class="inner">
+        <div>
+          <div class="tag">Why</div>
+          <h1>为什么产品经理也要会画架构图？</h1>
+          <p>产品架构图不是为了炫技，而是为了把“业务、功能、数据、角色、系统边界”放在同一张图里。</p>
+          <p>它让业务方知道产品覆盖什么，让设计和研发知道模块边界，也让团队能提前发现漏掉的角色、数据流和系统依赖。</p>
+        </div>
+        <div class="grid-2">
+          <div class="panel teal"><h3>对齐范围</h3><p>哪些模块在本期，哪些只是外部依赖。</p></div>
+          <div class="panel orange"><h3>暴露边界</h3><p>前台、后台、服务、数据和第三方接口分清楚。</p></div>
+          <div class="panel sky"><h3>减少返工</h3><p>在画图阶段发现漏掉的角色和流程。</p></div>
+          <div class="panel purple"><h3>便于汇报</h3><p>让复杂产品用一张图进入决策讨论。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：先停留在“过去”页，讲清楚痛点；再点击“AI 新流程”，强调节省的是结构提炼和反复排版时间。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Before vs AI</div>
+          <div class="switch-scene">
+            <div class="scene-copy">
+              <div>
+                <h1>以前怎么画？现在有 AI 后怎么画？</h1>
+                <div class="scene-actions">
+                  <button class="compare-btn active" data-scene="oldWay">过去：手工画图</button>
+                  <button class="compare-btn" data-scene="newWay">现在：AI 先出草案</button>
+                </div>
+              </div>
+              <div class="scene-view active" id="oldWay">
+                <h3>过去的问题不只是慢，而是“越改越乱”</h3>
+                <p>PM 要先读文档，再手动拆模块、摆框、连线、对齐。需求一变，图也跟着重排，最后经常没人愿意维护。</p>
+                <div class="pain-list">
+                  <div>资料散：PRD、会议纪要、代码和截图分散</div>
+                  <div>边界模糊：模块、角色、外部系统混在一起</div>
+                  <div>排版耗时：大量时间花在对齐和连线上</div>
+                  <div>维护困难：需求变化后整张图要重修</div>
+                </div>
+                <div class="advantage-strip">旧方式的核心成本：人脑负责提炼结构，同时还要负责画面排版。</div>
+              </div>
+              <div class="scene-view" id="newWay">
+                <h3>新的方式：先让 AI 把结构变成第一版图</h3>
+                <p>把 PRD、功能清单、系统描述交给 AI，让它先提炼模块、角色、数据流和系统边界，再生成 SVG/HTML、图片提示词，或直接调用图片 API 出图。</p>
+                <div class="gain-list">
+                  <div>更快：从空白画布变成审查草案</div>
+                  <div>更完整：AI 先检查角色、模块、数据和依赖</div>
+                  <div>更可迭代：用自然语言继续调整结构</div>
+                  <div>更适合交付：SVG 可导出，提示词和图片可展示</div>
+                </div>
+                <div class="advantage-strip">新方式的优势：AI 承担结构初稿和图形生成，人负责业务判断、边界校验和表达取舍。</div>
+              </div>
+            </div>
+            <div>
+              <div class="scene-view active" data-visual="oldWay">
+                <div class="scene-visual">
+                  <img class="old-way-img" src="assets/old-way-architecture-diagram.png" alt="旧方式绘制产品架构图的混乱场景">
+                  <div class="old-way-overlay">
+                    <span>资料散</span>
+                    <span>连线乱</span>
+                    <span>改图慢</span>
+                  </div>
+                </div>
+              </div>
+              <div class="scene-view" data-visual="newWay">
+                <div class="scene-visual dark">
+                  <svg class="ai-flow" viewBox="0 0 620 560">
+                    <defs>
+                      <linearGradient id="aiGrad" x1="0" x2="1"><stop offset="0" stop-color="#5eead4"/><stop offset=".55" stop-color="#38bdf8"/><stop offset="1" stop-color="#fdba74"/></linearGradient>
+                    </defs>
+                    <path d="M120 116 C210 150 245 214 310 280"/>
+                    <path d="M500 120 C430 158 376 210 310 280"/>
+                    <path d="M125 438 C196 392 246 340 310 280"/>
+                    <path d="M500 438 C428 398 375 342 310 280"/>
+                  </svg>
+                  <div class="ai-node an1">输入资料<small>PRD / 功能清单</small></div>
+                  <div class="ai-node an2">结构提炼<small>角色 / 模块 / 边界</small></div>
+                  <div class="ai-center">AI</div>
+                  <div class="ai-node an3">图形生成<small>SVG / 提示词 / 图片</small></div>
+                  <div class="ai-node an4">人工校验<small>业务判断 / 取舍</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这里用由浅入深的方式讲方法论，帮助学员知道不同图解决不同问题。">
+      <div class="inner">
+        <div>
+          <div class="tag">Method</div>
+          <h1>由浅入深：产品架构图的 4 层思考</h1>
+          <p>新手常见问题是把所有东西都塞进一张图。更好的方式是先分层：用户看什么、产品有哪些模块、系统怎么连接、数据怎么流动。</p>
+        </div>
+        <div>
+          <div class="tab-switch">
+            <button class="tab-btn active" data-target="level1">功能树</button>
+            <button class="tab-btn" data-target="level2">信息架构</button>
+            <button class="tab-btn" data-target="level3">系统边界</button>
+            <button class="tab-btn" data-target="level4">数据流</button>
+          </div>
+          <div class="tab-view active" data-view="level1"><div class="panel teal"><h3>1. 功能树</h3><p>先回答“产品有哪些能力”：模块、子模块、功能点。适合早期盘点和范围确认。</p></div></div>
+          <div class="tab-view" data-view="level2"><div class="panel orange"><h3>2. 信息架构</h3><p>再回答“用户如何理解和找到这些能力”：导航、分类、层级、入口和命名。</p></div></div>
+          <div class="tab-view" data-view="level3"><div class="panel sky"><h3>3. 系统边界</h3><p>继续回答“哪些是我们的系统，哪些是外部系统”：角色、应用、后台、服务、第三方。</p></div></div>
+          <div class="tab-view" data-view="level4"><div class="panel purple"><h3>4. 数据流</h3><p>最后回答“信息怎么流动”：输入、处理、存储、同步、通知和反馈。</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这里把 C4 作为分层视角，不要求学员掌握技术细节。">
+      <div class="inner full">
+        <div>
+          <div class="tag">C4 Lens</div>
+          <h1>借用 C4 的思路：不同听众看不同层级</h1>
+          <p>C4 不是仓库里原生的内容，而是我们补充借用的一个经典分层视角。它把软件结构分成 Context、Container、Component、Code 四层。产品经理不一定要画到代码层，但它的“逐级放大”思路非常适合产品架构沟通。</p>
+          <table class="table">
+            <thead><tr><th>层级</th><th>产品经理怎么用</th><th>适合谁看</th><th>一句话</th></tr></thead>
+            <tbody>
+              <tr><td>Context</td><td>系统和外部角色/系统的关系</td><td>老板、业务方</td><td>这个产品在业务里扮演什么角色？</td></tr>
+              <tr><td>Container</td><td>前台、后台、服务、数据存储的拆分</td><td>产品、设计、研发</td><td>产品由哪些大块组成？</td></tr>
+              <tr><td>Component</td><td>某个模块内部的子能力和交互</td><td>产品、研发</td><td>这个模块怎么工作？</td></tr>
+              <tr><td>Code</td><td>代码级结构，PM 通常不需要深入</td><td>研发</td><td>实现细节如何落地？</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：把 OST 和信息架构都转成产品架构图的前置输入，避免一上来就画系统框。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Product Thinking</div>
+          <h1>优秀架构图，先从“为什么”开始</h1>
+          <p>产品架构不是模块堆叠。好的图会让人看出目标、用户机会、解决方案和系统承载之间的关系。点击左侧步骤，可以按流程逐步展开。</p>
+          <div class="reveal-board">
+            <div class="step-rail">
+              <button class="reveal-btn active" data-step="s1">1. Outcome</button>
+              <button class="reveal-btn" data-step="s2">2. Opportunity</button>
+              <button class="reveal-btn" data-step="s3">3. Solution</button>
+              <button class="reveal-btn" data-step="s4">4. Module</button>
+              <button class="reveal-btn" data-step="s5">5. System</button>
+            </div>
+            <div class="reveal-stage">
+              <div class="stage-grid"></div>
+              <div class="reveal-card active" id="s1">
+                <h3>Outcome：先定目标</h3>
+                <p>先问这张图服务什么目标：降低沟通成本、确认版本范围、对齐系统边界，还是给老板汇报产品全貌。</p>
+                <div class="mini-flow"><span>目标</span><span>用户</span><span>方案</span><span>模块</span><span>系统</span></div>
+              </div>
+              <div class="reveal-card" id="s2">
+                <h3>Opportunity：再看用户问题</h3>
+                <p>架构图要能映射真实用户问题。否则图再漂亮，也只是功能堆叠。</p>
+                <div class="mini-flow"><span>目标</span><span>机会</span><span>痛点</span><span>场景</span><span>证据</span></div>
+              </div>
+              <div class="reveal-card" id="s3">
+                <h3>Solution：形成解决方案</h3>
+                <p>把用户问题翻译成功能方案：哪些能力要进产品，哪些只是运营流程，哪些依赖第三方系统。</p>
+                <div class="mini-flow"><span>需求</span><span>方案</span><span>入口</span><span>规则</span><span>反馈</span></div>
+              </div>
+              <div class="reveal-card" id="s4">
+                <h3>Module：落到产品模块</h3>
+                <p>把方案拆成模块、子模块和权限入口，这一步是产品架构图最常见的表达。</p>
+                <div class="mini-flow"><span>用户端</span><span>后台</span><span>配置</span><span>看板</span><span>权限</span></div>
+              </div>
+              <div class="reveal-card" id="s5">
+                <h3>System：补上系统边界</h3>
+                <p>最后画清楚应用、服务、数据层和外部依赖，让研发能判断接口、数据和实现边界。</p>
+                <div class="mini-flow"><span>应用</span><span>服务</span><span>数据</span><span>接口</span><span>外部</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：新版 arch-diagram 已经从两种输出升级为三种输出，重点讲清楚 A 稳、B 灵活、C 有冲击力。">
+      <div class="inner">
+        <div>
+          <div class="tag">Skill</div>
+          <h1>从方法到工具：让 AI 先画第一版</h1>
+          <p>前面我们讲的是“应该怎么想”。接下来落到仓库里的 `arch-diagram`：它把这些思考变成一个可执行流程，先提炼架构信息，再选择输出形式。</p>
+          <div class="focus-line">新版重点：同一个架构输入，可以走 SVG 精准交付、提示词探索风格，也可以配置 API 后直接出图。</div>
+        </div>
+        <div class="skill-preview">
+          <h3 style="color:white;margin-bottom:18px">arch-diagram 工作流</h3>
+          <div class="skill-row"><b>读取输入</b><span>PRD / 功能清单 / 代码 / 截图 / 文字描述</span></div>
+          <div class="skill-arrow">↓</div>
+          <div class="skill-row"><b>提炼结构</b><span>系统名称、用户角色、模块、连接关系、外部依赖</span></div>
+          <div class="skill-arrow">↓</div>
+          <div class="skill-row"><b>选择输出</b><span>A：HTML/SVG 精准图；B：中英文提示词；C：调用图片 API 直接出图</span></div>
+          <div class="skill-arrow">↓</div>
+          <div class="skill-row"><b>生成交付</b><span>浏览器打开、导出 PNG/PDF、复制提示词，或保存 PNG 图片</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这里让学员理解工具取舍，避免一个工具打天下。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Tools</div>
+          <h1>工具盘点：不同阶段选不同工具</h1>
+          <div class="tool-grid">
+            <div class="tool"><b>SVG 直接生成</b><span>正式交付首选。文字、箭头、层级精准，可导出 PNG/PDF。</span><span class="pill teal">路径 A</span></div>
+            <div class="tool"><b>AI 提示词</b><span>生成中英文提示词，复制到 ChatGPT Image / Midjourney 使用。</span><span class="pill sky">路径 B</span></div>
+            <div class="tool"><b>AI 直接出图</b><span>配置 API Key 后直接输出 PNG，更适合展示一键出图能力。</span><span class="pill orange">路径 C</span></div>
+            <div class="tool"><b>手工工具</b><span>draw.io / Figma 适合后期精修和团队协作。</span><span class="pill purple">精修</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这一页可以点击切换三类图，强调架构图不是只有一种形态。">
+      <div class="inner">
+        <div>
+          <div class="tag">Three Diagrams</div>
+          <h1>产品设计里常用的三张架构图</h1>
+          <p>不要试图用一张图解决所有问题。不同阶段，我们需要不同粒度的图。</p>
+        </div>
+        <div>
+          <div class="mode-switch">
+            <button class="switch-btn active" data-mode="m1">产品模块图</button>
+            <button class="switch-btn" data-mode="m2">系统关系图</button>
+            <button class="switch-btn" data-mode="m3">数据流程图</button>
+          </div>
+          <div class="mode-view active" id="m1"><div class="panel teal"><h3>产品模块图</h3><p>回答“产品由哪些模块组成”。适合需求评审、范围确认和版本规划。</p></div></div>
+          <div class="mode-view" id="m2"><div class="panel sky"><h3>系统关系图</h3><p>回答“模块之间、系统之间怎么连接”。适合和研发对齐边界。</p></div></div>
+          <div class="mode-view" id="m3"><div class="panel orange"><h3>数据流程图</h3><p>回答“数据从哪里来、到哪里去、在哪里存”。适合发现同步和权限风险。</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：安装页保持简单，现场实操时可直接复制命令。">
+      <div class="inner">
+        <div>
+          <div class="tag">Setup</div>
+          <h1>怎么安装这个 Skill？</h1>
+          <p>新版 skill 依赖 `references/svg-template.html`，所以安装时要复制整个 `skill` 目录，而不是只复制 `SKILL.md`。</p>
+        </div>
+        <div class="code">gh repo clone shangbianai/pm-ai-guide
+
+mkdir -p ~/.claude/skills/arch-diagram
+
+cp -R "pm-ai-guide/第3章_产品设计/01_盘点画产品架构图的工具/skill/"* \
+  ~/.claude/skills/arch-diagram/
+
+# 重新打开 Claude Code 后使用
+/arch-diagram</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：讲清楚输入模板，帮助学员知道怎么把业务语言喂给 AI。">
+      <div class="inner">
+        <div>
+          <div class="tag">Prompt</div>
+          <h1>实操时怎么描述需求？</h1>
+          <p>输入不需要很长，但要包含系统名称、用户角色、主要模块、外部依赖和希望输出的图形类型。</p>
+          <div class="focus-line">关键不是让 AI 猜，而是给它足够的结构化信息，让它先提炼再画图。</div>
+        </div>
+        <div class="code">系统名称：连锁门店运营管理系统
+用户角色：总部运营、区域经理、店长、门店员工
+主要模块：销售数据、库存管理、排班考勤、公告通知、数据看板
+外部依赖：微信小程序、企业微信通知、外卖平台订单
+希望输出：产品架构图，区分用户端、管理后台、业务服务、数据层、外部系统</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：收束为检查清单，让学员能判断自己画的图是否合格。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Checklist</div>
+          <h1>一张合格的产品架构图，要过 6 个检查</h1>
+          <table class="table">
+            <thead><tr><th>检查项</th><th>问题</th><th>常见错误</th></tr></thead>
+            <tbody>
+              <tr><td>目标</td><td>这张图要帮谁做什么决策？</td><td>没有受众，所有内容混在一起。</td></tr>
+              <tr><td>角色</td><td>谁在使用系统？谁是外部参与者？</td><td>只画模块，不画角色。</td></tr>
+              <tr><td>边界</td><td>哪些是本系统，哪些是外部系统？</td><td>第三方服务和自研模块混在一起。</td></tr>
+              <tr><td>层级</td><td>是模块级、系统级，还是数据流级？</td><td>一张图里同时塞入过多层级。</td></tr>
+              <tr><td>流向</td><td>箭头方向是否说明了真实关系？</td><td>连线很多，但不知道谁调用谁。</td></tr>
+              <tr><td>可维护</td><td>需求变化后是否容易更新？</td><td>手工美化太多，后续没人愿意改。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：结尾自然接到实操：安装 Skill，输入系统描述，看 AI 如何生成图。">
+      <div class="inner">
+        <div>
+          <div class="tag">Summary</div>
+          <h1>这节课你能获得什么</h1>
+          <p>第一，知道产品架构图不只是画框和箭头，而是产品沟通和系统边界对齐工具。</p>
+          <p>第二，掌握从功能树、信息架构、系统边界到数据流的分层方法。</p>
+          <p>第三，知道如何用新版 `arch-diagram` 在 SVG、提示词、直接出图三种方式之间做选择。</p>
+          <div class="focus-line">接下来，我们进入实操环节：安装新版 `arch-diagram`，用一个真实产品描述生成产品架构图。</div>
+        </div>
+        <div class="map-card">
+          <div class="big-quote">好的产品架构图，不是把复杂性藏起来，而是把复杂性整理到别人能理解。</div>
+          <div style="margin-top:22px">
+            <span class="pill teal">功能树</span>
+            <span class="pill sky">信息架构</span>
+            <span class="pill orange">系统边界</span>
+            <span class="pill purple">数据流</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls">
+    <button class="secondary" id="prev">上一页</button>
+    <span class="page-no" id="pageNo">1 / 13</span>
+    <button id="next">下一页</button>
+  </div>
+  <button class="draw-toggle" id="drawToggle">标注</button>
+  <button class="note-trigger" id="noteBtn" title="讲师备注">?</button>
+  <div class="draw-toolbar" id="drawToolbar">
+    <button class="color-btn red active" data-color="#ef4444" title="红色"></button>
+    <button class="color-btn yellow" data-color="#eab308" title="黄色"></button>
+    <button class="secondary" id="clearDraw">清空</button>
+    <button class="secondary" id="exitDraw">退出</button>
+  </div>
+  <div class="note-modal" id="noteModal">
+    <div class="note-box">
+      <h3>讲师备注</h3>
+      <p id="noteText"></p>
+      <div class="note-actions"><button id="closeNote">关闭</button></div>
+    </div>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const bar = document.getElementById('bar');
+    const pageNo = document.getElementById('pageNo');
+    const noteText = document.getElementById('noteText');
+    const noteModal = document.getElementById('noteModal');
+    let current = 0;
+    function show(i){
+      current = Math.max(0, Math.min(slides.length - 1, i));
+      slides.forEach((s, idx) => s.classList.toggle('active', idx === current));
+      bar.style.width = `${((current + 1) / slides.length) * 100}%`;
+      pageNo.textContent = `${current + 1} / ${slides.length}`;
+      noteText.textContent = slides[current].dataset.note || '这一页没有额外备注。';
+    }
+    document.getElementById('prev').addEventListener('click', () => show(current - 1));
+    document.getElementById('next').addEventListener('click', () => show(current + 1));
+    document.addEventListener('keydown', e => {
+      if(document.body.classList.contains('drawing')) return;
+      if(e.key === 'ArrowLeft') show(current - 1);
+      if(e.key === 'ArrowRight' || e.key === ' ') show(current + 1);
+      if(e.key === 'Escape') noteModal.classList.remove('open');
+    });
+    document.getElementById('noteBtn').addEventListener('click', () => {
+      noteText.textContent = slides[current].dataset.note || '这一页没有额外备注。';
+      noteModal.classList.add('open');
+    });
+    document.getElementById('closeNote').addEventListener('click', () => noteModal.classList.remove('open'));
+    noteModal.addEventListener('click', e => { if(e.target === noteModal) noteModal.classList.remove('open'); });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const wrap = btn.closest('.inner');
+        wrap.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        wrap.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+        btn.classList.add('active');
+        wrap.querySelector(`[data-view="${btn.dataset.target}"]`).classList.add('active');
+      });
+    });
+    document.querySelectorAll('.switch-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const wrap = btn.closest('.inner');
+        wrap.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
+        wrap.querySelectorAll('.mode-view').forEach(v => v.classList.remove('active'));
+        btn.classList.add('active');
+        wrap.querySelector(`#${btn.dataset.mode}`).classList.add('active');
+      });
+    });
+    document.querySelectorAll('.compare-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const scene = btn.dataset.scene;
+        const wrap = btn.closest('.switch-scene');
+        wrap.querySelectorAll('.compare-btn').forEach(b => b.classList.remove('active'));
+        wrap.querySelectorAll('.scene-view').forEach(v => v.classList.remove('active'));
+        btn.classList.add('active');
+        wrap.querySelector(`#${scene}`).classList.add('active');
+        wrap.querySelector(`[data-visual="${scene}"]`).classList.add('active');
+      });
+    });
+    document.querySelectorAll('.reveal-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const board = btn.closest('.reveal-board');
+        board.querySelectorAll('.reveal-btn').forEach(b => b.classList.remove('active'));
+        board.querySelectorAll('.reveal-card').forEach(v => v.classList.remove('active'));
+        btn.classList.add('active');
+        board.querySelector(`#${btn.dataset.step}`).classList.add('active');
+      });
+    });
+
+    const canvas = document.getElementById('drawCanvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    let color = '#ef4444';
+    function resizeCanvas(){
+      const img = ctx.getImageData(0, 0, canvas.width || 1, canvas.height || 1);
+      canvas.width = window.innerWidth * devicePixelRatio;
+      canvas.height = window.innerHeight * devicePixelRatio;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+      try { ctx.putImageData(img, 0, 0); } catch(e) {}
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 5;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    function pos(e){ return { x: e.clientX, y: e.clientY }; }
+    canvas.addEventListener('pointerdown', e => {
+      drawing = true;
+      const p = pos(e);
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+    });
+    canvas.addEventListener('pointermove', e => {
+      if(!drawing) return;
+      const p = pos(e);
+      ctx.strokeStyle = color;
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    });
+    ['pointerup','pointerleave'].forEach(evt => canvas.addEventListener(evt, () => drawing = false));
+    document.getElementById('drawToggle').addEventListener('click', () => {
+      document.body.classList.toggle('drawing');
+      document.getElementById('drawToggle').textContent = document.body.classList.contains('drawing') ? '标注中' : '标注';
+    });
+    document.getElementById('exitDraw').addEventListener('click', () => {
+      document.body.classList.remove('drawing');
+      document.getElementById('drawToggle').textContent = '标注';
+    });
+    document.getElementById('clearDraw').addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
+    document.querySelectorAll('.color-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        color = btn.dataset.color;
+      });
+    });
+    show(0);
+  </script>
+</body>
+</html>

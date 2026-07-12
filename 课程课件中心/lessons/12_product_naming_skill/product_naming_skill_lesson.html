@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>产品命名 Skill · AI 产品经理课程</title>
+  <style>
+    :root{
+      --bg:#f6f8fb;--paper:#ffffff;--ink:#172033;--soft:#526075;--muted:#8a96a8;--line:rgba(23,32,51,.12);
+      --indigo:#3855e8;--cyan:#13b7c8;--coral:#ff6b5f;--green:#20b87a;--amber:#f2a63a;--violet:#9563ff;
+      --shadow:0 28px 90px rgba(31,45,80,.14);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;color:var(--ink);
+      background:
+        radial-gradient(900px 560px at 8% 0,rgba(56,85,232,.13),transparent 62%),
+        radial-gradient(760px 500px at 92% 12%,rgba(19,183,200,.13),transparent 60%),
+        linear-gradient(180deg,#fbfcff,#edf2f8);
+      overflow-x:hidden;
+    }
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.65;background:linear-gradient(90deg,rgba(56,85,232,.045) 1px,transparent 1px),linear-gradient(rgba(19,183,200,.04) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(180deg,#000,transparent 86%)}
+    .topbar{position:sticky;top:0;z-index:80;background:rgba(255,255,255,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:1520px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:14px}
+    .mark{width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,var(--indigo),var(--cyan));box-shadow:0 16px 36px rgba(56,85,232,.22);display:grid;place-items:center;color:#fff;font-weight:950}
+    .brand{font-size:21px;font-weight:950;line-height:1.05}.brand small{display:block;margin-top:5px;color:var(--muted);font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:900}
+    .spacer{flex:1}.hint{font-size:13px;color:var(--muted)}kbd{border:1px solid var(--line);background:#fff;border-radius:7px;padding:1px 7px;color:var(--soft)}
+    .progress{height:4px;background:rgba(23,32,51,.06)}.progress span{display:block;width:7.69%;height:100%;background:linear-gradient(90deg,var(--indigo),var(--cyan),var(--amber));transition:.25s}
+    .deck{max-width:1520px;margin:0 auto;padding:24px 24px 108px}.slide{display:none;position:relative;overflow:hidden;min-height:790px;border:1px solid var(--line);border-radius:30px;background:linear-gradient(150deg,rgba(255,255,255,.98),rgba(247,250,255,.96));box-shadow:var(--shadow)}
+    .slide.active{display:block;animation:in .28s ease}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .slide:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 20% 18%,rgba(56,85,232,.10),transparent 28%),radial-gradient(circle at 82% 76%,rgba(255,107,95,.09),transparent 26%)}
+    .inner{position:relative;z-index:1;min-height:790px;padding:58px 64px;display:grid;grid-template-columns:1.02fr .98fr;gap:44px;align-items:center}.inner.full{grid-template-columns:1fr}
+    .time-chip{position:absolute;right:28px;top:24px;z-index:5;border:1px solid var(--line);background:rgba(255,255,255,.76);border-radius:999px;padding:7px 12px;font-size:12px;color:var(--muted);font-weight:900}
+    .tag{display:inline-flex;gap:9px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.72);border-radius:999px;padding:8px 14px;margin-bottom:18px;color:var(--soft);font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:950}
+    .tag:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--indigo);box-shadow:0 0 20px rgba(56,85,232,.5)}
+    h1{font-size:58px;line-height:1.08;margin:0 0 18px;letter-spacing:0;font-weight:950}h2{font-size:38px;line-height:1.18;margin:0 0 16px}h3{font-size:21px;margin:0 0 10px}
+    p{font-size:19px;line-height:1.72;color:var(--soft);margin:0 0 12px}.hl{background:linear-gradient(120deg,var(--indigo),var(--cyan),var(--coral));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .focus{margin-top:18px;border:1px solid rgba(56,85,232,.24);border-left:5px solid var(--indigo);border-radius:17px;padding:16px 18px;background:linear-gradient(90deg,rgba(56,85,232,.08),rgba(19,183,200,.07));font-size:17px;font-weight:900;line-height:1.55;color:#263b85}
+    .panel,.code{border:1px solid var(--line);border-radius:21px;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.64));padding:22px;box-shadow:0 14px 36px rgba(31,45,80,.06)}
+    .panel p,.panel li{font-size:16px}.panel.indigo{border-color:rgba(56,85,232,.25)}.panel.cyan{border-color:rgba(19,183,200,.28)}.panel.coral{border-color:rgba(255,107,95,.28)}.panel.green{border-color:rgba(32,184,122,.28)}.panel.amber{border-color:rgba(242,166,58,.32)}.panel.violet{border-color:rgba(149,99,255,.28)}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    ul{margin:10px 0 0 20px;padding:0}li{margin:7px 0;color:var(--soft);font-size:16px;line-height:1.58}
+    .name-lab{min-height:570px;border:1px solid var(--line);border-radius:34px;background:linear-gradient(135deg,#172033,#243a6f);color:#fff;padding:30px;position:relative;overflow:hidden;box-shadow:0 26px 70px rgba(31,45,80,.24)}
+    .name-lab:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(180deg,#000,transparent 90%)}
+    .word-card{position:relative;z-index:1;border:1px solid rgba(255,255,255,.18);border-radius:22px;background:rgba(255,255,255,.10);padding:22px;margin:15px 0}.word-card b{font-size:34px;display:block}.word-card span{display:block;margin-top:8px;color:rgba(255,255,255,.7);font-size:15px}
+    .chapter-map{display:grid;grid-template-columns:1.05fr 1fr;gap:18px}.chapter-left{display:grid;place-items:center;border:1px solid var(--line);border-radius:24px;background:#fff;min-height:420px;text-align:center}.chapter-left b{font-size:38px}.chapter-left span{display:block;margin-top:12px;color:var(--soft);font-size:24px}
+    .chapter-list{display:grid;gap:14px}.chapter-item{border:1px solid var(--line);border-radius:18px;background:#fff;padding:18px}.chapter-item.active{border-color:rgba(56,85,232,.38);background:linear-gradient(90deg,rgba(56,85,232,.08),rgba(19,183,200,.05))}.chapter-item b{font-size:20px}.chapter-item p{font-size:15px;margin:6px 0 0}
+    .chapter-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:22px}.chapter-card{min-height:168px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.88);padding:20px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 14px 34px rgba(31,45,80,.06)}.chapter-card.active{border-color:rgba(56,85,232,.42);background:linear-gradient(150deg,rgba(56,85,232,.10),rgba(19,183,200,.08),#fff)}.chapter-card b{font-size:22px}.chapter-card p{font-size:15px;line-height:1.58;margin:8px 0 0}.chapter-card.more{align-items:center;text-align:center;justify-content:center}.dots{font-size:40px;letter-spacing:.1em;color:var(--muted);line-height:1}
+    .value-stack{display:grid;gap:13px}.value-item{display:grid;grid-template-columns:50px 1fr;gap:14px;align-items:start;border:1px solid var(--line);border-radius:18px;background:#fff;padding:16px}.value-num{width:50px;height:50px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--indigo),var(--cyan));color:#fff;font-weight:950}.value-item h3{margin-bottom:4px}.value-item p{font-size:15px;line-height:1.55;margin:0}
+    .style-tabs,.candidate-tabs{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}.style-tab,.candidate-tab{border:1px solid var(--line);background:#fff;color:var(--soft);border-radius:999px;padding:10px 15px;font-weight:950;cursor:pointer}.style-tab.active,.candidate-tab.active{background:linear-gradient(135deg,var(--indigo),var(--cyan));color:#fff;border-color:transparent}
+    .style-content{display:none}.style-content.active{display:block}.score-card{display:grid;grid-template-columns:1fr 1.2fr;gap:20px;align-items:start}.score-list{display:grid;gap:12px}.score-row{display:grid;grid-template-columns:110px 1fr 42px;gap:10px;align-items:center;color:var(--soft);font-size:15px}.bar{height:10px;border-radius:999px;background:rgba(23,32,51,.08);overflow:hidden}.bar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--indigo),var(--cyan))}
+    table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:13px;text-align:left;vertical-align:top;font-size:15px;line-height:1.52;color:var(--soft)}th{background:rgba(56,85,232,.07);color:#253469}tr:last-child td{border-bottom:0}td:last-child,th:last-child{border-right:0}
+    .flow{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.step{position:relative;border:1px solid var(--line);border-radius:18px;background:#fff;padding:18px}.step:after{content:"";position:absolute;right:-10px;top:50%;width:8px;height:2px;background:var(--indigo)}.step:last-child:after{display:none}.step strong{display:block;color:var(--indigo);font-size:24px;margin-bottom:8px}.step p{font-size:15px;line-height:1.55}
+    .risk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.risk{border:1px solid var(--line);background:#fff;border-radius:20px;padding:20px}.risk .icon{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:950;margin-bottom:14px}.r1{background:var(--coral)}.r2{background:var(--indigo)}.r3{background:var(--amber)}.r4{background:var(--green)}
+    .code{font-family:"SFMono-Regular",Consolas,monospace;color:#274287;font-size:15px;line-height:1.74;white-space:pre-wrap;background:#f7f9ff;max-height:540px;overflow:auto}
+    .controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;gap:10px;align-items:center;z-index:95;border:1px solid var(--line);background:rgba(255,255,255,.88);backdrop-filter:blur(14px);padding:10px;border-radius:999px;box-shadow:0 18px 48px rgba(31,45,80,.12)}
+    button{border:0;border-radius:999px;padding:10px 16px;font-weight:950;background:linear-gradient(135deg,var(--indigo),var(--cyan));color:#fff;cursor:pointer}button.secondary{background:#fff;color:var(--soft);border:1px solid var(--line)}.page-no{color:var(--soft);font-size:13px;min-width:62px;text-align:center}
+    .note-trigger,.draw-toggle{position:fixed;bottom:24px;z-index:98;border:1px solid var(--line);background:rgba(255,255,255,.92);color:var(--ink);box-shadow:0 16px 44px rgba(31,45,80,.12)}.note-trigger{right:24px;width:42px;height:42px;padding:0;font-size:20px}.draw-toggle{right:78px}
+    #drawCanvas{position:fixed;inset:0;z-index:70;pointer-events:none}body.drawing #drawCanvas{pointer-events:auto;cursor:crosshair}.controls,.note-trigger,.draw-toggle,.draw-toolbar{pointer-events:auto}.draw-toolbar{position:fixed;right:24px;top:90px;z-index:96;display:none;gap:8px;align-items:center;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.93);padding:9px;box-shadow:0 16px 44px rgba(31,45,80,.12)}body.drawing .draw-toolbar{display:flex}.color-btn{width:30px;height:30px;border-radius:50%;border:2px solid rgba(23,32,51,.15);padding:0}.color-btn.active{outline:3px solid rgba(56,85,232,.18)}.red{background:#ef4444}.yellow{background:#facc15}.blue-pen{background:#2563eb}
+    .note-modal{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(23,32,51,.42)}.note-modal.open{display:flex}.note-box{width:min(720px,100%);border:1px solid var(--line);border-radius:20px;background:#fff;padding:24px;box-shadow:0 28px 90px rgba(31,45,80,.24)}.note-box p{font-size:16px}.note-actions{display:flex;justify-content:flex-end;margin-top:18px}
+    @media(max-width:980px){.inner,.inner.full,.grid-2,.grid-3,.grid-4,.chapter-map,.chapter-grid,.score-card,.flow,.risk-grid{grid-template-columns:1fr}.inner{padding:34px}.time-chip{position:static;display:inline-flex;margin:18px}.hint{display:none}h1{font-size:40px}.step:after{display:none}}
+  </style>
+</head>
+<body>
+  <canvas id="drawCanvas"></canvas>
+  <div class="topbar"><div class="topbar-inner"><div class="mark">N</div><div class="brand">AI 增强型产品经理 <small>Chapter 4 · 产品运营与管理</small></div><div class="spacer"></div><div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页 · 标注自动清空</div></div><div class="progress"><span id="bar"></span></div></div>
+  <main class="deck">
+    <section class="slide active" data-note="这一页承接新的大章，只轻轻带出后续几个主题。">
+      <div class="time-chip">00:00 - 02:00</div>
+      <div class="inner full">
+        <div>
+          <div class="tag">Chapter 4</div>
+          <h1>进入第 4 章：<span class="hl">产品运营与管理</span></h1>
+          <p>产品做出来之后，还要被命名、被验证、被汇报、被复盘。第 4 章会围绕这些运营和管理场景，继续用 AI Skill 把产品经理的日常工作做得更稳定。</p>
+          <div class="chapter-grid">
+            <div class="chapter-card active"><div><b>产品命名</b><p>新功能、新模块、新产品如何起一个经得起推敲的名字。</p></div><span>01</span></div>
+            <div class="chapter-card"><div><b>验收测试</b><p>利用 AI Agent 自动化测试，一键输出验收测试报告。</p></div><span>02</span></div>
+            <div class="chapter-card"><div><b>向上汇报</b><p>遇事不决问“靠谱”Skills，辅助向主管和领导汇报。</p></div><span>03</span></div>
+            <div class="chapter-card"><div><b>运营数据复盘</b><p>从复盘到实战分析，掌握运营数据变化背后的机会。</p></div><span>04</span></div>
+            <div class="chapter-card more"><div class="dots">...</div><p>更多运营与管理场景</p></div>
+          </div>
+          <div class="focus">这一页只是第 4 章的入口，接下来先从“产品命名”这个最容易被低估的场景开始。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="开场强调产品命名不是包装，而是产品被理解和传播的第一层接口。">
+      <div class="time-chip">02:00 - 03:30</div>
+      <div class="inner">
+        <div><div class="tag">Naming Skill</div><h1>本节课：用 AI 做一次<span class="hl">命名决策</span></h1><p>这一节讲 `pm-naming` Skill：当新功能、新模块、新产品不知道叫什么时，让 AI 按方法论生成候选、打分、做风险审查。</p><div class="focus">核心价值：不是帮你随便起一个名字，而是帮你做出经得起推敲、方便团队讨论的命名决策。</div></div>
+        <div class="name-lab"><div class="word-card"><b>飞鱼洞察</b><span>品牌前缀 + 功能意图</span></div><div class="word-card"><b>运营数据助手</b><span>功能描述型，清晰直接</span></div><div class="word-card"><b>一键诊断</b><span>动作引导型，突出收益</span></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="解释为什么命名会影响理解、传播和团队协作。">
+      <div class="time-chip">03:30 - 06:00</div>
+      <div class="inner">
+        <div><div class="tag">Why Naming</div><h1>为什么产品需要一个<span class="hl">好名字</span>？</h1><p>名字不是最后包装一下，而是用户、销售、运营、研发共同使用的产品入口。一个好名字能让产品少解释、好传播、能沉淀。</p><div class="focus">命名失败的典型表现：团队内部叫法不统一、用户看不懂、搜索找不到、上线后又想改名。</div></div>
+        <div class="value-stack">
+          <div class="value-item"><div class="value-num">01</div><div><h3>降低理解成本</h3><p>用户看到名字就知道大概用途，销售和运营也更容易讲清楚。</p></div></div>
+          <div class="value-item"><div class="value-num">02</div><div><h3>建立产品体系</h3><p>新功能不是孤立存在，而是放进品牌、产品线和模块层级里。</p></div></div>
+          <div class="value-item"><div class="value-num">03</div><div><h3>提高传播效率</h3><p>好记、好说、好搜索，才能在团队协作和用户传播里留下来。</p></div></div>
+          <div class="value-item"><div class="value-num">04</div><div><h3>减少后期风险</h3><p>提前检查歧义、撞名、商标和文化风险，避免上线后被迫返工。</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲 Skill 的输入输出和适用场景。">
+      <div class="time-chip">06:00 - 08:30</div>
+      <div class="inner full">
+        <div><div class="tag">Skill Overview</div><h1>`pm-naming` Skill 能解决四类问题</h1><div class="grid-4"><div class="panel indigo"><h3>新功能命名</h3><p>刚定义好能力，还不知道功能叫什么。</p></div><div class="panel cyan"><h3>新模块/产品命名</h3><p>新业务线或大模块需要独立名称。</p></div><div class="panel amber"><h3>名称评估</h3><p>已有候选，但需要判断哪个更合适。</p></div><div class="panel coral"><h3>改名诊断</h3><p>现有名称不清晰、不好传播或有风险。</p></div></div><div class="focus">输出不是单个名字，而是一份候选命名报告：候选、评分、推荐理由、风险提示和实施建议。</div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲 Qualtrics XM 的命名启发，强调属于谁和做什么。">
+      <div class="time-chip">08:30 - 11:00</div>
+      <div class="inner">
+        <div><div class="tag">XM Naming</div><h1>Qualtrics XM 的启发：<span class="hl">品牌 + 功能</span></h1><p>Qualtrics 的 XM 体系不是随便起名，而是用稳定结构告诉用户：这个产品属于 XM 体系，同时说明它干什么。</p><div class="focus">每一层名称都传递两个信息：属于谁，干什么。</div></div>
+        <div class="panel"><table><thead><tr><th>层级</th><th>命名方式</th><th>示例</th></tr></thead><tbody><tr><td>平台级</td><td>公司品牌 + Platform</td><td>XM Platform</td></tr><tr><td>产品线</td><td>品牌前缀 + 功能描述</td><td>XM Discover / XM Engage</td></tr><tr><td>领域应用</td><td>领域缩写 + 产品类型</td><td>CX Dashboard / EX Dashboard</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页用按钮切换四种命名风格。">
+      <div class="time-chip">11:00 - 15:00</div>
+      <div class="inner full">
+        <div><div class="tag">Naming Styles</div><h1>四种命名风格：先选路，再起名</h1><div class="style-tabs"><button class="style-tab active" data-style="a">A 功能描述型</button><button class="style-tab" data-style="b">B 品牌前缀型</button><button class="style-tab" data-style="c">C 隐喻意象型</button><button class="style-tab" data-style="d">D 动作引导型</button></div><div id="styleBox" class="panel style-content active"></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲完整流程。">
+      <div class="time-chip">15:00 - 18:00</div>
+      <div class="inner full">
+        <div><div class="tag">Workflow</div><h1>产品命名的 6 步工作流</h1><div class="flow"><div class="step"><strong>01</strong><h3>了解对象</h3><p>功能做什么、谁用、在体系中的位置。</p></div><div class="step"><strong>02</strong><h3>确定风格</h3><p>功能描述、品牌前缀、隐喻意象或动作引导。</p></div><div class="step"><strong>03</strong><h3>生成候选</h3><p>输出 5-8 个候选，并说明命名逻辑。</p></div><div class="step"><strong>04</strong><h3>四维评分</h3><p>清晰度、一致性、传播力、风险可控。</p></div><div class="step"><strong>05</strong><h3>风险审查</h3><p>歧义、撞名、商标、文化地域风险。</p></div><div class="step"><strong>06</strong><h3>输出报告</h3><p>推荐 Top 3、备选和实施建议。</p></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲四维度评分。">
+      <div class="time-chip">18:00 - 21:00</div>
+      <div class="inner">
+        <div><div class="tag">Scoring</div><h1>不是凭感觉选，而是用四维度打分</h1><p>命名评分会把主观感受拆成四个维度，并加权计算综合得分。</p><div class="focus">综合得分 = 语义清晰度 × 30% + 品牌一致性 × 25% + 传播力 × 25% + 风险可控性 × 20%</div></div>
+        <div class="panel"><table><thead><tr><th>维度</th><th>权重</th><th>核心问题</th></tr></thead><tbody><tr><td>语义清晰度</td><td>30%</td><td>不需要解释就能理解吗？</td></tr><tr><td>品牌一致性</td><td>25%</td><td>和公司已有命名协调吗？</td></tr><tr><td>传播力</td><td>25%</td><td>好记、好说、好搜索吗？</td></tr><tr><td>风险可控性</td><td>20%</td><td>有歧义、撞名、文化问题吗？</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="通过候选切换演示评分矩阵。">
+      <div class="time-chip">21:00 - 24:00</div>
+      <div class="inner full">
+        <div><div class="tag">Candidate Matrix</div><h1>候选名称怎么比较？</h1><div class="candidate-tabs"><button class="candidate-tab active" data-candidate="fy">飞鱼洞察</button><button class="candidate-tab" data-candidate="sj">运营数据助手</button><button class="candidate-tab" data-candidate="zd">一键诊断</button></div><div class="score-card"><div class="panel"><h2 id="candidateName">飞鱼洞察</h2><p id="candidateDesc">品牌前缀 + 洞察能力，适合对外或产品线级命名。</p><div class="focus" id="candidateAdvice">适合需要建立产品体系感，并希望名字具备一定传播记忆点的场景。</div></div><div class="panel"><div class="score-list" id="scoreList"></div></div></div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲风险审查是命名里非常关键的一步。">
+      <div class="time-chip">24:00 - 27:00</div>
+      <div class="inner full">
+        <div><div class="tag">Risk Check</div><h1>命名最后一定要做风险审查</h1><div class="risk-grid"><div class="risk"><div class="icon r1">语</div><h3>语言歧义</h3><p>谐音、方言、缩写、中英文双关。</p></div><div class="risk"><div class="icon r2">撞</div><h3>撞名风险</h3><p>竞品、内部项目、知名产品和开源项目。</p></div><div class="risk"><div class="icon r3">法</div><h3>商标/法律</h3><p>商标局查询、域名、行业管制和敏感词。</p></div><div class="risk"><div class="icon r4">文</div><h3>文化/地域</h3><p>数字、颜色、动物、符号和地域敏感度。</p></div></div><div class="focus">快速口诀：说出来不尴尬，搜一下不撞衫，查一查不被告，翻一翻不踩雷。</div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="展示示例报告的结构。">
+      <div class="time-chip">27:00 - 30:00</div>
+      <div class="inner">
+        <div><div class="tag">Report</div><h1>最终输出是一份可讨论的命名报告</h1><p>报告不是单纯列名字，而是把命名对象、公司命名风格、候选清单、评分矩阵、风险审查和推荐方案串起来。</p></div>
+        <div class="panel"><h3>候选命名报告结构</h3><ul><li>命名对象概述</li><li>公司命名风格分析</li><li>综合评分 Top 3</li><li>完整候选清单</li><li>风险审查</li><li>首选和备选推荐</li><li>实施建议和命名记录</li></ul></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="展示仓库结构，说明这个 Skill 的实现方式。">
+      <div class="time-chip">30:00 - 32:30</div>
+      <div class="inner">
+        <div><div class="tag">Implementation</div><h1>这个 Skill 是怎么实现的？</h1><p>主指令文件负责流程和输出模板，references 里放评分细则和风险审查清单，示例报告帮助 AI 对齐输出风格。</p></div>
+        <div class="code">01_产品命名Skill/
+├── README.md
+├── guide/index.html
+├── skills/pm-naming/
+│   ├── SKILL.md
+│   └── references/
+│       ├── naming-criteria.md
+│       └── risk-checklist.md
+└── 候选命名报告-示例.md</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="给实操输入模板，方便后面接实操。">
+      <div class="time-chip">32:30 - 35:00</div>
+      <div class="inner">
+        <div><div class="tag">How To Use</div><h1>实操时可以这样输入</h1><p>安装后输入 `/pm-naming`，把命名对象、功能描述、目标用户、已有命名风格和候选偏好说清楚。</p><div class="focus">如果只有一个模糊想法，也可以先让 Skill 追问关键问题，再开始生成候选。</div></div>
+        <div class="code">/pm-naming
+
+命名对象：新功能 / 新模块 / 新产品
+一句话描述：
+目标用户：
+产品体系位置：
+已有命名风格：
+竞品或同类名称：
+偏好风格：功能描述型 / 品牌前缀型 / 隐喻意象型 / 动作引导型
+需要规避的词：
+
+请输出 5-8 个候选，并按四维度评分，给出 Top 3 推荐和风险审查。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="结尾承接实操。">
+      <div class="time-chip">35:00 - 36:30</div>
+      <div class="inner">
+        <div><div class="tag">Review</div><h1>回顾重点：这节课的价值</h1><p>第一，理解命名不是创意比赛，而是定位、体系和传播的共同决策。</p><p>第二，掌握四种命名风格和四维度评分框架。</p><p>第三，用风险清单把歧义、撞名、商标和文化问题提前排掉。</p><div class="focus">接下来进入实操环节：用 `pm-naming` 为一个产品功能生成候选名称，并选出最稳的一组。</div></div>
+        <div class="panel indigo"><h3>一句话带走</h3><p style="font-size:30px;line-height:1.48;font-weight:950;color:#243a91">好名字不是“高级感”，而是让用户少想一秒，让团队少解释一遍。</p></div>
+      </div>
+    </section>
+  </main>
+  <div class="controls"><button class="secondary" id="prev">上一页</button><span class="page-no" id="pageNo">1 / 14</span><button id="next">下一页</button></div>
+  <button class="draw-toggle" id="drawToggle">标注</button><button class="note-trigger" id="noteBtn">?</button>
+  <div class="draw-toolbar"><button class="color-btn red active" data-color="#ef4444" title="红色"></button><button class="color-btn yellow" data-color="#facc15" title="黄色"></button><button class="color-btn blue-pen" data-color="#2563eb" title="蓝色"></button><button class="secondary" id="clearDraw">清空</button><button class="secondary" id="exitDraw">退出</button></div>
+  <div class="note-modal" id="noteModal"><div class="note-box"><h3>讲师备注</h3><p id="noteText"></p><div class="note-actions"><button id="closeNote">关闭</button></div></div></div>
+  <script>
+    const slides=[...document.querySelectorAll('.slide')],bar=document.getElementById('bar'),pageNo=document.getElementById('pageNo'),noteText=document.getElementById('noteText'),noteModal=document.getElementById('noteModal');let current=0;
+    const canvas=document.getElementById('drawCanvas'),ctx=canvas.getContext('2d');let drawing=false,pen='#ef4444';function clearDraw(){ctx.clearRect(0,0,canvas.width,canvas.height)}
+    function show(i){current=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,idx)=>s.classList.toggle('active',idx===current));bar.style.width=`${((current+1)/slides.length)*100}%`;pageNo.textContent=`${current+1} / ${slides.length}`;noteText.textContent=slides[current].dataset.note||'这一页没有额外备注。';clearDraw()}
+    document.getElementById('prev').onclick=()=>show(current-1);document.getElementById('next').onclick=()=>show(current+1);document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')show(current-1);if(e.key==='ArrowRight'||e.key===' ')show(current+1);if(e.key==='Escape')noteModal.classList.remove('open')});
+    document.getElementById('noteBtn').onclick=()=>{noteText.textContent=slides[current].dataset.note||'这一页没有额外备注。';noteModal.classList.add('open')};document.getElementById('closeNote').onclick=()=>noteModal.classList.remove('open');noteModal.onclick=e=>{if(e.target===noteModal)noteModal.classList.remove('open')};
+    function resize(){canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=5}resize();addEventListener('resize',resize);
+    canvas.addEventListener('pointerdown',e=>{drawing=true;ctx.beginPath();ctx.moveTo(e.clientX,e.clientY)});canvas.addEventListener('pointermove',e=>{if(!drawing)return;ctx.strokeStyle=pen;ctx.lineTo(e.clientX,e.clientY);ctx.stroke()});['pointerup','pointerleave','pointercancel'].forEach(evt=>canvas.addEventListener(evt,()=>drawing=false));
+    document.getElementById('drawToggle').onclick=()=>{document.body.classList.toggle('drawing');document.getElementById('drawToggle').textContent=document.body.classList.contains('drawing')?'标注中':'标注'};document.getElementById('exitDraw').onclick=()=>{document.body.classList.remove('drawing');document.getElementById('drawToggle').textContent='标注'};document.getElementById('clearDraw').onclick=clearDraw;document.querySelectorAll('.color-btn').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.color-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');pen=btn.dataset.color});
+    const styles={
+      a:{title:'A 功能描述型',body:'一看就懂，不需要解释。适合 B 端工具、中后台功能和内部系统。',examples:'订单管理中心、批量导入、数据看板',advice:'清晰优先，创意让位于理解成本。'},
+      b:{title:'B 品牌前缀型',body:'用品牌前缀建立体系感，适合产品线、对外产品和平台级能力。',examples:'XM Discover、飞鱼洞察、钉钉智能人事',advice:'适合需要长期扩展产品矩阵的团队。'},
+      c:{title:'C 隐喻意象型',body:'有故事和记忆点，适合 C 端产品、品牌功能、营销型功能。',examples:'朋友圈、银河、闪电达、瀑布流',advice:'记忆度高，但要避免含义过度抽象。'},
+      d:{title:'D 动作引导型',body:'突出用户收益或行动，适合增长功能、CTA 场景和工具型功能。',examples:'一键诊断、先买后付、猜你喜欢',advice:'适合希望用户马上理解下一步动作的场景。'}
+    };
+    function renderStyle(k){const s=styles[k];document.getElementById('styleBox').innerHTML=`<h2>${s.title}</h2><p>${s.body}</p><div class="grid-2"><div class="panel"><h3>典型示例</h3><p>${s.examples}</p></div><div class="panel"><h3>选择建议</h3><p>${s.advice}</p></div></div>`}
+    document.querySelectorAll('.style-tab').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.style-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderStyle(btn.dataset.style)});renderStyle('a');
+    const candidates={
+      fy:{name:'飞鱼洞察',desc:'品牌前缀 + 洞察能力，适合对外或产品线级命名。',advice:'适合需要建立产品体系感，并希望名字具备一定传播记忆点的场景。',scores:[['清晰度',4],['一致性',5],['传播力',4],['风险',4]],total:'4.3'},
+      sj:{name:'运营数据助手',desc:'功能描述型，适合内部工具和 B 端后台。',advice:'清晰直接，学习成本低，但品牌感和记忆点相对弱。',scores:[['清晰度',5],['一致性',4],['传播力',3],['风险',5]],total:'4.3'},
+      zd:{name:'一键诊断',desc:'动作引导型，突出用户收益和行动感。',advice:'适合增长入口和工具型功能，但如果功能不止诊断，需要补副标题。',scores:[['清晰度',4],['一致性',3],['传播力',5],['风险',4]],total:'4.0'}
+    };
+    function renderCandidate(k){const c=candidates[k];document.getElementById('candidateName').textContent=c.name;document.getElementById('candidateDesc').textContent=c.desc;document.getElementById('candidateAdvice').textContent=c.advice;document.getElementById('scoreList').innerHTML=c.scores.map(([label,val])=>`<div class="score-row"><b>${label}</b><div class="bar"><span style="width:${val*20}%"></span></div><b>${val}</b></div>`).join('')+`<div class="focus">综合分：${c.total}</div>`}
+    document.querySelectorAll('.candidate-tab').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.candidate-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderCandidate(btn.dataset.candidate)});renderCandidate('fy');
+    show(0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{{报告标题}}</title>
+  <style>
+/* === 设计系统：换肤只需修改 :root 变量 === */
+:root {
+  --brand-primary: #1A365D;
+  --brand-secondary: #2B6CB0;
+  --brand-accent: #3182CE;
+  --neutral-bg: #F8FAFC;
+  --neutral-panel: #FFFFFF;
+  --neutral-text-main: #1E293B;
+  --neutral-text-muted: #64748B;
+  --neutral-border: #E2E8F0;
+  --link-color: #0066CC;
+  --shadow: 0 10px 30px -5px rgba(26, 54, 93, 0.08);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  color: var(--neutral-text-main);
+  background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 160px, var(--neutral-bg) 160px);
+}
+a { color: var(--brand-secondary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* === 布局 === */
+.shell { max-width: 1380px; margin: 0 auto; padding: 24px; }
+.hero {
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+  color: #FFFFFF;
+  border-radius: 16px;
+  padding: 48px 40px;
+  box-shadow: 0 10px 30px -5px rgba(26, 54, 93, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: radial-gradient(circle at 100% 0%, rgba(255,255,255,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+.hero h1 { margin: 0 0 16px; font-size: clamp(32px, 5vw, 48px); font-weight: 800; letter-spacing: -0.5px; position: relative; z-index: 1; color: #FFFFFF; }
+.hero p { margin: 0 0 24px; color: rgba(255,255,255,0.9); font-size: 16px; line-height: 1.6; max-width: 800px; position: relative; z-index: 1; }
+.hero .meta { display:flex; flex-wrap:wrap; gap:12px; position: relative; z-index: 1; }
+.chip { border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #FFFFFF; border-radius: 6px; padding: 6px 12px; font-size: 14px; font-weight: 500; backdrop-filter: blur(4px); }
+.layout { display:grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; margin-top: 24px; }
+
+/* === 侧栏目录 === */
+.sidebar {
+  position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow: auto;
+  background: rgba(255,255,255,.82); backdrop-filter: blur(12px);
+  border:1px solid rgba(219,228,240,.9); border-radius: 20px; padding: 18px; box-shadow: var(--shadow);
+}
+.sidebar-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: 12px; }
+.sidebar h2 { margin: 4px 0; font-size: 18px; }
+.sidebar-toggle {
+  display:none; align-items:center; justify-content:center; min-width: 88px;
+  border:1px solid var(--neutral-border); background:#fff; color:var(--brand-primary);
+  border-radius:999px; padding:8px 12px; font-size: 13px; font-weight: 600; cursor:pointer;
+}
+.sidebar nav { display:flex; flex-direction:column; gap:4px; }
+.sidebar nav a { display:block; padding:8px 10px; border-radius: 10px; color: var(--brand-primary); font-size: 14px; transition: background-color .2s ease, color .2s ease; }
+.sidebar nav a.sub { padding-left: 18px; font-size: 13px; color: var(--neutral-text-muted); }
+.sidebar nav a:hover, .sidebar nav a.active { background: rgba(43, 108, 176, 0.1); color: var(--brand-secondary); text-decoration:none; }
+.sidebar nav a.active { font-weight: 600; }
+.sidebar.is-collapsed nav { display:none; }
+.toc-empty { padding: 8px 10px; color: var(--neutral-text-muted); font-size: 14px; }
+
+/* === 内容区 === */
+.content {
+  background: var(--neutral-panel); border-radius: 24px; box-shadow: var(--shadow); padding: 32px;
+}
+section.content-section { margin-bottom: 26px; }
+h1, h2, h3, h4 { color: var(--brand-primary); line-height: 1.3; }
+h1, h2, h3 { scroll-margin-top: 24px; }
+h1 { font-size: 34px; margin-top: 6px; }
+h2 { font-size: 28px; margin-top: 34px; padding-top: 12px; border-top: 1px solid var(--neutral-border); }
+h3 { font-size: 22px; margin-top: 26px; }
+h4 { font-size: 18px; margin-top: 18px; }
+.figure-title { display:flex; align-items:center; gap:12px; }
+.figure-title::after { content:''; height:1px; flex:1; background: linear-gradient(90deg, rgba(43, 108, 176, 0.1), transparent); }
+p, li, blockquote { font-size: 15px; line-height: 1.85; color: #334155; }
+ul, ol { padding-left: 22px; }
+hr { border:0; border-top:1px dashed var(--neutral-border); margin: 28px 0; }
+code { background: #f1f5f9; padding: 2px 6px; border-radius: 6px; }
+pre { background:#0f172a; color:#e2e8f0; padding:18px; border-radius:16px; overflow:auto; }
+blockquote { margin: 14px 0; padding: 14px 18px; background: #f8fafc; border-left:4px solid var(--brand-secondary); border-radius:12px; }
+
+/* === 表格 === */
+.table-wrap { overflow-x: auto; margin: 14px 0 22px; border:1px solid var(--neutral-border); border-radius: 18px; }
+table { width:100%; border-collapse: collapse; min-width: 720px; }
+thead th { background: #eff6ff; color: #0f172a; }
+th, td { border-bottom:1px solid var(--neutral-border); padding: 12px 14px; text-align:left; vertical-align: top; font-size: 14px; line-height: 1.6; }
+tbody tr:nth-child(even) { background: #fbfdff; }
+
+/* === 指标卡 === */
+.metric-grid { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; margin: 28px 0 12px; }
+.metric-card { background: linear-gradient(180deg, #fff, #f8fbff); border:1px solid var(--neutral-border); border-radius: 18px; padding: 18px; box-shadow: 0 8px 24px rgba(37,99,235,.06); }
+.metric-card .label { font-size: 13px; color: var(--neutral-text-muted); }
+.metric-card .value { font-size: 30px; font-weight: 700; margin-top: 6px; color: var(--brand-primary); }
+.metric-card .desc { font-size: 13px; color: var(--neutral-text-muted); margin-top: 6px; }
+
+/* === 图表 === */
+.figure-card { background: linear-gradient(180deg, #ffffff, #f8fbff); border:1px solid var(--neutral-border); border-radius: 20px; padding: 16px; margin: 14px 0 22px; box-shadow: 0 12px 28px rgba(15,23,42,.05); }
+.chart-shell { display:flex; flex-direction: column; gap: 12px; }
+.chart-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+.chart-controls, .legend { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.legend button, .chart-controls button {
+  border:1px solid var(--neutral-border); background:#fff; color:var(--brand-primary); padding:7px 12px; border-radius:999px; cursor:pointer; font-size: 13px;
+}
+.legend button.is-off, .chart-controls button.is-off { opacity:.45; }
+.range-group { display:flex; gap:8px; align-items:center; font-size: 13px; color: var(--neutral-text-muted); }
+.range-group input[type="range"] { width: 110px; }
+.chart-stage { width:100%; min-height: 380px; position:relative; }
+.chart-stage svg { width:100%; height:100%; display:block; }
+.chart-empty {
+  min-height: 220px; display:flex; align-items:center; justify-content:center; text-align:center;
+  padding: 24px; border:1px dashed var(--neutral-border); border-radius: 18px;
+  color: var(--neutral-text-muted); background: linear-gradient(180deg, #fff, #f8fbff);
+}
+.chart-error { color: #b91c1c; border-color: rgba(185,28,28,.2); background: rgba(254,242,242,.8); }
+.tooltip {
+  position: absolute; pointer-events:none; background: rgba(15,23,42,.92); color:#fff; padding:8px 10px; border-radius:10px; font-size:12px; line-height:1.5; white-space: nowrap; transform: translate(-50%, calc(-100% - 12px)); opacity:0; transition: opacity .15s ease;
+}
+
+/* === 图示 === */
+.diagram-grid { display:grid; gap: 14px; }
+.chain-grid { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items:start; }
+.chain-col, .flow-step, .mind-node, .tier-card { background: #fff; border:1px solid var(--neutral-border); border-radius: 18px; padding: 16px; }
+.chain-col h4, .flow-step h4, .tier-card h4 { margin: 0 0 10px; font-size: 18px; }
+.arrow-note { text-align:center; color: var(--neutral-text-muted); font-size: 13px; }
+.lifecycle { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:12px; align-items:stretch; }
+.lifecycle .stage { position:relative; background:#fff; border:1px solid var(--neutral-border); border-radius:18px; padding:18px; }
+.lifecycle .stage.current { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.14); }
+.lifecycle .stage.current::before { content:'当前阶段'; position:absolute; top:-10px; left:14px; background:#2563eb; color:#fff; padding:3px 8px; border-radius:999px; font-size:12px; }
+.pyramid { display:grid; gap:12px; justify-items:center; }
+.tier-card { width:min(100%, 900px); text-align:center; }
+.tier-card.head { max-width: 48%; background: linear-gradient(180deg, #eff6ff, #fff); }
+.tier-card.mid { max-width: 68%; }
+.tier-card.tail { max-width: 88%; background: linear-gradient(180deg, #fff, #f8fafc); }
+.flow-row { display:grid; grid-template-columns: repeat(8, minmax(0,1fr)); gap:10px; }
+.flow-step { text-align:center; position:relative; }
+.flow-step:not(:last-child)::after { content:'→'; position:absolute; right:-10px; top:50%; transform: translateY(-50%); color:#94a3b8; font-size: 20px; }
+.mindmap { display:grid; grid-template-columns: 220px 1fr; gap:16px; align-items:start; }
+.mind-center { background: linear-gradient(180deg, #dbeafe, #eff6ff); border:1px solid #bfdbfe; border-radius: 24px; padding: 22px; text-align:center; font-weight:700; color:#1d4ed8; }
+.mind-branches { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+.mind-node h4 { margin-top:0; margin-bottom:8px; }
+figure figcaption { color: var(--neutral-text-muted); font-size: 13px; }
+.footer-note { font-size: 13px; color: var(--neutral-text-muted); margin-top: 28px; }
+
+/* === 参考链接 === */
+.anchor-link {
+  color: var(--link-color); text-decoration: underline; text-decoration-color: rgba(0,102,204,0.4);
+  text-underline-offset: 3px; transition: all 0.2s ease; cursor: pointer;
+}
+.anchor-link:hover { text-decoration-color: var(--link-color); background-color: rgba(0,102,204,0.05); }
+.ref-external-link { margin-left: 8px; color: var(--link-color); text-decoration: underline; }
+[id^="ref-"] { transition: background-color 0.5s ease; padding: 4px; border-radius: 4px; }
+
+/* === 标注系统 === */
+mark.hl {
+  border-radius: 3px; padding: 1px 0; cursor: pointer;
+  transition: filter 0.15s ease, background-color 0.15s ease;
+}
+mark.hl:hover { filter: brightness(0.95); }
+.hl-yellow { background-color: rgba(250, 204, 21, 0.45); border-bottom: 2px solid rgba(202, 138, 4, 0.5); }
+.hl-green  { background-color: rgba(34, 197, 94, 0.35);  border-bottom: 2px solid rgba(22, 101, 52, 0.5); }
+.hl-blue   { background-color: rgba(59, 130, 246, 0.35); border-bottom: 2px solid rgba(30, 58, 138, 0.5); }
+.hl-pink   { background-color: rgba(236, 72, 153, 0.35); border-bottom: 2px solid rgba(157, 23, 77, 0.5); }
+
+.annotate-toolbar {
+  position: fixed; right: 24px; bottom: 24px; z-index: 9000;
+  display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+}
+.annotate-toolbar .btn {
+  border: 1px solid var(--neutral-border); background: #fff; color: var(--brand-primary);
+  border-radius: 999px; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 6px 20px rgba(15,23,42,.12); transition: all .15s ease;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.annotate-toolbar .btn:hover { background: #f8fafc; transform: translateY(-1px); opacity: 1; }
+.annotate-toolbar .btn:not(.active) { opacity: 0.72; }
+.annotate-toolbar .btn.active { color: #fff; border-color: transparent; opacity: 1; }
+.annotate-toolbar .btn.active.off { background:#fff; color:var(--brand-primary); }
+@keyframes clearPulse {
+  0% { box-shadow: 0 0 0 0 rgba(225,29,72,.5); }
+  100% { box-shadow: 0 0 0 12px rgba(225,29,72,0); }
+}
+.annotate-toolbar .btn.pulse { animation: clearPulse .4s ease-out; }
+.annotate-toolbar .color-row { display: none; gap: 8px; }
+.annotate-toolbar .color-row.show { display: flex; }
+.annotate-toolbar .color-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: 2px solid #fff;
+  cursor: pointer; box-shadow: 0 4px 12px rgba(15,23,42,.15); transition: transform .15s ease;
+}
+.annotate-toolbar .color-btn:hover { transform: scale(1.12); }
+.annotate-toolbar .color-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+.annotate-toolbar .cb-yellow { background: #facc15; }
+.annotate-toolbar .cb-green  { background: #22c55e; }
+.annotate-toolbar .cb-blue   { background: #3b82f6; }
+.annotate-toolbar .cb-pink   { background: #ec4899; }
+.annotate-toolbar .color-btn.active { box-shadow: 0 0 0 3px rgba(255,255,255,1), 0 0 0 5px var(--brand-primary); }
+.annotate-toolbar .row { display: flex; gap: 8px; }
+
+/* === 画笔涂鸦层 === */
+main.content { position: relative; }
+.draw-layer {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 10; overflow: visible;
+}
+.draw-layer.active { pointer-events: auto; cursor: crosshair; }
+.draw-layer path { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; opacity: 0.65; }
+.draw-layer.active path { pointer-events: stroke; cursor: pointer; }
+.draw-layer path:hover { opacity: 0.9; }
+
+/* === 响应式 === */
+@media (max-width: 1180px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: relative; top: 0; max-height: none; }
+}
+@media (max-width: 900px) {
+  .metric-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .chain-grid, .lifecycle, .mindmap, .mind-branches { grid-template-columns: 1fr; }
+  .flow-row { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .flow-step:not(:last-child)::after { display:none; }
+  .content { padding: 22px; }
+  .sidebar-toggle { display:inline-flex; }
+}
+@media (max-width: 640px) {
+  .shell { padding: 14px; }
+  .hero { padding: 32px 24px; }
+  .content { padding: 18px; border-radius: 18px; }
+  .metric-grid { grid-template-columns: 1fr; }
+  .annotate-toolbar { right: 14px; bottom: 14px; }
+}
+
+/* === 打印 === */
+@media print {
+  .annotate-toolbar, .draw-layer, .sidebar-toggle { display: none !important; }
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .content { box-shadow: none; border: none; }
+  body { background: #fff; }
+}
+
+/* === 减少动画偏好 === */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- ============ Hero 头部（Agent 编辑） ============ -->
+    <header class="hero">
+      <h1>{{报告标题}}</h1>
+      <p>{{副标题或一句话摘要}}</p>
+      <div class="meta">
+        <span class="chip">{{日期 / 作者 / 版本}}</span>
+      </div>
+    </header>
+
+    <div class="layout">
+      <!-- ============ 侧栏目录（JS 自动生成，无需编辑） ============ -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>目录导航</h2>
+          <button type="button" class="sidebar-toggle" aria-controls="toc" aria-expanded="false">展开目录</button>
+        </div>
+        <nav id="toc"></nav>
+      </aside>
+
+      <!-- ============ 主内容区（Agent 在此填入章节） ============ -->
+      <main class="content">
+        <section class="content-section">
+          <div id="metric-grid" class="metric-grid"></div>
+        </section>
+
+        <!-- ▼▼▼ Agent 以下为示例章节，替换为实际报告内容 ▼▼▼ -->
+
+        <h1 id="示例章节">示例章节</h1>
+        <p>本模板演示如何构建一份专业 HTML 报告。直接在 <code>&lt;main class="content"&gt;</code> 内写入 <code>&lt;h1&gt;/&lt;h2&gt;/&lt;h3&gt;/&lt;p&gt;/&lt;ul&gt;/&lt;table&gt;</code> 等标准 HTML 标签，目录会自动生成。</p>
+
+        <h2 id="示例-子节">子节示例</h2>
+        <p>段落文本。<strong>加粗</strong>、<em>斜体</em>、<a href="#">链接</a>、<code>行内代码</code>均可使用。</p>
+        <ul>
+          <li>无序列表项一</li>
+          <li>无序列表项二</li>
+        </ul>
+        <blockquote>引用块示例：用于强调重要结论或引用第三方观点。</blockquote>
+
+        <h3 class="figure-title">图1 柱状折线混排示例</h3>
+        <div id="fig1" class="chart-root figure-card" data-chart="barline"></div>
+
+        <h3 class="figure-title">图2 饼图示例</h3>
+        <div id="fig2" class="chart-root figure-card" data-chart="pie"></div>
+
+        <h3 class="figure-title">图3 雷达图示例</h3>
+        <div id="fig3" class="chart-root figure-card" data-chart="radar"></div>
+
+        <h3 class="figure-title">图4 散点图示例</h3>
+        <div id="fig4" class="chart-root figure-card" data-chart="scatter"></div>
+
+        <h3 class="figure-title">图5 产业链结构示例</h3>
+        <div id="fig5" class="diagram figure-card"></div>
+
+        <h4>表格示例</h4>
+        <div class="table-wrap"><table>
+          <thead><tr><th>指标</th><th>2024</th><th>2025</th><th>2026E</th></tr></thead>
+          <tbody>
+            <tr><td>市场规模（亿元）</td><td>167</td><td>208</td><td>252</td></tr>
+            <tr><td>同比增速</td><td>22.8%</td><td>24.6%</td><td>21.2%</td></tr>
+          </tbody>
+        </table></div>
+
+        <hr>
+
+        <h1 id="附录-参考文献">附录 参考文献</h1>
+        <ul>
+          <li id="ref-S1">参考来源一</li>
+          <li id="ref-S2">参考来源二</li>
+        </ul>
+
+        <!-- ▲▲▲ 示例内容结束 ▲▲▲ -->
+        <svg class="draw-layer" id="drawLayer" xmlns="http://www.w3.org/2000/svg"></svg>
+      </main>
+    </div>
+  </div>
+
+  <!-- ============ 标注系统 UI ============ -->
+  <div class="annotate-toolbar" id="annotateToolbar">
+    <div class="color-row" id="colorRow">
+      <button class="color-btn cb-yellow active" data-color="yellow" title="黄色"></button>
+      <button class="color-btn cb-green" data-color="green" title="绿色"></button>
+      <button class="color-btn cb-blue" data-color="blue" title="蓝色"></button>
+      <button class="color-btn cb-pink" data-color="pink" title="粉色"></button>
+    </div>
+    <div class="row">
+      <button class="btn" id="btnPen" title="画笔涂鸦">画笔</button>
+      <button class="btn" id="btnHighlight" title="文字高亮">高亮</button>
+      <button class="btn" id="btnClear" title="清除全部">清除</button>
+    </div>
+  </div>
+
+  <script>
+/* ============================================================
+   REPORT_DATA：图表数据（Agent 编辑）
+   ============================================================ */
+const REPORT_DATA = {
+  fig1: {
+    labels: ["2022", "2023", "2024", "2025", "2026E"],
+    series: [
+      { name: "市场规模(亿元)", type: "bar", data: [114, 136, 167, 208, 252], color: "#2563eb" },
+      { name: "增速(%)", type: "line", data: [null, 19.3, 22.8, 24.6, 21.2], color: "#f97316", yAxis: 1 }
+    ]
+  },
+  fig2: {
+    title: "市场份额示例",
+    data: [
+      { name: "厂商A", value: 32 },
+      { name: "厂商B", value: 24 },
+      { name: "厂商C", value: 18 },
+      { name: "厂商D", value: 14 },
+      { name: "其他", value: 12 }
+    ]
+  },
+  fig3: {
+    labels: ["维度一", "维度二", "维度三", "维度四", "维度五"],
+    values: [4.2, 3.6, 2.8, 3.1, 4.4],
+    max: 5,
+    color: "#8b5cf6"
+  },
+  fig4: {
+    points: [
+      { x: 8, y: 95, name: "场景甲", group: "高成熟" },
+      { x: 6, y: 85, name: "场景乙", group: "中高成熟" },
+      { x: 5, y: 60, name: "场景丙", group: "成长中" },
+      { x: 4, y: 52, name: "场景丁", group: "成长中" }
+    ]
+  }
+};
+
+/* ============================================================
+   REF_LINKS：参考链接配置（Agent 编辑）
+   ============================================================ */
+const REF_LINKS = {
+  S1: { url: 'https://example.com', label: '参考来源一' },
+  S2: { url: 'https://example.com', label: '参考来源二' }
+};
+
+/* ============================================================
+   工具函数
+   ============================================================ */
+const NS = 'http://www.w3.org/2000/svg';
+const palette = ['#2563eb','#f97316','#14b8a6','#8b5cf6','#e11d48','#06b6d4','#84cc16','#f59e0b','#6366f1','#10b981','#64748b'];
+const MOBILE_NAV_QUERY = '(max-width: 900px)';
+
+function svgEl(tag, attrs = {}) {
+  const node = document.createElementNS(NS, tag);
+  Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
+  return node;
+}
+function htmlEl(tag, attrs = {}, text = '') {
+  const node = document.createElement(tag);
+  Object.entries(attrs).forEach(([k, v]) => {
+    if (k === 'class') node.className = v;
+    else if (k === 'html') node.innerHTML = v;
+    else node.setAttribute(k, v);
+  });
+  if (text) node.textContent = text;
+  return node;
+}
+function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+function fmt(v) { return typeof v === 'number' ? (Math.round(v * 100) / 100).toString() : v; }
+function isMobileNav() {
+  return Boolean(window.matchMedia && window.matchMedia(MOBILE_NAV_QUERY).matches);
+}
+
+/* ============================================================
+   图表渲染引擎
+   ============================================================ */
+function showChartState(root, message, variant = 'empty') {
+  if (!root) return;
+  root.innerHTML = '';
+  root.appendChild(htmlEl('div', { class: variant === 'error' ? 'chart-empty chart-error' : 'chart-empty' }, message));
+}
+function hasChartData(config) {
+  if (!config || typeof config !== 'object') return false;
+  if (Array.isArray(config.series)) return config.series.some(s => Array.isArray(s.data) && s.data.some(v => typeof v === 'number'));
+  if (Array.isArray(config.data)) return config.data.some(i => i && typeof i.value === 'number');
+  if (Array.isArray(config.points)) return config.points.some(p => p && typeof p.x === 'number' && typeof p.y === 'number');
+  if (Array.isArray(config.values)) return config.values.some(v => typeof v === 'number');
+  return false;
+}
+function getStage(root) {
+  let shell = root.querySelector('.chart-shell');
+  if (!shell) {
+    shell = htmlEl('div', { class: 'chart-shell' });
+    shell.appendChild(htmlEl('div', { class: 'chart-toolbar' }));
+    const stage = htmlEl('div', { class: 'chart-stage' });
+    stage.appendChild(htmlEl('div', { class: 'tooltip' }));
+    shell.appendChild(stage);
+    root.appendChild(shell);
+  }
+  return { shell, toolbar: shell.querySelector('.chart-toolbar'), stage: shell.querySelector('.chart-stage'), tooltip: shell.querySelector('.tooltip') };
+}
+function showTip(stage, tooltip, evt, lines) {
+  const rect = stage.getBoundingClientRect();
+  tooltip.innerHTML = lines.join('<br>');
+  tooltip.style.opacity = '1';
+  tooltip.style.left = (evt.clientX - rect.left) + 'px';
+  tooltip.style.top = (evt.clientY - rect.top) + 'px';
+}
+function hideTip(tooltip) { tooltip.style.opacity = '0'; }
+
+function addLegend(toolbar, series, state, rerender) {
+  const wrap = htmlEl('div', { class: 'legend' });
+  series.forEach((item, idx) => {
+    const btn = htmlEl('button', {}, item.name);
+    btn.style.borderColor = item.color; btn.style.color = item.color;
+    if (!state.visible[idx]) btn.classList.add('is-off');
+    btn.addEventListener('click', () => { state.visible[idx] = !state.visible[idx]; rerender(); });
+    wrap.appendChild(btn);
+  });
+  toolbar.appendChild(wrap);
+}
+function addRangeControls(toolbar, state, max, rerender) {
+  const wrap = htmlEl('div', { class: 'chart-controls' });
+  const group = htmlEl('div', { class: 'range-group' });
+  group.append('起始');
+  const start = htmlEl('input', { type: 'range', min: '0', max: String(max), value: String(state.start) });
+  const end = htmlEl('input', { type: 'range', min: '0', max: String(max), value: String(state.end) });
+  const label = htmlEl('span', {}, `${state.start + 1}-${state.end + 1}`);
+  const sync = () => {
+    let s = Number(start.value), e = Number(end.value);
+    if (s > e) [s, e] = [e, s];
+    state.start = s; state.end = e; label.textContent = `${s + 1}-${e + 1}`; rerender();
+  };
+  start.addEventListener('input', sync); end.addEventListener('input', sync);
+  group.appendChild(start); group.append('结束'); group.appendChild(end); group.appendChild(label);
+  wrap.appendChild(group); toolbar.appendChild(wrap);
+}
+
+function drawBarLineChart(root, config) {
+  if (!root) return;
+  if (!hasChartData(config) || !Array.isArray(config.labels) || !config.labels.length) { showChartState(root, '暂无可展示的图表数据'); return; }
+  const { toolbar, stage, tooltip } = getStage(root);
+  if (!root.__state) root.__state = { start: 0, end: config.labels.length - 1, visible: config.series.map(() => true) };
+  const state = root.__state;
+  const render = () => {
+    clear(toolbar); clear(stage); stage.appendChild(tooltip);
+    addLegend(toolbar, config.series, state, render);
+    if (config.labels.length > 4) addRangeControls(toolbar, state, config.labels.length - 1, render);
+    const rect = stage.getBoundingClientRect();
+    const width = Math.max(rect.width || stage.clientWidth || 700, 320);
+    const height = 390; stage.style.height = height + 'px';
+    const svg = svgEl('svg', { viewBox: `0 0 ${width} ${height}`, role: 'img', 'aria-label': 'chart' });
+    stage.appendChild(svg);
+    const margin = { top: 24, right: 58, bottom: 52, left: 58 };
+    const plotW = width - margin.left - margin.right, plotH = height - margin.top - margin.bottom;
+    const labels = config.labels.slice(state.start, state.end + 1);
+    const series = config.series.map((s, idx) => ({ ...s, active: state.visible[idx], data: s.data.slice(state.start, state.end + 1) })).filter(s => s.active);
+    const leftSeries = series.filter(s => !s.yAxis || s.yAxis === 0);
+    const rightSeries = series.filter(s => s.yAxis === 1);
+    const leftVals = leftSeries.flatMap(s => s.data.filter(v => typeof v === 'number'));
+    const rightVals = rightSeries.flatMap(s => s.data.filter(v => typeof v === 'number'));
+    const maxLeft = Math.max(...leftVals, 1) * 1.15;
+    const maxRight = rightVals.length ? Math.max(...rightVals, 1) * 1.2 : 0;
+    const step = plotW / Math.max(labels.length, 1);
+
+    const axis = svgEl('g', { stroke: '#94a3b8', 'stroke-width': '1' });
+    axis.appendChild(svgEl('line', { x1: margin.left, y1: margin.top + plotH, x2: margin.left + plotW, y2: margin.top + plotH }));
+    axis.appendChild(svgEl('line', { x1: margin.left, y1: margin.top, x2: margin.left, y2: margin.top + plotH }));
+    if (rightSeries.length) axis.appendChild(svgEl('line', { x1: margin.left + plotW, y1: margin.top, x2: margin.left + plotW, y2: margin.top + plotH }));
+    svg.appendChild(axis);
+    for (let i = 0; i <= 4; i += 1) {
+      const y = margin.top + (plotH / 4) * i;
+      const val = Math.round((maxLeft - (maxLeft / 4) * i) * 10) / 10;
+      svg.appendChild(svgEl('line', { x1: margin.left, y1: y, x2: margin.left + plotW, y2: y, stroke: '#e2e8f0' }));
+      const lbl = svgEl('text', { x: margin.left - 10, y: y + 4, 'text-anchor': 'end', fill: '#64748b', 'font-size': '12' });
+      lbl.textContent = val; svg.appendChild(lbl);
+      if (rightSeries.length) {
+        const rVal = Math.round((maxRight - (maxRight / 4) * i) * 10) / 10;
+        const rLbl = svgEl('text', { x: margin.left + plotW + 10, y: y + 4, fill: '#64748b', 'font-size': '12' });
+        rLbl.textContent = rVal; svg.appendChild(rLbl);
+      }
+    }
+    labels.forEach((labelText, i) => {
+      const x = margin.left + step * i + step / 2;
+      const lbl = svgEl('text', { x, y: height - 18, 'text-anchor': 'middle', fill: '#64748b', 'font-size': '12' });
+      lbl.textContent = labelText; svg.appendChild(lbl);
+    });
+
+    const barSeries = series.filter(s => s.type === 'bar');
+    const lineSeries = series.filter(s => s.type === 'line');
+    const barWidth = step / Math.max(barSeries.length + 1, 2);
+    barSeries.forEach((s, si) => {
+      s.data.forEach((v, i) => {
+        if (typeof v !== 'number') return;
+        const h = (v / maxLeft) * plotH;
+        const x = margin.left + step * i + step * 0.16 + si * barWidth;
+        const y = margin.top + plotH - h;
+        const rect = svgEl('rect', { x, y, width: barWidth * 0.9, height: h, rx: '6', fill: s.color, opacity: '0.88' });
+        rect.addEventListener('mousemove', e => showTip(stage, tooltip, e, [s.name, `${labels[i]}：${fmt(v)}`]));
+        rect.addEventListener('mouseleave', () => hideTip(tooltip));
+        svg.appendChild(rect);
+      });
+    });
+    lineSeries.forEach(s => {
+      const max = s.yAxis === 1 && maxRight ? maxRight : maxLeft;
+      const points = [];
+      s.data.forEach((v, i) => {
+        if (typeof v !== 'number') return;
+        const x = margin.left + step * i + step / 2;
+        const y = margin.top + plotH - (v / max) * plotH;
+        points.push([x, y, labels[i], v]);
+      });
+      if (!points.length) return;
+      const path = svgEl('path', { d: points.map((p, i) => `${i ? 'L' : 'M'} ${p[0]} ${p[1]}`).join(' '), fill: 'none', stroke: s.color, 'stroke-width': '3', 'stroke-linejoin': 'round', 'stroke-linecap': 'round' });
+      svg.appendChild(path);
+      points.forEach(p => {
+        const c = svgEl('circle', { cx: p[0], cy: p[1], r: '5', fill: '#fff', stroke: s.color, 'stroke-width': '3' });
+        c.addEventListener('mousemove', e => showTip(stage, tooltip, e, [s.name, `${p[2]}：${fmt(p[3])}`]));
+        c.addEventListener('mouseleave', () => hideTip(tooltip));
+        svg.appendChild(c);
+      });
+    });
+  };
+  render();
+}
+
+function drawPieChart(root, config) {
+  if (!root) return;
+  if (!hasChartData(config)) { showChartState(root, '暂无可展示的图表数据'); return; }
+  const { toolbar, stage, tooltip } = getStage(root);
+  if (!root.__state) root.__state = { topN: 'all', visible: config.data.map(() => true) };
+  const state = root.__state;
+  const render = () => {
+    clear(toolbar); clear(stage); stage.appendChild(tooltip);
+    const filters = htmlEl('div', { class: 'chart-controls' });
+    ['all','5','8'].forEach(v => {
+      const btn = htmlEl('button', { class: state.topN === v ? '' : 'is-off' }, v === 'all' ? '全部' : `Top ${v}`);
+      btn.addEventListener('click', () => { state.topN = v; render(); });
+      filters.appendChild(btn);
+    });
+    toolbar.appendChild(filters);
+    const legend = htmlEl('div', { class: 'legend' });
+    config.data.forEach((item, idx) => {
+      const btn = htmlEl('button', { class: state.visible[idx] ? '' : 'is-off' }, item.name);
+      btn.style.color = palette[idx % palette.length]; btn.style.borderColor = palette[idx % palette.length];
+      btn.addEventListener('click', () => { state.visible[idx] = !state.visible[idx]; render(); });
+      legend.appendChild(btn);
+    });
+    toolbar.appendChild(legend);
+
+    const rect = stage.getBoundingClientRect();
+    const width = Math.max(rect.width || stage.clientWidth || 700, 320);
+    const height = 420; stage.style.height = height + 'px';
+    const svg = svgEl('svg', { viewBox: `0 0 ${width} ${height}` });
+    stage.appendChild(svg);
+    const filtered = config.data.filter((_, idx) => state.visible[idx]);
+    const sorted = [...filtered].sort((a,b) => b.value - a.value);
+    const shown = state.topN === 'all' ? sorted : sorted.slice(0, Number(state.topN));
+    const total = shown.reduce((s, i) => s + i.value, 0);
+    if (total <= 0) { showChartState(root, '所选数据合计为零'); return; }
+    const cx = Math.min(width * 0.34, 220), cy = 210, radius = Math.min(135, width * 0.2 + 50), inner = radius * 0.55;
+    let angle = -Math.PI / 2;
+    shown.forEach((item, idx) => {
+      const slice = (item.value / total) * Math.PI * 2;
+      const x1 = cx + Math.cos(angle) * radius, y1 = cy + Math.sin(angle) * radius;
+      const x2 = cx + Math.cos(angle + slice) * radius, y2 = cy + Math.sin(angle + slice) * radius;
+      const ix1 = cx + Math.cos(angle + slice) * inner, iy1 = cy + Math.sin(angle + slice) * inner;
+      const ix2 = cx + Math.cos(angle) * inner, iy2 = cy + Math.sin(angle) * inner;
+      const large = slice > Math.PI ? 1 : 0;
+      const path = svgEl('path', { d: `M ${x1} ${y1} A ${radius} ${radius} 0 ${large} 1 ${x2} ${y2} L ${ix1} ${iy1} A ${inner} ${inner} 0 ${large} 0 ${ix2} ${iy2} Z`, fill: palette[idx % palette.length], opacity: '0.92' });
+      path.addEventListener('mousemove', e => showTip(stage, tooltip, e, [item.name, `份额：${item.value}%`]));
+      path.addEventListener('mouseleave', () => hideTip(tooltip));
+      svg.appendChild(path); angle += slice;
+    });
+    const center = svgEl('text', { x: cx, y: cy - 6, 'text-anchor': 'middle', 'font-size': '28', 'font-weight': '700', fill: '#0f172a' });
+    center.textContent = `${total.toFixed(1)}%`; svg.appendChild(center);
+    const center2 = svgEl('text', { x: cx, y: cy + 22, 'text-anchor': 'middle', 'font-size': '12', fill: '#64748b' });
+    center2.textContent = '所选份额合计'; svg.appendChild(center2);
+    const listX = width * 0.58;
+    shown.forEach((item, idx) => {
+      const y = 82 + idx * 28;
+      svg.appendChild(svgEl('circle', { cx: listX, cy: y, r: '6', fill: palette[idx % palette.length] }));
+      const lbl = svgEl('text', { x: listX + 14, y: y + 4, fill: '#334155', 'font-size': '13' });
+      lbl.textContent = `${item.name}  ${item.value}%`; svg.appendChild(lbl);
+    });
+  };
+  render();
+}
+
+function drawRadarChart(root, config) {
+  if (!root) return;
+  if (!hasChartData(config) || !Array.isArray(config.labels) || !config.labels.length || !config.max) { showChartState(root, '暂无可展示的图表数据'); return; }
+  const { toolbar, stage, tooltip } = getStage(root);
+  clear(toolbar); clear(stage); stage.appendChild(tooltip);
+  const rect = stage.getBoundingClientRect();
+  const width = Math.max(rect.width || stage.clientWidth || 700, 320);
+  const height = 400; stage.style.height = height + 'px';
+  const svg = svgEl('svg', { viewBox: `0 0 ${width} ${height}` });
+  stage.appendChild(svg);
+  const cx = width / 2, cy = height / 2 + 8, radius = Math.min(width, height) * 0.28;
+  for (let level = 1; level <= 5; level += 1) {
+    const r = radius * (level / 5);
+    const pts = config.labels.map((_, i) => {
+      const angle = -Math.PI / 2 + (Math.PI * 2 * i) / config.labels.length;
+      return [cx + Math.cos(angle) * r, cy + Math.sin(angle) * r];
+    });
+    svg.appendChild(svgEl('polygon', { points: pts.map(p => p.join(',')).join(' '), fill: level % 2 ? '#f8fafc' : '#eef2ff', stroke: '#dbe4f0' }));
+  }
+  const valuePts = config.labels.map((label, i) => {
+    const angle = -Math.PI / 2 + (Math.PI * 2 * i) / config.labels.length;
+    svg.appendChild(svgEl('line', { x1: cx, y1: cy, x2: cx + Math.cos(angle) * radius, y2: cy + Math.sin(angle) * radius, stroke: '#cbd5e1' }));
+    const t = svgEl('text', { x: cx + Math.cos(angle) * (radius + 26), y: cy + Math.sin(angle) * (radius + 26), 'text-anchor': Math.cos(angle) > 0.3 ? 'start' : (Math.cos(angle) < -0.3 ? 'end' : 'middle'), fill: '#334155', 'font-size': '12' });
+    t.textContent = label; svg.appendChild(t);
+    return [cx + Math.cos(angle) * radius * (config.values[i] / config.max), cy + Math.sin(angle) * radius * (config.values[i] / config.max), label, config.values[i]];
+  });
+  svg.appendChild(svgEl('polygon', { points: valuePts.map(p => `${p[0]},${p[1]}`).join(' '), fill: 'rgba(139, 92, 246, 0.25)', stroke: config.color, 'stroke-width': '3' }));
+  valuePts.forEach(p => {
+    const c = svgEl('circle', { cx: p[0], cy: p[1], r: '6', fill: '#fff', stroke: config.color, 'stroke-width': '3' });
+    c.addEventListener('mousemove', e => showTip(stage, tooltip, e, [p[2], `评分：${p[3]}/5`]));
+    c.addEventListener('mouseleave', () => hideTip(tooltip));
+    svg.appendChild(c);
+  });
+}
+
+function drawScatterChart(root, config) {
+  if (!root) return;
+  if (!hasChartData(config)) { showChartState(root, '暂无可展示的图表数据'); return; }
+  const { toolbar, stage, tooltip } = getStage(root);
+  if (!root.__state) root.__state = { minX: 0, maxX: 10, groups: [...new Set(config.points.map(p => p.group))] };
+  const state = root.__state;
+  const allGroups = [...new Set(config.points.map(p => p.group))];
+  const render = () => {
+    clear(toolbar); clear(stage); stage.appendChild(tooltip);
+    const controls = htmlEl('div', { class: 'chart-controls' });
+    const gWrap = htmlEl('div', { class: 'legend' });
+    allGroups.forEach(group => {
+      const active = state.groups.includes(group);
+      const btn = htmlEl('button', { class: active ? '' : 'is-off' }, group);
+      btn.addEventListener('click', () => { if (active) state.groups = state.groups.filter(g => g !== group); else state.groups.push(group); render(); });
+      gWrap.appendChild(btn);
+    });
+    controls.appendChild(gWrap);
+    const range = htmlEl('div', { class: 'range-group' });
+    range.append('技术成熟度');
+    const min = htmlEl('input', { type: 'range', min: '0', max: '10', value: String(state.minX) });
+    const max = htmlEl('input', { type: 'range', min: '0', max: '10', value: String(state.maxX) });
+    const label = htmlEl('span', {}, `${state.minX}-${state.maxX}`);
+    const sync = () => { let s = Number(min.value), e = Number(max.value); if (s > e) [s, e] = [e, s]; state.minX = s; state.maxX = e; label.textContent = `${s}-${e}`; render(); };
+    min.addEventListener('input', sync); max.addEventListener('input', sync);
+    range.appendChild(min); range.append('至'); range.appendChild(max); range.appendChild(label);
+    controls.appendChild(range); toolbar.appendChild(controls);
+
+    const rect = stage.getBoundingClientRect();
+    const width = Math.max(rect.width || stage.clientWidth || 700, 320);
+    const height = 390; stage.style.height = height + 'px';
+    const svg = svgEl('svg', { viewBox: `0 0 ${width} ${height}` });
+    stage.appendChild(svg);
+    const margin = { top: 20, right: 28, bottom: 48, left: 58 };
+    const plotW = width - margin.left - margin.right, plotH = height - margin.top - margin.bottom;
+    const points = config.points.filter(p => p.x >= state.minX && p.x <= state.maxX && state.groups.includes(p.group));
+    const maxY = Math.max(...config.points.map(p => p.y), 100) * 1.1;
+    svg.appendChild(svgEl('line', { x1: margin.left, y1: margin.top + plotH, x2: margin.left + plotW, y2: margin.top + plotH, stroke: '#94a3b8' }));
+    svg.appendChild(svgEl('line', { x1: margin.left, y1: margin.top, x2: margin.left, y2: margin.top + plotH, stroke: '#94a3b8' }));
+    for (let i = 0; i <= 5; i += 1) {
+      const y = margin.top + plotH - (plotH / 5) * i;
+      svg.appendChild(svgEl('line', { x1: margin.left, y1: y, x2: margin.left + plotW, y2: y, stroke: '#e2e8f0' }));
+      const lbl = svgEl('text', { x: margin.left - 10, y: y + 4, 'text-anchor': 'end', fill: '#64748b', 'font-size': '12' });
+      lbl.textContent = Math.round((maxY / 5) * i); svg.appendChild(lbl);
+    }
+    for (let x = 0; x <= 10; x += 1) {
+      const px = margin.left + (x / 10) * plotW;
+      const lbl = svgEl('text', { x: px, y: height - 18, 'text-anchor': 'middle', fill: '#64748b', 'font-size': '12' });
+      lbl.textContent = x; svg.appendChild(lbl);
+    }
+    points.forEach((p, idx) => {
+      const cx = margin.left + (p.x / 10) * plotW;
+      const cy = margin.top + plotH - (p.y / maxY) * plotH;
+      const c = svgEl('circle', { cx, cy, r: 11, fill: palette[idx % palette.length], opacity: '0.82' });
+      c.addEventListener('mousemove', e => showTip(stage, tooltip, e, [p.name, `技术成熟度：${p.x}`, `市场潜力：${p.y}亿元`]));
+      c.addEventListener('mouseleave', () => hideTip(tooltip));
+      svg.appendChild(c);
+      const lbl = svgEl('text', { x: cx + 14, y: cy + 4, fill: '#334155', 'font-size': '12' });
+      lbl.textContent = p.name; svg.appendChild(lbl);
+    });
+  };
+  render();
+}
+
+const CHART_RENDERERS = { barline: drawBarLineChart, pie: drawPieChart, radar: drawRadarChart, scatter: drawScatterChart };
+
+function renderCharts() {
+  document.querySelectorAll('.chart-root[data-chart]').forEach(root => {
+    const id = root.id;
+    const type = root.dataset.chart;
+    const config = REPORT_DATA[id];
+    const renderer = CHART_RENDERERS[type];
+    if (!renderer || !config) { showChartState(root, `图表 ${id} 配置缺失`, 'error'); return; }
+    try { renderer(root, config); } catch (e) { console.error(e); showChartState(root, `${id} 渲染失败`, 'error'); }
+  });
+}
+
+/* ============================================================
+   图示渲染（示例：产业链三列）
+   ============================================================ */
+function renderDiagrams() {
+  const fig5 = document.getElementById('fig5');
+  if (fig5) fig5.innerHTML = `
+    <div class="diagram-grid">
+      <div class="chain-grid">
+        <div class="chain-col"><h4>上游</h4><ul><li>核心材料</li><li>关键零部件</li><li>基础技术</li></ul></div>
+        <div class="chain-col"><h4>中游</h4><ul><li>整机产品</li><li>系统集成</li><li>平台软件</li></ul></div>
+        <div class="chain-col"><h4>下游</h4><ul><li>行业应用一</li><li>行业应用二</li><li>服务与运维</li></ul></div>
+      </div>
+      <div class="arrow-note">Agent 可按需扩展产业链、生命周期、金字塔、流程链、思维导图等图示</div>
+    </div>`;
+}
+
+/* ============================================================
+   目录（自动生成）
+   ============================================================ */
+function buildTOC() {
+  const sidebar = document.querySelector('.sidebar');
+  const nav = document.querySelector('#toc');
+  const toggle = document.querySelector('.sidebar-toggle');
+  if (!nav || !sidebar || !toggle) return;
+  clear(nav);
+  const headings = [...document.querySelectorAll('.content h1, .content h2, .content h3')].filter(n => n.id);
+  if (!headings.length) {
+    nav.appendChild(htmlEl('p', { class: 'toc-empty' }, '当前页面暂无可导航章节'));
+    return;
+  }
+  const setActiveLink = targetId => nav.querySelectorAll('a').forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${targetId}`));
+  const scrollToHeading = targetId => {
+    const target = document.getElementById(targetId); if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (history.replaceState) history.replaceState(null, '', `#${targetId}`);
+    setActiveLink(targetId);
+  };
+  const applySidebarState = () => {
+    const mobile = isMobileNav();
+    sidebar.classList.toggle('is-collapsed', mobile);
+    toggle.hidden = !mobile;
+    toggle.setAttribute('aria-expanded', String(!mobile));
+    toggle.textContent = mobile ? '展开目录' : '收起目录';
+  };
+  applySidebarState();
+  toggle.addEventListener('click', () => {
+    const collapsed = !sidebar.classList.contains('is-collapsed');
+    sidebar.classList.toggle('is-collapsed', collapsed);
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+    toggle.textContent = collapsed ? '展开目录' : '收起目录';
+  });
+  window.addEventListener('resize', () => { clearTimeout(window.__tocResize); window.__tocResize = setTimeout(applySidebarState, 120); });
+
+  headings.forEach(node => {
+    nav.appendChild(htmlEl('a', { href: `#${node.id}`, class: node.tagName === 'H3' ? 'sub' : '' }, node.textContent));
+  });
+  nav.addEventListener('click', event => {
+    const link = event.target.closest('a[href^="#"]'); if (!link) return;
+    event.preventDefault();
+    scrollToHeading(link.getAttribute('href').slice(1));
+    if (isMobileNav()) sidebar.classList.add('is-collapsed');
+  });
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => { if (entry.isIntersecting) setActiveLink(entry.target.id); });
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: 0.1 });
+  headings.forEach(h => observer.observe(h));
+  const initialId = window.location.hash ? window.location.hash.slice(1) : headings[0].id;
+  setActiveLink(initialId);
+}
+
+/* ============================================================
+   指标卡（Agent 修改此函数）
+   ============================================================ */
+function renderMetrics() {
+  const grid = document.getElementById('metric-grid');
+  if (!grid) return;
+  clear(grid);
+  [
+    ['示例指标一', '208 亿元', '指标说明'],
+    ['示例指标二', '24.6%', '指标说明'],
+    ['示例指标三', 'Top10 75%', '指标说明'],
+    ['示例指标四', '422 亿元', '指标说明']
+  ].forEach(item => {
+    const card = htmlEl('div', { class: 'metric-card' });
+    card.innerHTML = `<div class="label">${item[0]}</div><div class="value">${item[1]}</div><div class="desc">${item[2]}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+/* ============================================================
+   参考链接增强
+   ============================================================ */
+function enhanceReferenceLinks() {
+  document.querySelectorAll('.anchor-link').forEach(link => {
+    const refCode = link.textContent.trim();
+    const meta = REF_LINKS[refCode];
+    if (meta && meta.url) { link.href = meta.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; }
+  });
+  document.querySelectorAll('[id^="ref-"]').forEach(item => {
+    if (item.querySelector('.ref-external-link')) return;
+    const refCode = item.id.replace(/^ref-/, '');
+    const meta = REF_LINKS[refCode];
+    if (meta && meta.url) {
+      const ext = document.createElement('a');
+      ext.href = meta.url; ext.className = 'ref-external-link'; ext.target = '_blank'; ext.rel = 'noopener noreferrer';
+      ext.textContent = '打开原网页';
+      item.appendChild(document.createTextNode(' '));
+      item.appendChild(ext);
+    }
+  });
+}
+
+/* ============================================================
+   标注系统
+   ============================================================ */
+const ANN_KEY = 'html-report:annotations:' + location.pathname;
+const ANN_VERSION = 1;
+
+function getAnnStore() {
+  try { return JSON.parse(localStorage.getItem(ANN_KEY) || '{}'); }
+  catch (e) { return {}; }
+}
+function saveAnnStore(store) {
+  try { localStorage.setItem(ANN_KEY, JSON.stringify({ version: ANN_VERSION, ...store })); }
+  catch (e) { console.warn('标注保存失败', e); }
+}
+function genAid() {
+  const marks = document.querySelectorAll('main.content mark.hl[data-aid]');
+  let max = 0;
+  marks.forEach(m => { const n = Number(m.dataset.aid.replace(/^a/, '')); if (n > max) max = n; });
+  return 'a' + (max + 1);
+}
+
+// 跨节点高亮：extractContents → 包裹文本节点 → insertNode
+function highlightRange(range, color) {
+  const aid = genAid();
+  const fragment = range.extractContents();
+  function wrapTextNodes(node) {
+    if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim()) {
+      const mark = document.createElement('mark');
+      mark.className = 'hl hl-' + color;
+      mark.dataset.aid = aid;
+      node.parentNode.replaceChild(mark, node);
+      mark.appendChild(node);
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      [...node.childNodes].forEach(wrapTextNodes);
+    }
+  }
+  [...fragment.childNodes].forEach(wrapTextNodes);
+  range.insertNode(fragment);
+  return aid;
+}
+
+function saveAnnotations() {
+  const main = document.querySelector('main.content');
+  if (!main) return;
+  const notes = {};
+  document.querySelectorAll('main.content mark.hl[data-aid]').forEach(m => {
+    const aid = m.dataset.aid;
+    const note = m.dataset.note || '';
+    const color = (m.className.match(/hl-(\w+)/) || [])[1] || 'yellow';
+    if (note) notes[aid] = { color, note, ts: Date.now() };
+  });
+  saveAnnStore({ html: main.innerHTML, notes });
+}
+
+function loadAnnotations() {
+  const main = document.querySelector('main.content');
+  if (!main) return;
+  const store = getAnnStore();
+  if (store.html) {
+    // 先移出 drawLayer，避免被 innerHTML 覆盖
+    const layer = document.getElementById('drawLayer');
+    if (layer) layer.remove();
+    main.innerHTML = store.html;
+    // 重新插入 drawLayer 到 main 末尾
+    if (layer) main.appendChild(layer);
+    if (store.notes) {
+      Object.entries(store.notes).forEach(([aid, info]) => {
+        main.querySelectorAll(`mark.hl[data-aid="${aid}"]`).forEach(mark => {
+          mark.dataset.note = info.note;
+          mark.className = 'hl hl-' + (info.color || 'yellow');
+        });
+      });
+    }
+  }
+}
+
+function removeHighlight(markEl) {
+  if (!markEl) return;
+  const parent = markEl.parentNode;
+  while (markEl.firstChild) parent.insertBefore(markEl.firstChild, markEl);
+  parent.removeChild(markEl);
+  parent.normalize();
+}
+
+function changeHighlightColor(markEl, color) {
+  markEl.className = 'hl hl-' + color;
+}
+
+// === 标注模式状态 ===
+let penMode = false;          // 画笔涂鸦模式
+let highlightMode = false;    // 文字高亮模式
+let currentColor = 'yellow';  // 当前笔触颜色
+let drawing = false;          // 画笔正在绘制
+let currentPath = null;       // 当前绘制中的 path
+const COLOR_HEX = { yellow: '#facc15', green: '#22c55e', blue: '#3b82f6', pink: '#ec4899' };
+
+// === 画笔涂鸦 ===
+function setDrawLayerSize() {
+  const main = document.querySelector('main.content');
+  const layer = document.getElementById('drawLayer');
+  if (!main || !layer) return;
+  layer.setAttribute('width', main.scrollWidth);
+  layer.setAttribute('height', main.scrollHeight);
+}
+
+function svgPoint(evt) {
+  const layer = document.getElementById('drawLayer');
+  const rect = layer.getBoundingClientRect();
+  return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+}
+
+function initPen() {
+  const layer = document.getElementById('drawLayer');
+  if (!layer) return;
+  layer.addEventListener('pointerdown', e => {
+    if (!penMode) return;
+    drawing = true;
+    const p = svgPoint(e);
+    currentPath = svgEl('path', { stroke: COLOR_HEX[currentColor] || '#facc15', d: `M ${p.x} ${p.y}` });
+    layer.appendChild(currentPath);
+    e.preventDefault();
+  });
+  layer.addEventListener('pointermove', e => {
+    if (!drawing) return;
+    const p = svgPoint(e);
+    currentPath.setAttribute('d', currentPath.getAttribute('d') + ` L ${p.x} ${p.y}`);
+  });
+  const endDraw = () => {
+    if (!drawing) return;
+    drawing = false;
+    saveDrawings();
+  };
+  layer.addEventListener('pointerup', endDraw);
+  layer.addEventListener('pointerleave', endDraw);
+  layer.addEventListener('pointercancel', endDraw);
+  // 画笔模式下：点击单条轨迹 → 删除该条
+  layer.addEventListener('click', e => {
+    if (!penMode || drawing) return;
+    if (e.target.tagName === 'path') {
+      e.target.remove();
+      saveDrawings();
+    }
+  });
+}
+
+function saveDrawings() {
+  const paths = [...document.querySelectorAll('#drawLayer path')].map(p => ({
+    d: p.getAttribute('d'), stroke: p.getAttribute('stroke')
+  }));
+  try { localStorage.setItem('html-report:drawings:' + location.pathname, JSON.stringify(paths)); }
+  catch (e) { console.warn('画笔保存失败', e); }
+}
+
+function loadDrawings() {
+  const layer = document.getElementById('drawLayer');
+  if (!layer) return;
+  let data = [];
+  try { data = JSON.parse(localStorage.getItem('html-report:drawings:' + location.pathname) || '[]'); }
+  catch (e) { data = []; }
+  data.forEach(({ d, stroke }) => layer.appendChild(svgEl('path', { d, stroke })));
+}
+
+// === 颜色选择 ===
+function applyButtonColor() {
+  const hex = COLOR_HEX[currentColor];
+  const activeBtn = document.querySelector('.annotate-toolbar .btn.active');
+  if (activeBtn && activeBtn.id !== 'btnClear') {
+    activeBtn.style.backgroundColor = hex;
+    activeBtn.style.borderColor = hex;
+  }
+}
+
+function selectColor(color) {
+  currentColor = color;
+  document.querySelectorAll('#colorRow .color-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.color === color);
+  });
+  applyButtonColor();
+}
+
+// === 模式切换 ===
+function enterPenMode() {
+  penMode = true;
+  highlightMode = false;
+  document.getElementById('drawLayer').classList.add('active');
+  document.getElementById('btnPen').classList.add('active');
+  document.getElementById('btnHighlight').classList.remove('active');
+  document.getElementById('btnHighlight').style.backgroundColor = '';
+  document.getElementById('btnHighlight').style.borderColor = '';
+  document.getElementById('colorRow').classList.add('show');
+  applyButtonColor();
+  window.getSelection().removeAllRanges();
+}
+
+function exitPenMode() {
+  penMode = false;
+  drawing = false;
+  document.getElementById('drawLayer').classList.remove('active');
+  document.getElementById('btnPen').classList.remove('active');
+  document.getElementById('btnPen').style.backgroundColor = '';
+  document.getElementById('btnPen').style.borderColor = '';
+  document.getElementById('colorRow').classList.remove('show');
+}
+
+function enterHighlightMode() {
+  highlightMode = true;
+  penMode = false;
+  document.getElementById('drawLayer').classList.remove('active');
+  document.getElementById('btnHighlight').classList.add('active');
+  document.getElementById('btnPen').classList.remove('active');
+  document.getElementById('btnPen').style.backgroundColor = '';
+  document.getElementById('btnPen').style.borderColor = '';
+  document.getElementById('colorRow').classList.add('show');
+  applyButtonColor();
+}
+
+function exitHighlightMode() {
+  highlightMode = false;
+  document.getElementById('btnHighlight').classList.remove('active');
+  document.getElementById('btnHighlight').style.backgroundColor = '';
+  document.getElementById('btnHighlight').style.borderColor = '';
+  document.getElementById('colorRow').classList.remove('show');
+  window.getSelection().removeAllRanges();
+}
+
+// === 工具栏初始化 ===
+function initAnnotationToolbar() {
+  const btnPen = document.getElementById('btnPen');
+  const btnHighlight = document.getElementById('btnHighlight');
+  const btnClear = document.getElementById('btnClear');
+  const colorRow = document.getElementById('colorRow');
+
+  // 画笔按钮：切换画笔模式
+  btnPen.addEventListener('click', () => {
+    if (penMode) exitPenMode(); else { exitHighlightMode(); enterPenMode(); }
+  });
+
+  // 高亮按钮：切换高亮模式
+  btnHighlight.addEventListener('click', () => {
+    if (highlightMode) exitHighlightMode(); else { exitPenMode(); enterHighlightMode(); }
+  });
+
+  // 四色按钮：选当前颜色
+  colorRow.querySelectorAll('.color-btn').forEach(btn => {
+    btn.addEventListener('click', () => selectColor(btn.dataset.color));
+  });
+
+  // 高亮模式下：mouseup 时若有选区则高亮
+  document.addEventListener('mouseup', () => {
+    if (!highlightMode) return;
+    const sel = window.getSelection();
+    if (!sel || !sel.toString().trim() || !sel.rangeCount) return;
+    const range = sel.getRangeAt(0);
+    const main = document.querySelector('main.content');
+    if (!main.contains(range.commonAncestorContainer)) return;
+    highlightRange(range, currentColor);
+    sel.removeAllRanges();
+    saveAnnotations();
+  });
+
+  // 点击已有高亮 → 删除（点哪删哪）
+  document.querySelector('main.content').addEventListener('click', e => {
+    const mark = e.target.closest('mark.hl[data-aid]');
+    if (mark) {
+      e.stopPropagation();
+      document.querySelectorAll(`main.content mark.hl[data-aid="${mark.dataset.aid}"]`).forEach(removeHighlight);
+      saveAnnotations();
+    }
+  });
+
+  // 清除全部：画笔 + 高亮，无 confirm，执行后退出所有模式 + 脉冲反馈
+  btnClear.addEventListener('click', () => {
+    document.querySelectorAll('main.content mark.hl[data-aid]').forEach(removeHighlight);
+    document.querySelectorAll('#drawLayer path').forEach(p => p.remove());
+    localStorage.removeItem(ANN_KEY);
+    localStorage.removeItem('html-report:drawings:' + location.pathname);
+    saveAnnotations();
+    saveDrawings();
+    exitPenMode();
+    exitHighlightMode();
+    btnClear.classList.add('pulse');
+    setTimeout(() => btnClear.classList.remove('pulse'), 400);
+  });
+}
+
+/* ============================================================
+   初始化
+   ============================================================ */
+window.addEventListener('resize', () => {
+  clearTimeout(window.__reportResize);
+  window.__reportResize = setTimeout(() => {
+    document.querySelectorAll('.chart-root').forEach(n => { n.__state = n.__state || null; });
+    renderCharts();
+  }, 120);
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadAnnotations();
+  loadDrawings();
+  setDrawLayerSize();
+  renderMetrics();
+  buildTOC();
+  renderCharts();
+  renderDiagrams();
+  enhanceReferenceLinks();
+  initPen();
+  initAnnotationToolbar();
+});
+// 图表渲染后内容高度可能变化，延时重设画笔层尺寸
+window.addEventListener('load', () => setTimeout(setDrawLayerSize, 300));
+  </script>
+</body>
+</html>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>竞品分析 · 用 pm-compete Skill 找机会点和差异化</title>
+  <style>
+    :root{
+      --bg:#09090c;
+      --panel:#121118;
+      --ink:#fbfbff;
+      --soft:#d7d4df;
+      --muted:#9b94aa;
+      --line:rgba(255,255,255,.14);
+      --cyan:#2dd4bf;
+      --orange:#fb923c;
+      --pink:#f472b6;
+      --blue:#60a5fa;
+      --yellow:#facc15;
+      --shadow:0 30px 90px rgba(0,0,0,.48);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(760px 500px at 14% -8%,rgba(251,146,60,.23),transparent 58%),
+        radial-gradient(780px 520px at 105% 2%,rgba(45,212,191,.18),transparent 60%),
+        radial-gradient(560px 420px at 86% 100%,rgba(244,114,182,.13),transparent 62%),
+        linear-gradient(180deg,#09090c 0%,#111018 100%);
+      overflow-x:hidden;
+    }
+    .topbar{position:sticky;top:0;z-index:10;background:rgba(9,9,12,.84);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:1380px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
+    .dot{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--cyan));box-shadow:0 0 22px rgba(251,146,60,.6)}
+    .brand{font-weight:950;letter-spacing:.02em}
+    .brand small{display:block;color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+    .spacer{flex:1}
+    .hint{color:var(--muted);font-size:13px}
+    kbd{font-family:inherit;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:6px;padding:1px 6px;color:var(--soft)}
+    .progress{height:3px;background:rgba(255,255,255,.06)}
+    .progress span{display:block;height:100%;width:7.14%;background:linear-gradient(90deg,var(--orange),var(--pink),var(--cyan));transition:.25s}
+    .deck{max-width:1380px;margin:0 auto;padding:24px 24px 100px}
+    .slide{
+      display:none;
+      min-height:720px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:linear-gradient(180deg,rgba(18,17,24,.94),rgba(10,10,15,.92));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .slide.active{display:block;animation:in .35s ease}
+    @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .slide:before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+        linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px);
+      background-size:46px 46px;
+      mask-image:linear-gradient(180deg,black,transparent 84%);
+    }
+    .inner{position:relative;z-index:1;padding:54px;min-height:720px;display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center}
+    .inner.full{grid-template-columns:1fr}
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.07);
+      color:var(--soft);
+      border-radius:999px;
+      padding:6px 12px;
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-weight:950;
+      margin-bottom:18px;
+    }
+    .tag:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 14px var(--orange)}
+    h1{font-size:54px;line-height:1.08;margin:0 0 18px;letter-spacing:-.02em}
+    h2{font-size:38px;line-height:1.18;margin:0 0 16px;letter-spacing:-.01em}
+    h3{margin:0 0 10px;font-size:21px}
+    p{font-size:19px;line-height:1.72;color:var(--soft);margin:0}
+    b{color:white}
+    .hl{background:linear-gradient(120deg,var(--orange),var(--pink),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .focus-line{
+      margin-top:18px;border:1px solid rgba(45,212,191,.35);border-left:5px solid var(--cyan);
+      border-radius:14px;padding:14px 16px;
+      background:linear-gradient(90deg,rgba(45,212,191,.12),rgba(251,146,60,.06));
+      color:#f0fdfa;font-size:17px;font-weight:900;line-height:1.55;
+    }
+    .panel,.code,.map-card{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.025));
+      border-radius:18px;
+      padding:22px;
+    }
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .panel p,.panel li{font-size:16px;color:var(--soft);line-height:1.62}
+    .panel.cyan{border-color:rgba(45,212,191,.45);background:linear-gradient(180deg,rgba(45,212,191,.10),rgba(255,255,255,.025))}
+    .panel.orange{border-color:rgba(251,146,60,.45);background:linear-gradient(180deg,rgba(251,146,60,.12),rgba(255,255,255,.025))}
+    .panel.pink{border-color:rgba(244,114,182,.45);background:linear-gradient(180deg,rgba(244,114,182,.11),rgba(255,255,255,.025))}
+    .panel.blue{border-color:rgba(96,165,250,.45);background:linear-gradient(180deg,rgba(96,165,250,.11),rgba(255,255,255,.025))}
+    .panel h3{display:flex;align-items:center;gap:8px}
+    .panel h3:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+    .panel.orange h3:before{background:var(--orange);box-shadow:0 0 12px var(--orange)}
+    .panel.pink h3:before{background:var(--pink);box-shadow:0 0 12px var(--pink)}
+    .panel.blue h3:before{background:var(--blue);box-shadow:0 0 12px var(--blue)}
+    ul{margin:10px 0 0 20px;padding:0}
+    li{margin:6px 0}
+    li.hot{color:#fff;font-weight:850}
+    li.hot::marker{color:var(--orange)}
+    .pill{display:inline-flex;align-items:center;border-radius:999px;border:1px solid var(--line);padding:5px 10px;margin:4px 4px 0 0;background:rgba(255,255,255,.055);color:var(--soft);font-size:13px;font-weight:850}
+    .pill.cyan{color:#99f6e4;border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.1)}
+    .pill.orange{color:#fed7aa;border-color:rgba(251,146,60,.35);background:rgba(251,146,60,.11)}
+    .pill.pink{color:#fbcfe8;border-color:rgba(244,114,182,.35);background:rgba(244,114,182,.10)}
+    .pill.blue{color:#bfdbfe;border-color:rgba(96,165,250,.35);background:rgba(96,165,250,.10)}
+    .cover-slide{
+      background:
+        linear-gradient(135deg,rgba(251,146,60,.28),transparent 36%),
+        linear-gradient(315deg,rgba(45,212,191,.22),transparent 42%),
+        linear-gradient(180deg,rgba(18,17,24,.96),rgba(9,9,12,.94));
+    }
+    .cover-inner{position:relative;z-index:1;min-height:720px;padding:50px 58px 92px;display:grid;grid-template-columns:1.03fr .97fr;gap:42px;align-items:center}
+    .cover-kicker{font-size:13px;font-weight:950;letter-spacing:.22em;text-transform:uppercase;color:#fed7aa;margin-bottom:18px}
+    .cover-title{font-size:66px;line-height:1.02;margin:0 0 20px;font-weight:980;letter-spacing:-.03em}
+    .cover-subtitle{font-size:22px;line-height:1.65;color:#fff7ed;max-width:720px}
+    .radar{
+      min-height:430px;border:1px solid rgba(255,255,255,.18);border-radius:24px;position:relative;overflow:hidden;
+      background:
+        radial-gradient(circle at center,transparent 0 18%,rgba(255,255,255,.08) 18.2% 18.8%,transparent 19% 35%,rgba(255,255,255,.08) 35.2% 35.8%,transparent 36% 52%,rgba(255,255,255,.08) 52.2% 52.8%,transparent 53%),
+        linear-gradient(90deg,transparent 49.8%,rgba(255,255,255,.12) 50%,transparent 50.2%),
+        linear-gradient(transparent 49.8%,rgba(255,255,255,.12) 50%,transparent 50.2%),
+        rgba(255,255,255,.045);
+      box-shadow:0 24px 80px rgba(0,0,0,.30);
+    }
+    .radar:after{content:"";position:absolute;inset:0;background:conic-gradient(from 250deg,rgba(45,212,191,.35),transparent 22%,transparent);animation:sweep 5s linear infinite}
+    @keyframes sweep{to{transform:rotate(360deg)}}
+    .radar-point{position:absolute;z-index:1;display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;color:white}
+    .radar-point:before{content:"";width:12px;height:12px;border-radius:50%;background:var(--orange);box-shadow:0 0 18px var(--orange)}
+    .p1{left:58%;top:26%}.p2{left:35%;top:43%}.p3{left:63%;top:62%}.p4{left:22%;top:66%}
+    .mode-switch,.tab-switch{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+    .switch-btn,.tab-btn{border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--soft);border-radius:999px;padding:9px 14px;font-size:14px;font-weight:950;cursor:pointer}
+    .switch-btn.active,.tab-btn.active{color:#100c06;border-color:rgba(251,146,60,.65);background:linear-gradient(135deg,var(--orange),var(--yellow));box-shadow:0 0 24px rgba(251,146,60,.18)}
+    .mode-view,.tab-view{display:none;animation:in .25s ease}
+    .mode-view.active,.tab-view.active{display:block}
+    .workflow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+    .wf-step{border:1px solid var(--line);border-radius:16px;padding:16px;background:rgba(255,255,255,.045);min-height:158px;position:relative}
+    .wf-step:after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:var(--orange);font-size:22px;font-weight:950}
+    .wf-step:last-child:after{display:none}
+    .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:9px;background:linear-gradient(135deg,var(--orange),var(--pink));font-weight:950;margin-bottom:12px;color:#17080d}
+    .wf-step b{display:block;font-size:16px;margin-bottom:8px}
+    .wf-step span{display:block;color:var(--soft);font-size:14px;line-height:1.5}
+    .table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:16px;overflow:hidden;font-size:15px}
+    .table th,.table td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}
+    .table th{background:rgba(255,255,255,.08);color:#fff}
+    .table tr:last-child td{border-bottom:0}
+    .table th:last-child,.table td:last-child{border-right:0}
+    .score{display:inline-flex;min-width:48px;justify-content:center;border-radius:999px;background:rgba(251,146,60,.13);border:1px solid rgba(251,146,60,.38);color:#fed7aa;font-weight:950}
+    .code{font-family:"SFMono-Regular",Consolas,monospace;color:#ccfbf1;font-size:14px;line-height:1.65;white-space:pre-wrap;max-height:530px;overflow:auto}
+    .terminal{border:1px solid rgba(45,212,191,.36);border-radius:18px;overflow:hidden;background:#080a0d;box-shadow:0 22px 60px rgba(0,0,0,.28)}
+    .terminal-head{display:flex;align-items:center;gap:7px;padding:12px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.06)}
+    .terminal-head span{width:10px;height:10px;border-radius:50%;background:var(--pink)}
+    .terminal-head span:nth-child(2){background:var(--yellow)}
+    .terminal-head span:nth-child(3){background:var(--cyan)}
+    .terminal-code{font-family:"SFMono-Regular",Consolas,monospace;color:#ccfbf1;font-size:14px;line-height:1.72;white-space:pre-wrap;padding:18px}
+    .axis{
+      min-height:420px;position:relative;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.04);overflow:hidden;
+    }
+    .axis:before{content:"";position:absolute;left:50%;top:12%;bottom:12%;border-left:2px solid rgba(255,255,255,.20)}
+    .axis:after{content:"";position:absolute;top:50%;left:10%;right:10%;border-top:2px solid rgba(255,255,255,.20)}
+    .axis-label{position:absolute;color:var(--muted);font-size:13px;font-weight:900;letter-spacing:.08em}
+    .axis .top{top:20px;left:50%;transform:translateX(-50%)}.axis .bottom{bottom:20px;left:50%;transform:translateX(-50%)}
+    .axis .left{left:22px;top:50%;transform:translateY(-50%)}.axis .right{right:22px;top:50%;transform:translateY(-50%)}
+    .product{position:absolute;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:8px 12px;background:rgba(255,255,255,.08);font-size:14px;font-weight:950;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+    .prod-a{left:62%;top:24%;color:#fed7aa}.prod-b{left:54%;top:70%;color:#bfdbfe}.prod-c{left:40%;top:38%;color:#99f6e4}
+    .big-quote{font-size:30px;line-height:1.42;font-weight:950;color:white}
+    .controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:20;border:1px solid var(--line);background:rgba(9,9,12,.84);backdrop-filter:blur(14px);padding:10px;border-radius:999px}
+    button{border:0;border-radius:999px;padding:10px 16px;font-weight:950;background:linear-gradient(135deg,var(--orange),var(--yellow));color:#130d06;cursor:pointer}
+    button.secondary{background:rgba(255,255,255,.08);color:var(--soft);border:1px solid var(--line)}
+    .page-no{color:var(--soft);font-size:13px;min-width:58px;text-align:center}
+    .note-trigger{position:fixed;right:24px;bottom:24px;z-index:25;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(9,9,12,.86);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:950;box-shadow:0 16px 44px rgba(0,0,0,.34)}
+    .note-modal{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.50)}
+    .note-modal.open{display:flex}
+    .note-box{width:min(640px,100%);border:1px solid rgba(255,255,255,.18);border-radius:18px;background:#111018;box-shadow:0 28px 90px rgba(0,0,0,.55);padding:24px}
+    .note-box h3{margin-bottom:12px}
+    .note-box p{font-size:16px}
+    .note-actions{margin-top:18px;display:flex;justify-content:flex-end}
+    @media(max-width:980px){
+      .inner,.inner.full,.cover-inner,.grid-2,.grid-3,.grid-4,.workflow{grid-template-columns:1fr;padding:28px}
+      .wf-step:after{display:none}
+      h1{font-size:38px}.cover-title{font-size:46px}h2{font-size:30px}.hint{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="dot"></span>
+      <div class="brand">AI 增强型产品经理 <small>Chapter 2 · 需求调研 Skills</small></div>
+      <div class="spacer"></div>
+      <div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页</div>
+    </div>
+    <div class="progress"><span id="bar"></span></div>
+  </div>
+
+  <main class="deck">
+    <section class="slide cover-slide active" data-note="讲师提示：开场先讲传统竞品分析的痛点，再把这一节定义成从功能对比走到机会判断。">
+      <div class="cover-inner">
+        <div>
+          <div class="cover-kicker">pm-compete Skill</div>
+          <h1 class="cover-title">用 AI Skills 找到<br><span class="hl">机会点和差异化</span></h1>
+          <p class="cover-subtitle">竞品分析不是把竞品官网抄一遍，而是把功能、口碑、定位和价值曲线放在一起，最后回答：我们到底该做什么、不该做什么。</p>
+          <div class="focus-line">这节课的目标：学会用 `pm-compete` 从竞品信息生成一份能辅助决策的竞品分析报告。</div>
+        </div>
+        <div class="radar" aria-label="竞品雷达图">
+          <div class="radar-point p1">功能矩阵</div>
+          <div class="radar-point p2">用户口碑</div>
+          <div class="radar-point p3">价值曲线</div>
+          <div class="radar-point p4">差异化机会</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：强调竞品分析的核心不是资料整理，而是把资料转成产品判断。">
+      <div class="inner">
+        <div>
+          <div class="tag">Problem</div>
+          <h1>传统竞品分析，最容易卡在三件事</h1>
+          <p>第一，资料散：官网、截图、应用商店评价、行业文章都在不同地方。</p>
+          <p>第二，维度乱：今天比功能，明天比价格，最后很难形成统一判断。</p>
+          <p>第三，结论弱：写了很多“竞品 A 做得好”，但没有告诉团队下一步怎么做。</p>
+        </div>
+        <div class="grid-2">
+          <div class="panel orange"><h3>只列功能</h3><p>知道竞品有没有，但不知道用户觉得好不好。</p></div>
+          <div class="panel pink"><h3>只看宣传</h3><p>官网说的是卖点，用户吐槽才是机会。</p></div>
+          <div class="panel blue"><h3>只做截图</h3><p>页面长得像，不代表业务定位一样。</p></div>
+          <div class="panel cyan"><h3>只给描述</h3><p>老板要的是判断：跟进、差异化，还是暂不做。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这里把 Skill 能力讲全，但不要把每个能力展开太久，后面会逐层拆。">
+      <div class="inner">
+        <div>
+          <div class="tag">Capability</div>
+          <h1>这个 Skill 能做什么？</h1>
+          <p>`pm-compete` 输入竞品名称、链接、截图、体验笔记或已有文档，输出功能矩阵、用户口碑对比、定位图、价值曲线、ERRC 行动框架和机会点建议。</p>
+          <div class="focus-line">它不是“生成一篇介绍竞品的文章”，而是生成一份可以进入产品决策讨论的分析底稿。</div>
+        </div>
+        <div class="grid-3">
+          <div class="panel cyan"><h3>输入</h3><p>竞品名、官网链接、截图、体验笔记、研究文档。</p></div>
+          <div class="panel orange"><h3>分析</h3><p>功能、口碑、定位、价值曲线、差异化机会。</p></div>
+          <div class="panel pink"><h3>输出</h3><p>Markdown 报告、功能矩阵、Word 报告、Excel 表格。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这一页可以点击三个标签，帮助学员理解 GitHub 目录里各文件的职责。">
+      <div class="inner">
+        <div>
+          <div class="tag">Structure</div>
+          <h1>GitHub 里的 Skill 结构</h1>
+          <p>这节课对应的仓库目录很清晰：`SKILL.md` 定义工作流，`competitive-analysis.md` 和 `feature-matrix.md` 是示例产物，Word / Excel 是可交付版本。</p>
+          <div class="focus-line">理解结构的价值：你知道 AI 不是随手写报告，而是按固定流程生成可维护的分析资产。</div>
+        </div>
+        <div>
+          <div class="tab-switch" data-tabs="structure">
+            <button class="tab-btn active" data-target="tree">目录</button>
+            <button class="tab-btn" data-target="flow">流程</button>
+            <button class="tab-btn" data-target="outputs">交付</button>
+          </div>
+          <div class="tab-view active" data-view="tree">
+            <div class="code">source_files/
+├─ README.md
+├─ skills/pm-compete/
+│  └─ SKILL.md
+├─ competitive-analysis.md
+├─ feature-matrix.md
+├─ 竞品分析报告_v1.0.docx
+├─ 竞品分析报告_v1.1.docx
+└─ 功能对比矩阵_v1.0.xlsx</div>
+          </div>
+          <div class="tab-view" data-view="flow">
+            <div class="workflow">
+              <div class="wf-step"><span class="num">1</span><b>识别目标</b><span>己方产品、竞品列表、分析目的。</span></div>
+              <div class="wf-step"><span class="num">2</span><b>采集信息</b><span>官网、评价、截图、体验笔记。</span></div>
+              <div class="wf-step"><span class="num">3</span><b>结构化</b><span>矩阵、口碑、定位、价值曲线。</span></div>
+              <div class="wf-step"><span class="num">4</span><b>给建议</b><span>P0/P1/P2 和暂不做。</span></div>
+              <div class="wf-step"><span class="num">5</span><b>出文件</b><span>报告和可分发文档。</span></div>
+            </div>
+          </div>
+          <div class="tab-view" data-view="outputs">
+            <div class="grid-2">
+              <div class="panel cyan"><h3>competitive-analysis.md</h3><p>完整竞品分析报告，适合继续追问、迭代和沉淀。</p></div>
+              <div class="panel orange"><h3>feature-matrix.md</h3><p>功能矩阵独立保存，便于后续只更新某个竞品。</p></div>
+              <div class="panel pink"><h3>Word 报告</h3><p>适合对外或对上汇报，保留版本。</p></div>
+              <div class="panel blue"><h3>Excel 矩阵</h3><p>适合横向浏览和继续补数据。</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：点一下 Mode A / Mode B，说明这个 Skill 支持首次分析和后续更新，不是一次性文档生成。">
+      <div class="inner">
+        <div>
+          <div class="tag">Mode</div>
+          <h1>两种工作模式：首次建立，持续更新</h1>
+          <p>竞品分析不是做完就结束。一个新版本发布、一个新玩家入局，都可能让原来的判断过期。</p>
+        </div>
+        <div>
+          <div class="mode-switch">
+            <button class="switch-btn active" data-mode="modeA">Mode A 初始化</button>
+            <button class="switch-btn" data-mode="modeB">Mode B 增量更新</button>
+          </div>
+          <div class="mode-view active" id="modeA">
+            <div class="panel orange">
+              <h3>首次建立竞品分析</h3>
+              <p>当 `_pm_context/competitive/competitive-analysis.md` 不存在时，Skill 会从头理解产品、竞品和分析目的，生成完整分析框架。</p>
+              <span class="pill orange">功能矩阵</span><span class="pill pink">用户口碑</span><span class="pill cyan">机会点排序</span>
+            </div>
+          </div>
+          <div class="mode-view" id="modeB">
+            <div class="panel cyan">
+              <h3>在已有报告上更新</h3>
+              <p>当报告已经存在时，Skill 会识别是新增竞品、更新竞品信息，还是调整结论，并保留历史版本。</p>
+              <span class="pill cyan">新增竞品</span><span class="pill blue">版本递增</span><span class="pill orange">只改相关部分</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这一页为后面实操做铺垫。命令不要讲得过长，只让学员知道安装和触发方式。">
+      <div class="inner">
+        <div>
+          <div class="tag">Setup</div>
+          <h1>怎么安装这个 Skill？</h1>
+          <p>从仓库拿到 `skills/pm-compete` 目录，把它放到 Claude Code 的 skills 目录。之后用自然语言触发“竞品分析”即可。</p>
+          <div class="focus-line">如果上一节已经生成了功能清单，放在 `_pm_context/requirements/feature-list.md`，这个 Skill 会自动读取己方产品信息。</div>
+        </div>
+        <div class="terminal">
+          <div class="terminal-head"><span></span><span></span><span></span></div>
+          <div class="terminal-code">gh repo clone shangbianai/pm-ai-guide
+
+mkdir -p ~/.claude/skills
+
+cp -R "pm-ai-guide/第2章_需求调研/02_竞品分析1：用AI Skills帮你找机会点和差异化/skills/pm-compete" \
+  ~/.claude/skills/
+
+# 重新打开 Claude Code 后生效</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：强调一手体验笔记可信度最高，截图和官网也能用，但要标注不确定性。">
+      <div class="inner">
+        <div>
+          <div class="tag">Inputs</div>
+          <h1>它吃四类输入</h1>
+          <p>你不需要一开始就准备完整报告。竞品名称、链接、截图、体验笔记，都可以变成结构化分析。</p>
+        </div>
+        <div class="grid-2">
+          <div class="panel cyan"><h3>竞品名称 / 链接</h3><p>适合快速启动，AI 会围绕官网、产品页和公开评价采集信息。</p></div>
+          <div class="panel orange"><h3>界面截图</h3><p>适合分析功能布局、模块层级和关键交互。</p></div>
+          <div class="panel pink"><h3>体验笔记</h3><p>可信度最高，能把你的一手判断沉淀成报告。</p></div>
+          <div class="panel blue"><h3>已有文档</h3><p>把旧报告、Excel 或 PDF 作为基础，继续补全和升级。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这里讲五层方法论，不要停在名词解释，要不断回到它分别回答什么问题。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Framework</div>
+          <h1>五层分析，回答五个问题</h1>
+          <table class="table">
+            <thead><tr><th>层次</th><th>方法</th><th>回答的问题</th><th>对产品决策的价值</th></tr></thead>
+            <tbody>
+              <tr><td><span class="score">01</span></td><td>功能矩阵</td><td>竞品有没有这个功能？</td><td>快速看出核心能力缺口。</td></tr>
+              <tr><td><span class="score">02</span></td><td>用户口碑</td><td>这个功能做得好不好？</td><td>发现官网宣传和真实体验的落差。</td></tr>
+              <tr><td><span class="score">03</span></td><td>定位图</td><td>我们和竞品站在哪个位置？</td><td>判断是在扎堆区，还是有空白区。</td></tr>
+              <tr><td><span class="score">04</span></td><td>价值曲线</td><td>哪些竞争要素值得投入？</td><td>避免每个维度都平均用力。</td></tr>
+              <tr><td><span class="score">05</span></td><td>ERRC</td><td>该消除、减少、提升、创造什么？</td><td>从“抄竞品”变成“做取舍”。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：用示例里的客如云/简道云，让学员理解同一个功能要结合口碑判断。">
+      <div class="inner">
+        <div>
+          <div class="tag">Matrix</div>
+          <h1>功能矩阵：不只是打勾</h1>
+          <p>功能矩阵的价值在于统一比较标准。每个格子必须有标记：完整支持、部分支持、不支持，或者信息不足。</p>
+          <div class="focus-line">关键点：如果竞品“有这个功能”，但用户普遍吐槽体验差，矩阵里就不应该简单打 ✅。</div>
+        </div>
+        <div>
+          <table class="table">
+            <thead><tr><th>功能点</th><th>己方</th><th>客如云</th><th>简道云</th><th>判断</th></tr></thead>
+            <tbody>
+              <tr><td>外卖订单同步</td><td>🔶</td><td>✅</td><td>❌</td><td>客如云核心壁垒，己方需评估优先级。</td></tr>
+              <tr><td>门店库存记录</td><td>✅</td><td>✅</td><td>✅</td><td>基础能力，差异不在“有没有”。</td></tr>
+              <tr><td>POS 收银/点单</td><td>❌</td><td>✅</td><td>❌</td><td>不符合己方轻量后台定位。</td></tr>
+              <tr><td>移动端体验</td><td>★★★★</td><td>★★★</td><td>★★★</td><td>己方可以放大“轻量易用”。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这一页让学员看到定位图不是装饰，而是用来决定竞争策略。">
+      <div class="inner">
+        <div>
+          <div class="tag">Position</div>
+          <h1>定位图：看清楚你到底在跟谁竞争</h1>
+          <p>示例报告用两个轴做判断：功能广度和开箱即用程度。这样就能看出己方不是简单追客如云，也不是复制简道云。</p>
+          <div class="focus-line">好的定位图要能逼出一句策略：我们处在哪个空白地带？这个空白是机会，还是陷阱？</div>
+        </div>
+        <div class="axis">
+          <div class="axis-label top">即装即用</div>
+          <div class="axis-label bottom">需自行搭建</div>
+          <div class="axis-label left">仅门店运营</div>
+          <div class="axis-label right">全链路数字化</div>
+          <div class="product prod-a">客如云</div>
+          <div class="product prod-b">简道云</div>
+          <div class="product prod-c">己方产品</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：ERRC 是这节课最适合拔高的地方，讲清楚“减什么”往往比“加什么”更重要。">
+      <div class="inner">
+        <div>
+          <div class="tag">ERRC</div>
+          <h1>ERRC：竞品分析最后要落到取舍</h1>
+          <p>很多团队做竞品分析，最后变成“别人有的我们也要有”。ERRC 的价值是让你同时思考消除、减少、提升和创造。</p>
+        </div>
+        <div class="grid-2">
+          <div class="panel pink"><h3>消除</h3><p>POS 收银、前厅点餐、硬件绑定，这些不符合轻量后台定位。</p></div>
+          <div class="panel blue"><h3>减少</h3><p>减少大而全倾向，只聚焦 10-50 家门店的核心运营。</p></div>
+          <div class="panel orange"><h3>提升</h3><p>提升小程序体验、库存可靠性和透明定价。</p></div>
+          <div class="panel cyan"><h3>创造</h3><p>创造“极简门店运营”的新定位，避开重型餐饮 SaaS 红海。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：把这页讲成“老板愿意看的结论”，不是分析过程复述。">
+      <div class="inner">
+        <div>
+          <div class="tag">Decision</div>
+          <h1>老板关心的不是竞品资料，而是行动建议</h1>
+          <p>这就是 `pm-compete` 的重点：最后把分析转成 P0/P1/P2 和暂不做，让团队知道资源该往哪里放。</p>
+        </div>
+        <div>
+          <table class="table">
+            <thead><tr><th>优先级</th><th>行动建议</th><th>理由</th></tr></thead>
+            <tbody>
+              <tr><td>P0</td><td>保持极简定位</td><td>用体验和轻量化避开客如云的大而全。</td></tr>
+              <tr><td>P1</td><td>评估外卖订单同步</td><td>这是客如云吸引连锁客户的核心卖点之一。</td></tr>
+              <tr><td>P1</td><td>建立透明定价</td><td>正面回应隐性收费带来的用户不信任。</td></tr>
+              <tr><td>暂不做</td><td>POS/硬件/前厅点餐</td><td>不符合轻量管理后台定位。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：这一页是实操前的输入模板，现场可以直接复制使用。">
+      <div class="inner">
+        <div>
+          <div class="tag">Practice</div>
+          <h1>实操时怎么用？</h1>
+          <p>最简单的方式：告诉 AI 我方产品、竞品列表、分析目的和已有资料。如果已经有上一节课输出的功能清单，把文件路径给它。</p>
+          <div class="focus-line">输入越贴近真实业务，输出越像产品判断；输入越像空泛题目，输出越像泛泛报告。</div>
+        </div>
+        <div class="code">产品：连锁门店运营管理系统
+竞品：客如云、简道云、美团餐饮管家
+目的：找出我们的差异化机会和功能优先级
+侧重：功能矩阵、用户口碑、外卖订单同步、轻量化定位
+资料：_pm_context/requirements/feature-list.md</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：强调 Skill 联动：上一节的功能清单，是这一节的己方产品输入。">
+      <div class="inner">
+        <div>
+          <div class="tag">Workflow</div>
+          <h1>它能接住上一节课的产物</h1>
+          <p>上一节 `pm-requirements` 输出功能清单，这一节 `pm-compete` 可以自动读取它，把“我方产品是什么”这一步省掉。</p>
+          <div class="focus-line">这就是 Skill 系列的价值：每一节课的产物，都是下一节课的上下文。</div>
+        </div>
+        <div class="workflow">
+          <div class="wf-step"><span class="num">1</span><b>VoC</b><span>客户访谈、用户反馈、业务方需求。</span></div>
+          <div class="wf-step"><span class="num">2</span><b>需求池</b><span>真伪判断、场景归类、优先级。</span></div>
+          <div class="wf-step"><span class="num">3</span><b>功能清单</b><span>己方产品能力和规划依据。</span></div>
+          <div class="wf-step"><span class="num">4</span><b>竞品分析</b><span>横向对比，找到差异化。</span></div>
+          <div class="wf-step"><span class="num">5</span><b>行动建议</b><span>P0/P1/P2 和暂不做。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲师提示：收尾时自然承接到终端实操，提醒学员接下来会看到从安装到生成报告的完整过程。">
+      <div class="inner">
+        <div>
+          <div class="tag">Summary</div>
+          <h1>这节课你能获得什么</h1>
+          <p>第一，知道怎么用 AI 把竞品信息整理成功能矩阵。</p>
+          <p>第二，理解为什么要把用户口碑、定位图、价值曲线和 ERRC 放进竞品分析。</p>
+          <p>第三，掌握从竞品资料到产品行动建议的完整链路。</p>
+          <div class="focus-line">接下来，我们进入实操环节：安装 `pm-compete` skill，跑一遍从竞品输入到报告输出的完整流程。</div>
+        </div>
+        <div class="map-card">
+          <div class="big-quote">竞品分析的终点，不是“别人有什么”，而是“我们该怎么赢”。</div>
+          <div style="margin-top:22px">
+            <span class="pill cyan">功能矩阵</span>
+            <span class="pill orange">用户口碑</span>
+            <span class="pill pink">定位图</span>
+            <span class="pill blue">行动建议</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls">
+    <button class="secondary" id="prev">上一页</button>
+    <span class="page-no" id="pageNo">1 / 15</span>
+    <button id="next">下一页</button>
+  </div>
+  <button class="note-trigger" id="noteBtn" title="讲师备注">?</button>
+  <div class="note-modal" id="noteModal">
+    <div class="note-box">
+      <h3>讲师备注</h3>
+      <p id="noteText"></p>
+      <div class="note-actions"><button id="closeNote">关闭</button></div>
+    </div>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const bar = document.getElementById('bar');
+    const pageNo = document.getElementById('pageNo');
+    const noteText = document.getElementById('noteText');
+    const noteModal = document.getElementById('noteModal');
+    let current = 0;
+
+    function show(i){
+      current = Math.max(0, Math.min(slides.length - 1, i));
+      slides.forEach((s, idx) => s.classList.toggle('active', idx === current));
+      bar.style.width = `${((current + 1) / slides.length) * 100}%`;
+      pageNo.textContent = `${current + 1} / ${slides.length}`;
+      noteText.textContent = slides[current].dataset.note || '这一页没有额外备注。';
+    }
+
+    document.getElementById('prev').addEventListener('click', () => show(current - 1));
+    document.getElementById('next').addEventListener('click', () => show(current + 1));
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'ArrowLeft') show(current - 1);
+      if(e.key === 'ArrowRight' || e.key === ' ') show(current + 1);
+      if(e.key === 'Escape') noteModal.classList.remove('open');
+    });
+    document.getElementById('noteBtn').addEventListener('click', () => {
+      noteText.textContent = slides[current].dataset.note || '这一页没有额外备注。';
+      noteModal.classList.add('open');
+    });
+    document.getElementById('closeNote').addEventListener('click', () => noteModal.classList.remove('open'));
+    noteModal.addEventListener('click', (e) => {
+      if(e.target === noteModal) noteModal.classList.remove('open');
+    });
+
+    document.querySelectorAll('.switch-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.mode-view').forEach(v => v.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.mode).classList.add('active');
+      });
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const wrap = btn.closest('.inner');
+        wrap.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        wrap.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+        btn.classList.add('active');
+        wrap.querySelector(`[data-view="${btn.dataset.target}"]`).classList.add('active');
+      });
+    });
+
+    show(0);
+  </script>
+</body>
+</html>

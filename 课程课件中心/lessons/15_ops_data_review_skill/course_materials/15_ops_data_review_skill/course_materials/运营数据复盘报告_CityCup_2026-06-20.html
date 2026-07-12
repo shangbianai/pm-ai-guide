@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>运营数据复盘 - CityCup 咖啡小程序</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f172a;--ink-soft:#334155;--ink-muted:#64748b;--ink-faint:#94a3b8;--surface:#fff;--surface-raised:#f8fafc;--surface-dim:#f1f5f9;--surface-inset:#e2e8f0;--border:#e2e8f0;--border-strong:#cbd5e1;--blue:#2563eb;--blue-soft:#3b82f6;--blue-pale:#dbeafe;--blue-bg:#eff6ff;--green:#059669;--green-pale:#d1fae5;--green-bg:#ecfdf5;--amber:#d97706;--amber-pale:#fef3c7;--amber-bg:#fffbeb;--red:#dc2626;--red-pale:#fee2e2;--red-bg:#fef2f2;--violet:#7c3aed;--violet-pale:#ede9fe;--violet-bg:#f5f3ff;--radius-sm:6px;--radius:12px;--radius-lg:16px;--radius-xl:24px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Noto Sans SC",-apple-system,BlinkMacSystemFont,sans-serif;color:var(--ink);background:var(--surface-dim);line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+.page{max-width:960px;margin:0 auto;padding:32px 20px 64px}
+.cover{position:relative;background:var(--ink);color:#fff;padding:56px 48px 48px;border-radius:var(--radius-xl);margin-bottom:40px;overflow:hidden}
+.cover::before{content:"";position:absolute;top:-40%;right:-20%;width:500px;height:500px;background:radial-gradient(circle,rgba(37,99,235,.25) 0%,transparent 70%);pointer-events:none}
+.cover::after{content:"";position:absolute;bottom:-30%;left:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(124,58,237,.15) 0%,transparent 70%);pointer-events:none}
+.cover .tag{display:inline-block;padding:4px 14px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:100px;font-size:12px;font-weight:500;letter-spacing:.5px;margin-bottom:20px;backdrop-filter:blur(8px)}
+.cover h1{font-size:32px;font-weight:900;line-height:1.3;margin-bottom:12px;position:relative;letter-spacing:-.5px}
+.cover .lead{font-size:16px;opacity:.7;line-height:1.6;margin-bottom:28px;position:relative;max-width:600px}
+.cover .meta-row{display:flex;gap:24px;font-size:13px;opacity:.5;position:relative}
+.s{background:var(--surface);border-radius:var(--radius-lg);padding:36px 40px;margin-bottom:24px;border:1px solid var(--border)}
+.s-head{margin-bottom:24px}
+.s-head .s-num{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.s-head h2{font-size:22px;font-weight:800;color:var(--ink);line-height:1.35;letter-spacing:-.3px}
+.s-head .s-desc{font-size:14px;color:var(--ink-muted);margin-top:4px}
+.verdict{background:linear-gradient(135deg,#1e3a5f 0%,#1a1a2e 100%);color:#fff;border-radius:var(--radius-lg);padding:36px 40px;margin-bottom:24px;position:relative;overflow:hidden}
+.verdict::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none}
+.verdict .label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px}
+.verdict .v-text{font-size:22px;font-weight:700;line-height:1.5;margin-bottom:28px;position:relative}
+.verdict .top-actions{display:flex;flex-direction:column;gap:10px;position:relative}
+.verdict .act-card{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);backdrop-filter:blur(4px)}
+.verdict .act-card .act-body{font-size:14px;line-height:1.6;opacity:.9}
+.verdict .act-card .act-body strong{color:#fff;opacity:1}
+.p-badge{display:inline-block;padding:3px 12px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:.5px}
+.p0{background:var(--red);color:#fff}.p1{background:var(--amber);color:#fff}.p2{background:var(--blue);color:#fff}
+.metric-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.metric{padding:20px;background:var(--surface-raised);border-radius:var(--radius);border:1px solid var(--border);text-align:center}
+.metric .m-val{font-size:28px;font-weight:800;color:var(--ink);line-height:1.2;margin-bottom:4px}
+.metric .m-val.green{color:var(--green)}.metric .m-val.amber{color:var(--amber)}.metric .m-val.red{color:var(--red)}.metric .m-val.blue{color:var(--blue)}
+.metric .m-label{font-size:12px;color:var(--ink-muted);font-weight:500}
+.player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.player-card{padding:16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface-raised)}
+.player-card .p-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.player-card .p-role{font-size:12px;color:var(--ink-muted);margin-bottom:8px}
+.player-card .p-note{font-size:12px;color:var(--ink-soft);line-height:1.5}
+.persona-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.persona-card{padding:20px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface-raised)}
+.persona-card .pc-name{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.persona-card .pc-meta{font-size:12px;color:var(--ink-muted);margin-bottom:12px}
+.persona-card .pc-detail{font-size:13px;color:var(--ink-soft);margin-bottom:6px;line-height:1.55}
+.persona-card .pc-detail strong{color:var(--ink)}
+.data-table{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px}
+.data-table thead th{background:var(--surface-dim);padding:10px 14px;text-align:left;font-size:12px;font-weight:600;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.data-table thead th:first-child{border-radius:var(--radius-sm) 0 0 0}
+.data-table thead th:last-child{border-radius:0 var(--radius-sm) 0 0}
+.data-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--ink-soft);vertical-align:top}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--surface-raised)}
+.tag-high{display:inline-block;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;background:var(--red-pale);color:var(--red)}
+.tag-mid{display:inline-block;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;background:var(--amber-pale);color:var(--amber)}
+.tag-low{display:inline-block;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;background:var(--green-pale);color:var(--green)}
+.risk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.risk-card{padding:18px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface-raised)}
+.risk-card .rc-head{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.risk-card .rc-meta{font-size:12px;color:var(--ink-muted);margin-bottom:6px}
+.risk-card .rc-mit{font-size:13px;color:var(--ink-soft);line-height:1.55;background:var(--surface-dim);padding:10px 14px;border-radius:var(--radius-sm)}
+.styled-list{list-style:none;padding:0}
+.styled-list li{padding:8px 14px 8px 18px;position:relative;font-size:13.5px;color:var(--ink-soft);line-height:1.6;border-bottom:1px solid rgba(0,0,0,.04)}
+.styled-list li:last-child{border-bottom:none}
+.styled-list li::before{content:"";position:absolute;left:0;top:15px;width:6px;height:6px;border-radius:2px;transform:rotate(45deg);background:var(--blue)}
+.decision-box{background:linear-gradient(135deg,#1e3a5f 0%,#1a1a2e 100%);color:#fff;border-radius:var(--radius-lg);padding:36px 40px;margin-bottom:24px;text-align:center;position:relative;overflow:hidden}
+.decision-box::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none}
+.decision-box .label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:12px}
+.decision-box .one-liner{font-size:22px;font-weight:800;line-height:1.45;position:relative}
+.act-list{margin-top:20px}
+.act-row{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;background:var(--surface-raised);border-radius:var(--radius);margin-bottom:10px;border:1px solid var(--border)}
+.act-row:last-child{margin-bottom:0}
+.act-row .act-content{font-size:14px;color:var(--ink-soft);line-height:1.6}
+.act-row .act-content strong{color:var(--ink)}
+.act-row .act-meta{color:var(--ink-muted);font-size:12px;margin-top:2px}
+.notdo-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--red-bg);border-radius:var(--radius);margin-bottom:8px;border:1px solid rgba(220,38,38,.1)}
+.notdo-item:last-child{margin-bottom:0}
+.notdo-item .nd-icon{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.notdo-item .nd-body{font-size:13.5px;color:var(--ink-soft);line-height:1.6}
+.notdo-item .nd-body strong{color:var(--ink)}
+.notdo-item .nd-reason{color:var(--ink-muted);font-size:12px;margin-top:2px}
+.timeline{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:20px}
+.tl-phase{padding:20px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface-raised);position:relative}
+.tl-phase::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0}
+.tl-phase.tl-now::before{background:var(--red)}.tl-phase.tl-mid::before{background:var(--amber)}.tl-phase.tl-long::before{background:var(--blue)}
+.tl-phase h4{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px}
+.tl-phase .phase-goal{font-size:12px;color:var(--ink-muted);margin-bottom:8px}
+.tl-phase ul{list-style:none;padding:0}
+.tl-phase li{padding:5px 0;font-size:13px;color:var(--ink-soft);border-bottom:1px solid rgba(0,0,0,.04);line-height:1.55}
+.tl-phase li:last-child{border-bottom:none}
+.roi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.roi-card{padding:20px;text-align:center;border-radius:var(--radius);background:var(--surface-raised);border:1px solid var(--border)}
+.roi-card .roi-val{font-size:22px;font-weight:800;color:var(--green);margin-bottom:4px}
+.roi-card .roi-label{font-size:12px;color:var(--ink-muted)}
+.swot-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.swot-box{padding:20px;border-radius:var(--radius)}
+.swot-box h3{font-size:13px;font-weight:700;letter-spacing:.3px;margin-bottom:12px}
+.swot-box ul{list-style:none;padding:0}
+.swot-box li{font-size:13.5px;padding:6px 0 6px 16px;position:relative;line-height:1.6;color:var(--ink-soft);border-bottom:1px solid rgba(0,0,0,.04)}
+.swot-box li:last-child{border-bottom:none}
+.swot-box li::before{content:"";position:absolute;left:0;top:13px;width:6px;height:6px;border-radius:2px;transform:rotate(45deg)}
+.swot-s{background:var(--green-bg)}.swot-s h3{color:#065f46}.swot-s li::before{background:var(--green)}
+.swot-w{background:var(--red-bg)}.swot-w h3{color:#991b1b}.swot-w li::before{background:var(--red)}
+.swot-o{background:var(--blue-bg)}.swot-o h3{color:#1e40af}.swot-o li::before{background:var(--blue)}
+.swot-t{background:var(--amber-bg)}.swot-t h3{color:#92400e}.swot-t li::before{background:var(--amber)}
+.hl-box{padding:20px 24px;border-radius:var(--radius);margin-bottom:16px}
+.hl-blue{background:var(--blue-bg);border-left:4px solid var(--blue)}
+.hl-box p{font-size:14px;color:var(--ink-soft);line-height:1.7}
+.ins-item{padding:10px 14px;margin-bottom:8px;background:var(--surface);border-radius:var(--radius-sm);font-size:13px;line-height:1.6;border-left:3px solid var(--border-strong)}
+.ins-item:last-child{margin-bottom:0}
+.ins-item .finding{font-weight:600;color:var(--ink)}
+.ins-item .meta-line{color:var(--ink-muted);font-size:12px;margin-top:2px}
+.ind-item{padding:12px 16px;background:var(--surface-raised);border-radius:var(--radius);margin-bottom:8px;border:1px solid var(--border);font-size:13.5px;color:var(--ink-soft)}
+.ind-item:last-child{margin-bottom:0}
+.ind-item strong{color:var(--ink)}
+.partner-item{padding:10px 14px;background:var(--surface-raised);border-radius:var(--radius-sm);margin-bottom:6px;font-size:13.5px;color:var(--ink-soft);border-left:3px solid var(--blue)}
+.report-footer{text-align:center;padding:32px 0 16px;color:var(--ink-faint);font-size:12px}
+@media print{body{background:#fff}.page{padding:0}.s,.verdict,.decision-box{break-inside:avoid;box-shadow:none}.cover{background:var(--ink)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.verdict,.decision-box{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+@media(max-width:768px){.page{padding:16px 12px 48px}.cover{padding:36px 24px 32px}.cover h1{font-size:24px}.s{padding:24px 20px}.swot-2col{grid-template-columns:1fr}.timeline,.roi-grid{grid-template-columns:1fr}.metric-row{grid-template-columns:1fr 1fr}.player-grid,.persona-grid,.risk-grid{grid-template-columns:1fr}.verdict .v-text,.decision-box .one-liner{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="cover"><div class="tag">OPS DATA REVIEW REPORT</div><h1>运营数据复盘：CityCup 咖啡小程序</h1><div class="lead">V1.3 会员日活动版上线 14 天——规模增长强劲，但留存、变现效率、满意度三杀，是一次典型的「以折扣换规模」</div><div class="meta-row"><span>2026-06-20</span><span>运营数据复盘 Skill</span><span>复盘周期：2026-06-01 至 2026-06-14（上线后 14 天）</span></div></header>
+<div class="verdict"><div class="label">Executive Summary · 执行摘要</div><div class="v-text">整体健康度：需关注（黄灯偏红）。V1.3 版本成功拉动规模增长——UV +24%、新增注册 +44%，但增长质量明显存疑：留存全线回落（7日 -4pct、30日 -2pct）、单位变现效率下降（ARPU -7.2%）、NPS 下滑 6 点。一句话：规模上去了，健康度下来了，本质是「以折扣换规模」，不可持续。<br><br><div class="ins-item"><div class="finding">规模增长强劲，但增长质量同步下滑</div><div class="meta-line">数据依据：UV +24%、新增注册 +44%，但 ARPU 由 ¥3.07 降至 ¥2.85（-7.2%）、7日留存由 23% 降至 19%（-4pct）、NPS 由 48 降至 42（-6）。收入 +15% 完全靠流量撑，单位效率在变差。</div></div>
+<div class="ins-item"><div class="finding">授权注册是全链路最大漏斗，封死了 UV→收入的上限</div><div class="meta-line">数据依据：72,000 访问用户中仅 13,800 完成注册/授权，流失 58,200 人，单步流失率 80.8%，是漏斗中绝对值最大的断点。</div></div>
+<div class="ins-item"><div class="finding">社群渠道拉新质量垫底，券包拉来大量薅券用户</div><div class="meta-line">数据依据：社群活动渠道占新增 21%，但 7日留存仅 13%、付费转化 4.4%，均为各渠道最低，明显稀释整体留存与 ARPU。</div></div></div><div class="top-actions"><div class="act-card"><span class="p-badge p0">P0</span><div class="act-body"><strong>改造授权流程：门店扫码「先逛后登」，授权弹窗延后至下单前</strong> — 预计注册转化率提升 5-10pct，直接放大 UV→收入漏斗</div></div>
+<div class="act-card"><span class="p-badge p0">P0</span><div class="act-body"><strong>会员日券包规则简化 + 设置复购门槛（第二杯半价 / 满减）</strong> — 预计 NPS 回升、券核销率提升、新客质量改善</div></div>
+<div class="act-card"><span class="p-badge p0">P0</span><div class="act-body"><strong>社群渠道质量治理：接入薅券风控、按质量调权重</strong> — 预计整体留存与 ARPU 企稳回升</div></div></div></div>
+<div class="s"><div class="s-head"><div class="s-num">Module 01</div><h2>核心指标仪表盘</h2><div class="s-desc">关键数据卡片一览，红黄绿灯标识健康度</div></div><div class="metric-row"><div class="metric"><div class="m-val green">72,000</div><div class="m-label">UV <span style="color:var(--green)">+24.1%</span></div></div>
+<div class="metric"><div class="m-val green">252,000</div><div class="m-label">PV <span style="color:var(--green)">+35.5%</span></div></div>
+<div class="metric"><div class="m-val green">8,900</div><div class="m-label">DAU <span style="color:var(--green)">+30.9%</span></div></div>
+<div class="metric"><div class="m-val green">50,000</div><div class="m-label">MAU <span style="color:var(--green)">+19.0%</span></div></div>
+<div class="metric"><div class="m-val amber">19.2%</div><div class="m-label">注册转化率 <span style="color:var(--green)">+2.6pct</span></div></div>
+<div class="metric"><div class="m-val red">44.2%</div><div class="m-label">注册→下单 <span style="color:var(--red)">-10pct</span></div></div>
+<div class="metric"><div class="m-val red">8.5%</div><div class="m-label">整体付费转化 <span style="color:var(--red)">-0.5pct</span></div></div>
+<div class="metric"><div class="m-val amber">38%</div><div class="m-label">次日留存 <span style="color:var(--red)">-3pct</span></div></div>
+<div class="metric"><div class="m-val red">19%</div><div class="m-label">7日留存 <span style="color:var(--red)">-4pct</span></div></div>
+<div class="metric"><div class="m-val red">9%</div><div class="m-label">30日留存 <span style="color:var(--red)">-2pct</span></div></div>
+<div class="metric"><div class="m-val green">¥205,000</div><div class="m-label">总收入 <span style="color:var(--green)">+15.2%</span></div></div>
+<div class="metric"><div class="m-val red">¥2.85</div><div class="m-label">ARPU <span style="color:var(--red)">-7.2%</span></div></div>
+<div class="metric"><div class="m-val amber">¥33.6</div><div class="m-label">ARPPU <span style="color:var(--amber)">-1.8%</span></div></div></div></div>
+<div class="s"><div class="s-head"><div class="s-num">Module 02</div><h2>用户增长分析</h2><div class="s-desc">回答：用户从哪来？增长趋势如何？</div></div><h3 style="margin:0 0 12px;font-size:15px;font-weight:700">新增用户趋势</h3><div class="metric-row"><div class="metric"><div class="m-val blue">9,600</div><div class="m-label">上期 14 天</div></div>
+<div class="metric"><div class="m-val blue">13,800</div><div class="m-label">本期 14 天</div></div>
+<div class="metric"><div class="m-val blue">+43.8%</div><div class="m-label">环比</div></div></div><h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">渠道来源分析</h3><table class="data-table"><thead><tr><th>渠道</th><th>占比</th><th>质量</th><th>说明</th></tr></thead><tbody><tr><td>门店二维码</td><td>44.9%</td><td>高</td><td>7日留存 24%、付费转化 9.8%，质量最优</td></tr><tr><td>公众号推文</td><td>24.6%</td><td>中</td><td>量级可观但 7日留存 17%、付费转化 5.1%</td></tr><tr><td>社群活动</td><td>21.0%</td><td>低</td><td>7日留存 13%、付费转化 4.4%，薅券用户偏多</td></tr><tr><td>自然搜索</td><td>9.4%</td><td>高</td><td>规模小但 7日留存 20%、付费转化 6.8%，质量稳定</td></tr></tbody></table><h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">激活漏斗</h3><table class="data-table"><thead><tr><th>步骤</th><th>转化率</th><th>流失率</th></tr></thead><tbody><tr><td>访问→注册</td><td>19.2%</td><td>80.8%</td></tr><tr><td>注册→浏览</td><td>79.0%</td><td>21.0%</td></tr><tr><td>浏览→加购</td><td>66.1%</td><td>33.9%</td></tr><tr><td>加购→提交</td><td>90.3%</td><td>9.7%</td></tr><tr><td>提交→支付</td><td>93.8%</td><td>6.2%</td></tr></tbody></table></div>
+<div class="s"><div class="s-head"><div class="s-num">Module 03</div><h2>用户活跃分析</h2><div class="s-desc">回答：用户来了之后在做什么？活跃度如何？</div></div><div class="hl-box hl-blue"><p><strong>DAU</strong>：8,900 | <strong>MAU</strong>：50,000 | <strong>DAU/MAU</strong>：17.8% | DAU/MAU 由 16.2% 升至 17.8%（+1.6pct），粘性提升，但增量主要来自新用户拉动，需观察是否可持续</p></div><h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">用户分层</h3><table class="data-table"><thead><tr><th>分群</th><th>用户数</th><th>占比</th><th>趋势</th></tr></thead><tbody><tr><td>活跃老用户</td><td>24,000</td><td>48.0%</td><td>稳定</td></tr><tr><td>本期新增用户</td><td>13,800</td><td>27.6%</td><td>环比 +43.8%</td></tr><tr><td>回流用户（券包召回）</td><td>7,200</td><td>14.4%</td><td>上升</td></tr><tr><td>沉默/边缘用户</td><td>5,000</td><td>10.0%</td><td>略升，需关注</td></tr></tbody></table><h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">功能使用热度</h3><table class="data-table"><thead><tr><th>功能</th><th>使用率</th><th>使用频次</th><th>满意度</th></tr></thead><tbody><tr><td>门店扫码点单</td><td>80%</td><td>高</td><td>高</td></tr><tr><td>会员日券包</td><td>71%</td><td>高（活动期）</td><td>低（规则看不懂）</td></tr><tr><td>快速复购入口</td><td>62%</td><td>高</td><td>高（正反馈明显）</td></tr><tr><td>常买商品推荐</td><td>55%</td><td>中高</td><td>高</td></tr><tr><td>附近门店推荐</td><td>48%</td><td>中</td><td>中（排序偶尔不准）</td></tr></tbody></table></div>
+<div class="s"><div class="s-head"><div class="s-num">Module 04</div><h2>转化漏斗分析</h2><div class="s-desc">回答：用户在哪个环节流失最多？</div></div><table class="data-table"><thead><tr><th>步骤</th><th>用户数</th><th>累计转化率</th><th>该步流失率</th></tr></thead><tbody><tr><td>访问小程序</td><td>72,000</td><td>100%</td><td>—</td></tr><tr><td>完成注册/授权</td><td>13,800</td><td>19.2%</td><td>80.8%</td></tr><tr><td>浏览商品</td><td>10,900</td><td>15.1%</td><td>21.0%</td></tr><tr><td>加入购物车</td><td>7,200</td><td>10.0%</td><td>33.9%</td></tr><tr><td>提交订单</td><td>6,500</td><td>9.0%</td><td>9.7%</td></tr><tr><td>支付成功</td><td>6,100</td><td>8.5%</td><td>6.2%</td></tr></tbody></table><div class="hl-box" style="background:var(--red-bg);border-left-color:var(--red);margin-top:20px"><p><strong>⚠ 瓶颈定位</strong>：完成注册/授权（流失率 80.8%（流失约 58,200 人））</p><p>可能原因：授权弹窗前置，用户尚未感知产品价值即被要求授权 / 涉及手机号等隐私信息，用户顾虑导致流失 / 门店扫码「即来即点」场景与强制授权冲突，摩擦被放大 / 次要瓶颈：浏览→加购流失 33.9%，套餐规则理解成本高 + 商品页加载偏慢</p></div></div>
+<div class="s"><div class="s-head"><div class="s-num">Module 05</div><h2>留存分析</h2><div class="s-desc">回答：用户留下来了吗？留存趋势如何？</div></div><div class="metric-row"><div class="metric"><div class="m-val amber">38%（上期 41%）</div><div class="m-label">次日留存</div><div style="font-size:11px;color:var(--ink-muted)">基准：餐饮/咖啡小程序约 30-35%</div></div>
+<div class="metric"><div class="m-val red">19%（上期 23%）</div><div class="m-label">7日留存</div><div style="font-size:11px;color:var(--ink-muted)">基准：行业约 15-20%</div></div>
+<div class="metric"><div class="m-val red">9%（上期 11%）</div><div class="m-label">30日留存</div><div style="font-size:11px;color:var(--ink-muted)">基准：行业约 8-12%</div></div></div><h3 style="margin:16px 0 12px;font-size:15px;font-weight:700">健康度评估</h3><p>绝对水平尚可（次日、7日留存仍处于或略高于行业中位），但趋势全面下行是核心警报：三个留存指标环比全降，7日 -4pct 跌幅最大。结合社群渠道低留存拉新，判断为「低质量新客稀释整体留存」，而非产品本身留存能力崩塌——这是可修复的结构性问题，但必须立刻止血。</p><h3 style="margin:16px 0 12px;font-size:15px;font-weight:700;color:var(--red)">预警信号</h3><div class="ins-item"><div class="finding" style="color:var(--red)">⚠ 7日留存环比 -4pct</div><div class="meta-line">本期 19% vs 上期 23%，用户「来一次就走」倾向加重</div></div>
+<div class="ins-item"><div class="finding" style="color:var(--red)">⚠ 30日留存持续走低至 9%</div><div class="meta-line">长期留存根基削弱，直接影响 LTV 与会员体系价值</div></div>
+<div class="ins-item"><div class="finding" style="color:var(--red)">⚠ 新客质量稀释整体留存</div><div class="meta-line">社群渠道 7日留存仅 13%、付费转化 4.4%，拖低大盘</div></div></div>
+<div class="s"><div class="s-head"><div class="s-num">Module 06</div><h2>商业化分析</h2><div class="s-desc">回答：赚钱了吗？赚钱效率如何？</div></div><h3 style="margin:0 0 12px;font-size:15px;font-weight:700">收入趋势</h3><div class="metric-row"><div class="metric"><div class="m-val green">¥178,000</div><div class="m-label">上期 14 天</div></div>
+<div class="metric"><div class="m-val green">¥205,000</div><div class="m-label">本期 14 天</div></div>
+<div class="metric"><div class="m-val green">+15.2%</div><div class="m-label">环比</div></div></div><div class="hl-box hl-green"><p><strong>ARPU</strong>：¥2.85 / UV（¥3.07 → ¥2.85，-7.2%（单位流量变现变差）） | <strong>ARPPU</strong>：¥33.6 / 下单用户（¥34.2 → ¥33.6，-1.8%（客单价 ¥19.7，基本持平略降））</p></div><h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">付费转化漏斗</h3><table class="data-table"><thead><tr><th>步骤</th><th>转化率</th></tr></thead><tbody><tr><td>访问→注册</td><td>19.2%</td></tr><tr><td>注册→下单</td><td>44.2%</td></tr><tr><td>访问→下单（整体付费转化）</td><td>8.5%</td></tr></tbody></table><h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">单位经济模型</h3><div class="roi-grid"><div class="roi-card"><div class="roi-val">¥80 / 注册用户（估）</div><div class="roi-label">LTV 估算</div></div><div class="roi-card"><div class="roi-val">¥10 / 注册（混合渠道，估，含券补贴）</div><div class="roi-label">CAC</div></div><div class="roi-card"><div class="roi-val">约 8（整体健康；但社群新客 LTV/CAC &lt;2，边际亏损，预警）</div><div class="roi-label">LTV/CAC</div></div></div></div>
+<div class="s"><div class="s-head"><div class="s-num">Module 07</div><h2>用户反馈分析</h2><div class="s-desc">回答：用户满意吗？高频痛点是什么？</div></div><div class="hl-box hl-blue"><p><strong>当前 NPS</strong>：42（48 → 42，-6 点（满意度下滑））</p></div><h3 style="margin:16px 0 12px;font-size:15px;font-weight:700">高频反馈主题</h3><div class="ins-item"><div class="finding">会员日券包规则看不懂 <span class="tag-low">高频</span> <span class="tag-low">负面</span></div><div class="meta-line">典型反馈：「券包到底能不能叠加，领了到结算才知道不能用」</div></div>
+<div class="ins-item"><div class="finding">快速复购入口体验好 <span class="tag-low">中频</span> <span class="tag-low">正面</span></div><div class="meta-line">典型反馈：「一键复购上次订单，比排队快多了」</div></div>
+<div class="ins-item"><div class="finding">常买商品推荐贴心 <span class="tag-low">中频</span> <span class="tag-low">正面</span></div><div class="meta-line">典型反馈：「推荐的就是我常喝的，省事」</div></div>
+<div class="ins-item"><div class="finding">门店扫码点单快 <span class="tag-low">中频</span> <span class="tag-low">正面</span></div><div class="meta-line">典型反馈：「扫码直接点，不用排队」</div></div>
+<div class="ins-item"><div class="finding">附近门店排序偶尔不准 <span class="tag-low">低频</span> <span class="tag-low">负面</span></div><div class="meta-line">典型反馈：「推荐的不是离我最近的店」</div></div><h3 style="margin:20px 0 12px;font-size:15px;font-weight:700;color:var(--red)">痛点聚类</h3><div class="ins-item"><div class="finding" style="color:var(--red)">🔥 券包规则认知成本高（提及 客服咨询占比 37% 次）</div><div class="meta-line">严重度：<span class="tag-high">高</span> | 影响范围：活动期全量领券用户</div></div>
+<div class="ins-item"><div class="finding" style="color:var(--red)">🔥 券不可叠加提示不清（提及 中频反馈 次）</div><div class="meta-line">严重度：<span class="tag-mid">中</span> | 影响范围：领券后到结算才发现的用户</div></div>
+<div class="ins-item"><div class="finding" style="color:var(--red)">🔥 附近门店排序异常（提及 低频反馈 次）</div><div class="meta-line">严重度：<span class="tag-low">低</span> | 影响范围：异地 / 多门店用户</div></div></div>
+<div class="s"><div class="s-head"><div class="s-num">Module 08</div><h2>跨维度交叉分析</h2><div class="s-desc">回答：不同维度的数据交叉后发现了什么？</div></div><h3 style="margin:0 0 12px;font-size:15px;font-weight:700">用户分群 × 行为特征</h3><table class="data-table"><thead><tr><th>分群</th><th>行为特征</th><th>留存</th><th>价值贡献</th></tr></thead><tbody><tr><td>门店扫码老客</td><td>即来即点、复购稳定</td><td>高（次日 40%+）</td><td>高价值，核心盘</td></tr><tr><td>会员日券包新客</td><td>领券驱动、低复购</td><td>低（7日 13%）</td><td>低边际价值，薅券为主</td></tr><tr><td>常买推荐活跃用户</td><td>高频使用复购入口</td><td>高</td><td>高潜力，可重点运营</td></tr><tr><td>公众号引流用户</td><td>浏览为主、转化一般</td><td>中（7日 17%）</td><td>中等，需内容承接</td></tr></tbody></table><h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">渠道 × 质量 × 成本</h3><table class="data-table"><thead><tr><th>渠道</th><th>质量评分</th><th>CAC</th><th>LTV</th><th>ROI</th></tr></thead><tbody><tr><td>门店二维码</td><td>9/10</td><td>¥4（估）</td><td>¥42（估）</td><td>10.5</td></tr><tr><td>自然搜索</td><td>8/10</td><td>¥3（估）</td><td>¥36（估）</td><td>12.0</td></tr><tr><td>公众号推文</td><td>5/10</td><td>¥9（估）</td><td>¥22（估）</td><td>2.4</td></tr><tr><td>社群活动</td><td>3/10</td><td>¥7（估）</td><td>¥14（估）</td><td>2.0</td></tr></tbody></table><h3 style="margin:20px 0 12px;font-size:15px;font-weight:700">功能 × 留存影响</h3><table class="data-table"><thead><tr><th>功能</th><th>使用率</th><th>对留存影响</th><th>满意度</th></tr></thead><tbody><tr><td>快速复购入口</td><td>62%</td><td>正向（提升复购频次）</td><td>高</td></tr><tr><td>常买商品推荐</td><td>55%</td><td>正向（提升粘性）</td><td>高</td></tr><tr><td>会员日券包</td><td>71%</td><td>负向（拉低新客留存质量）</td><td>低</td></tr><tr><td>附近门店推荐</td><td>48%</td><td>中性</td><td>中</td></tr></tbody></table></div>
+<div class="s"><div class="s-head"><div class="s-num">Module 09</div><h2>问题诊断与根因分析</h2><div class="s-desc">回答：当前最核心的问题是什么？为什么？</div></div><div style="padding:18px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface-raised);margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span class="p-badge p0">P0</span><strong style="font-size:15px">授权注册是全链路最大漏斗，80.8% 访问用户未授权即流失</strong></div><div class="ins-item" style="margin-bottom:6px"><div class="finding">数据证据</div><div class="meta-line">72,000 访问 → 13,800 注册，流失 58,200 人（80.8%），单步流失率为全漏斗最高，注册转化率绝对值仅 19.2%。</div></div><div class="ins-item" style="margin-bottom:6px"><div class="finding">根因分析（5-Why）</div><div class="meta-line">5-Why：①为何流失多？授权弹窗前置；②为何前置？V1.3 默认注册才能点单；③为何用户不愿授权？尚未感知价值即被要求授权手机号等隐私；④根因：价值前置不足 + 隐私摩擦，与门店扫码「即来即点」的高即时性场景冲突。</div></div><div style="font-size:13px;color:var(--ink-muted)">影响范围：影响 58,200 访问用户 / 14天，直接封死 UV→收入转化上限，是收入增长的最大天花板。 | 建议方向：门店扫码「先逛后登」改造，授权延后至下单前；A/B 测试延迟授权对注册转化与下单转化的影响。</div></div><div style="padding:18px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface-raised);margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span class="p-badge p0">P0</span><strong style="font-size:15px">会员日券包拉新质量差，留存与变现效率双降</strong></div><div class="ins-item" style="margin-bottom:6px"><div class="finding">数据证据</div><div class="meta-line">社群渠道占新增 21%，但 7日留存 13%、付费转化 4.4% 均垫底；整体 7日留存 -4pct、30日 -2pct、ARPU -7.2%、注册→下单 -10pct。</div></div><div class="ins-item" style="margin-bottom:6px"><div class="finding">根因分析（5-Why）</div><div class="meta-line">5-Why：①留存为何降？新增用户质量下降；②为何下降？社群渠道券包拉来大量薅券用户；③为何？V1.3 券包设计偏重「拉新激励」而非「复购引导」；④根因：增长策略以折扣换规模，未设质量门槛与复购闭环。</div></div><div style="font-size:13px;color:var(--ink-muted)">影响范围：拉低整体留存与 ARPU，券补贴 ROI 偏低（社群 LTV/CAC &lt;2），若持续将损害会员体系长期价值。 | 建议方向：券包设置复购门槛（第二杯半价 / 满减），社群渠道接入薅券风控，设计非纯折扣的复购激励。</div></div><div style="padding:18px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface-raised);margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span class="p-badge p0">P0</span><strong style="font-size:15px">会员日券包规则认知成本高，拖累 NPS 与客服成本</strong></div><div class="ins-item" style="margin-bottom:6px"><div class="finding">数据证据</div><div class="meta-line">NPS 48 → 42（-6）；客服券包相关咨询占比 37%（明显高于平时）；高频反馈「规则看不懂」「券不可叠加提示不清」。</div></div><div class="ins-item" style="margin-bottom:6px"><div class="finding">根因分析（5-Why）</div><div class="meta-line">5-Why：①为何看不懂？叠加、有效期、使用门槛规则复杂；②为何复杂未被发现？领取时未前置说明；③根因：券包 UX 侧重促销力度，缺利益前置与规则可视化。</div></div><div style="font-size:13px;color:var(--ink-muted)">影响范围：NPS 下滑、客服成本上升、券核销率可能受损，影响活动期体验与口碑。 | 建议方向：券包规则简化 + 领取页利益前置说明，不可叠加时即时提示，券包使用状态可视化。</div></div><div style="padding:18px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface-raised);margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span class="p-badge p1">P1</span><strong style="font-size:15px">浏览→加购环节流失偏大（33.9%），体验摩擦</strong></div><div class="ins-item" style="margin-bottom:6px"><div class="finding">数据证据</div><div class="meta-line">浏览 10,900 → 加购 7,200，流失 3,700（33.9%）；反馈指向商品页加载偏慢、套餐规则理解成本高。</div></div><div class="ins-item" style="margin-bottom:6px"><div class="finding">根因分析（5-Why）</div><div class="meta-line">商品页加载慢影响决策 + 套餐组合规则信息架构不清，导致用户在加购前放弃。</div></div><div style="font-size:13px;color:var(--ink-muted)">影响范围：影响约 3,700 用户 / 14天，是注册后到下单之间的主要摩擦点。 | 建议方向：商品页性能优化（首屏 &lt;1.5s）+ 套餐规则可视化。</div></div></div>
+<div class="s"><div class="s-head"><div class="s-num">Module 10</div><h2>行动方案</h2><div class="s-desc">回答：接下来做什么？不做什么？</div></div><h3 style="margin:0 0 12px;font-size:15px;font-weight:700;color:var(--red)">短期优化（1-2周）</h3><div class="act-list"><div class="act-row"><span class="p-badge p0">P0</span><div class="act-content"><strong>门店扫码「先逛后登」改造，授权弹窗延后至下单前，A/B 验证</strong><div class="act-meta">预期效果：注册转化率预计 +5-10pct，放大全链路漏斗 | 产品 + 前端 2 周内</div></div></div>
+<div class="act-row"><span class="p-badge p0">P0</span><div class="act-content"><strong>会员日券包规则简化 V1：领取页利益前置 + 不可叠加即时提示</strong><div class="act-meta">预期效果：NPS 回升、券包客服咨询占比下降 | 产品 + 运营 1 周内</div></div></div>
+<div class="act-row"><span class="p-badge p0">P0</span><div class="act-content"><strong>社群渠道券包加复购门槛（第二杯半价 / 满减）+ 接入薅券风控</strong><div class="act-meta">预期效果：新客留存与付费转化企稳回升 | 运营 + 风控 2 周内</div></div></div>
+<div class="act-row"><span class="p-badge p1">P1</span><div class="act-content"><strong>商品页加载性能优化 + 套餐规则可视化</strong><div class="act-meta">预期效果：浏览→加购流失率下降 | 前端 2 周内</div></div></div></div><h3 style="margin:20px 0 12px;font-size:15px;font-weight:700;color:var(--amber)">中期策略（1-3月）</h3><div class="act-list"><div class="act-row"><span class="p-badge p1">P1</span><div class="act-content"><strong>搭建非折扣驱动的复购体系：常买推荐 + 会员积分 + 打卡，承接「快速复购入口」正反馈</strong><div class="act-meta">预期效果：7日/30日留存回升 | 产品 + 运营 1 个月</div></div></div>
+<div class="act-row"><span class="p-badge p1">P1</span><div class="act-content"><strong>搭建分渠道质量看板（CAC / LTV / ROI），社群渠道按质量调权重</strong><div class="act-meta">预期效果：投放 ROI 提升，低质渠道收缩 | 增长 + 数据 1 个月</div></div></div>
+<div class="act-row"><span class="p-badge p2">P2</span><div class="act-content"><strong>附近门店排序算法修正（距离 + 营业状态 + 库存）</strong><div class="act-meta">预期效果：门店推荐满意度提升 | 技术 1-2 个月</div></div></div></div><h3 style="margin:20px 0 12px;font-size:15px;font-weight:700;color:var(--blue)">长期规划（3-6月）</h3><div class="act-list"><div class="act-row"><span class="p-badge p2">P2</span><div class="act-content"><strong>会员日从「券包促销」升级为「会员权益日」，构建长期留存飞轮</strong><div class="act-meta">预期效果：30日留存回升至 12%+ |  </div></div></div>
+<div class="act-row"><span class="p-badge p2">P2</span><div class="act-content"><strong>数据基础设施：归因与渠道 LTV 追踪，支撑精细化投放与单位经济管理</strong><div class="act-meta">预期效果：分渠道 ROI 可量化、可优化 |  </div></div></div></div><h3 style="margin:24px 0 12px;font-size:15px;font-weight:700;color:var(--red)">NOT TO DO</h3><div class="notdo-item"><div class="nd-icon">✕</div><div class="nd-body"><strong>不要继续单纯加大券包折扣力度冲量</strong><div class="nd-reason">会进一步恶化留存、ARPU、NPS，强化「以折扣换规模」的恶性循环</div></div></div>
+<div class="notdo-item"><div class="nd-icon">✕</div><div class="nd-body"><strong>不要在授权流程增加更多必填项</strong><div class="nd-reason">授权已是全链路最大漏斗，增加摩擦等于自断流量</div></div></div>
+<div class="notdo-item"><div class="nd-icon">✕</div><div class="nd-body"><strong>不要盲目扩投社群渠道</strong><div class="nd-reason">当前质量最差（LTV/CAC&lt;2），需先治理质量再考虑扩量</div></div></div></div>
+<div class="s"><div class="s-head"><div class="s-num">Module 11</div><h2>监测计划</h2><div class="s-desc">回答：怎么持续跟踪？看什么信号？</div></div><table class="data-table"><thead><tr><th>关键信号</th><th>观察指标</th><th>数据来源</th><th>检查频率</th></tr></thead><tbody><tr><td>注册转化回升</td><td>访问→注册转化率、授权完成率</td><td>小程序埋点</td><td>日</td></tr><tr><td>留存企稳</td><td>次日 / 7日 / 30日留存、分渠道留存</td><td>留存看板</td><td>周</td></tr><tr><td>变现效率改善</td><td>ARPU、ARPPU、客单价、注册→下单</td><td>BI 报表</td><td>周</td></tr><tr><td>券包体验改善</td><td>券包客服咨询占比、券核销率、NPS</td><td>客服系统 + 用户调研</td><td>周</td></tr><tr><td>渠道质量变化</td><td>分渠道 7日留存、付费转化、ROI</td><td>渠道看板</td><td>周</td></tr></tbody></table></div>
+<div class="report-footer"><p>由「运营数据复盘 Skill」生成 · 2026-06-20</p><p style="margin-top:4px;">本报告基于运营数据分析生成，关键结论建议结合业务上下文进一步验证</p></div>
+</div>
+</body>
+</html>

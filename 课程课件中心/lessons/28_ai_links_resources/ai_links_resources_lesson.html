@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 新链接</title>
+<style>
+:root{--ink:#f8fafc;--muted:#b7c0ce;--line:rgba(255,255,255,.15);--violet:#a78bfa;--cyan:#22d3ee;--gold:#facc15;--rose:#fb7185;--green:#34d399;--red:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;overflow:hidden;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(circle at 12% 14%,rgba(167,139,250,.28),transparent 28%),radial-gradient(circle at 86% 18%,rgba(34,211,238,.18),transparent 26%),radial-gradient(circle at 50% 95%,rgba(251,113,133,.16),transparent 34%),#06060d}
+body:before{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:68px 68px;pointer-events:none}
+.deck{height:100vh;display:grid;place-items:center;padding:52px 70px 90px}
+.slide{display:none;width:min(1640px,calc(100vw - 140px));height:min(820px,calc(100vh - 142px));position:relative}
+.slide.active{display:block;animation:fade .42s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.center{height:100%;display:grid;place-items:center;text-align:center}
+.hero-copy{max-width:1320px;margin:0 auto;transform:translateY(22px)}
+.corner-label{position:absolute;right:34px;top:28px;display:inline-flex;gap:10px;align-items:center;padding:10px 18px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.07);font-weight:950;letter-spacing:6px;color:#d8def0}
+.kicker{display:inline-flex;gap:10px;align-items:center;padding:10px 18px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.07);font-weight:950;letter-spacing:8px;color:#d8def0}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--violet);box-shadow:0 0 28px var(--violet)}
+h1{font-size:clamp(60px,7vw,128px);line-height:1.02;margin:0 0 44px;font-weight:1000}
+.grad{background:linear-gradient(135deg,#fff,#a78bfa 38%,#22d3ee 68%,#facc15);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{max-width:1120px;margin:0 auto;color:#d9e1ee;font-size:clamp(22px,2vw,34px);line-height:1.55;font-weight:850}
+.panel{height:100%;border:1px solid var(--line);border-radius:40px;background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));padding:38px;overflow:hidden}
+.title{font-size:clamp(36px,4vw,68px);line-height:1.08;margin:0 0 12px;font-weight:1000}
+.sub{margin:0 0 22px;color:#cbd5e1;font-size:21px;line-height:1.45;font-weight:760}
+.tool-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.tool-card{min-height:430px;border:1px solid var(--line);border-radius:28px;padding:20px;background:rgba(255,255,255,.065);position:relative;overflow:hidden;opacity:0;transform:translateY(16px);transition:.35s ease}
+.tool-card.show{opacity:1;transform:none}
+.tool-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(var(--cyan),var(--violet),var(--gold))}
+.tool-card b{display:block;font-size:25px;margin-bottom:18px}
+.tool-card span{display:block;margin-bottom:10px;padding:10px 12px;border-radius:14px;background:rgba(5,7,13,.62);border:1px solid rgba(255,255,255,.08);font-size:17px;font-weight:850;color:#e5edf8}
+.tool-card small{display:block;color:#94a3b8;font-size:14px;line-height:1.35;margin-top:12px}
+.book-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.book{min-height:145px;border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:18px 20px;background:linear-gradient(135deg,rgba(167,139,250,.16),rgba(255,255,255,.055));opacity:0;transform:translateY(14px);transition:.32s ease}
+.book.show{opacity:1;transform:none}
+.book strong{display:block;font-size:21px;line-height:1.22;margin-bottom:10px}
+.book small{display:block;color:#b8c3d4;font-size:15px;line-height:1.38;font-weight:760}
+.book-note{margin-top:18px;border:1px solid rgba(250,204,21,.24);border-radius:20px;padding:17px 22px;background:rgba(250,204,21,.09);font-size:22px;font-weight:950;color:#f8fafc}
+.course-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.course{min-height:190px;border:1px solid var(--line);border-radius:24px;background:rgba(255,255,255,.065);padding:22px;opacity:0;transform:translateY(16px);transition:.32s ease}
+.course.show{opacity:1;transform:none}
+.course em{font-style:normal;display:inline-flex;margin-bottom:13px;padding:6px 10px;border-radius:999px;background:rgba(34,211,238,.14);color:#a5f3fc;font-weight:950}
+.course b{display:block;font-size:23px;line-height:1.25;margin-bottom:11px}
+.course span{color:#cbd5e1;font-weight:750;line-height:1.42}
+.kol-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.kol{min-height:118px;border:1px solid var(--line);border-radius:20px;padding:16px;background:rgba(255,255,255,.06);opacity:0;transform:translateY(12px);transition:.28s ease}
+.kol.show{opacity:1;transform:none}
+.kol b{display:block;font-size:19px;margin-bottom:7px}
+.kol span{color:#cbd5e1;font-size:14px;line-height:1.38;font-weight:740}
+.community{height:calc(100% - 170px);display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:stretch}
+.value-sentence{max-width:1280px;margin:0 0 24px;color:#e8eef8;font-size:31px;line-height:1.46;font-weight:950}
+.value-sentence span{display:inline-block;margin:0 6px;background:linear-gradient(135deg,#fde68a,#86efac,#67e8f9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tag-board{position:relative;min-height:500px;border:1px solid var(--line);border-radius:34px;background:rgba(255,255,255,.055);padding:30px;overflow:hidden}
+.idea{display:inline-flex;margin:8px;padding:13px 18px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);font-size:21px;font-weight:950;opacity:0;transform:translateY(12px) scale(.96);transition:.35s ease}
+.idea.show{opacity:1;transform:none}
+.typed{position:absolute;left:30px;right:30px;bottom:58px;min-height:68px;border-radius:20px;background:linear-gradient(135deg,rgba(239,68,68,.94),rgba(251,113,133,.82));display:flex;align-items:center;justify-content:center;padding:14px 22px;font-size:24px;line-height:1.35;font-weight:1000;opacity:0;box-shadow:0 20px 60px rgba(239,68,68,.22)}
+.typed.show{opacity:1}
+.typed:after,.ending-title.typing:after{content:"";display:inline-block;width:3px;height:1.08em;background:#fff;margin-left:8px;animation:blink .85s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.arrow{position:absolute;right:26px;bottom:138px;font-size:76px;color:var(--gold);opacity:0;transform:translateX(-18px);transition:.35s ease}
+.arrow.show{opacity:1;transform:none}
+.qr-stack{display:grid;gap:16px}
+.qr-card{border:1px solid rgba(250,204,21,.28);border-radius:28px;background:rgba(255,255,255,.08);padding:15px;text-align:center;opacity:0;transform:translateY(16px);transition:.35s ease}
+.qr-card.show{opacity:1;transform:none}
+.qr-card img{width:170px;height:170px;object-fit:contain;border-radius:18px;background:#fff}
+.qr-card b{display:block;margin-top:10px;font-size:22px}
+.ending{height:100%;display:grid;place-items:center;text-align:center}
+.ending h2{min-height:1.15em;font-size:clamp(56px,7vw,118px);line-height:1.05;margin:0 0 42px;font-weight:1000;background:linear-gradient(135deg,#fff,#fde68a 45%,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ending p{font-size:clamp(26px,2.7vw,46px);margin:0;color:#e5e7eb;font-weight:900}
+.nav,.tools,.draw-toggle,.fullscreen{position:fixed;z-index:100;border:1px solid var(--line);background:rgba(255,255,255,.08);backdrop-filter:blur(16px);border-radius:999px}
+.fullscreen{right:32px;top:28px;height:42px;min-width:92px;color:white;font-weight:950;cursor:pointer}
+.nav{left:50%;bottom:24px;transform:translateX(-50%);display:flex;gap:10px;align-items:center;padding:8px 12px}
+.nav button{width:42px;height:36px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.08);color:#fff;font-size:18px;font-weight:950;cursor:pointer}
+.page{min-width:46px;text-align:center;font-weight:950}
+.draw-toggle{right:32px;bottom:24px;height:42px;min-width:82px;color:white;font-weight:950;cursor:pointer}
+.tools{display:none;right:32px;bottom:24px;gap:8px;padding:8px}
+body.drawing .draw-toggle{display:none}
+body.drawing .tools{display:flex}
+.swatch{width:28px;height:28px;border:2px solid rgba(255,255,255,.75);border-radius:50%;cursor:pointer}
+.clear{height:28px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.09);color:white;padding:0 11px;font-weight:950;cursor:pointer}
+#drawCanvas{position:fixed;inset:0;z-index:70;pointer-events:none}
+body.drawing #drawCanvas{pointer-events:auto;cursor:crosshair}
+@media(max-width:1200px){.deck{padding:42px 22px 86px}.slide{width:calc(100vw - 44px)}.tool-grid{grid-template-columns:repeat(2,1fr)}.book-grid,.course-grid,.kol-grid{grid-template-columns:repeat(2,1fr)}.community{grid-template-columns:1fr;height:auto}.qr-stack{display:none}h1{font-size:52px}.corner-label{right:18px;top:18px}}
+</style>
+</head>
+<body>
+<button class="fullscreen" onclick="toggleFullscreen()">全屏</button>
+<canvas id="drawCanvas"></canvas>
+<main class="deck">
+<section class="slide active">
+  <div class="corner-label"><span class="dot"></span>ALL AI LINKS</div>
+  <div class="center"><div class="hero-copy">
+    <h1>把信息源变成<br><span class="grad">学习加速器</span></h1>
+    <p class="lead">整理常用 AI 工具、中文书籍、入门课程、KOL 和社群入口，搭建一套能持续更新的 AI 学习网络。</p>
+  </div></div>
+</section>
+<section class="slide"><div class="panel">
+  <h2 class="title">常用 AI 工具：按任务分层</h2>
+  <p class="sub">不是所有任务都用同一个工具。先把场景分清楚，再选择最顺手的入口。</p>
+  <div class="tool-grid">
+    <div class="tool-card"><b>通用对话</b><span>ChatGPT</span><span>Claude</span><span>Gemini</span><span>豆包</span><span>DeepSeek</span><span>...</span><small>适合思考、写作、方案、复盘和快速问答。</small></div>
+    <div class="tool-card"><b>搜索研究</b><span>Codex</span><span>Perplexity</span><span>Claude</span><span>Gemini</span><span>Kimi</span><span>秘塔 AI 搜索</span><small>适合资料搜索、交叉验证、网页总结和长文分析。</small></div>
+    <div class="tool-card"><b>编程协作</b><span>Codex</span><span>Claude</span><span>Claude Code</span><span>Cursor</span><span>Trae</span><span>CodeBuddy</span><small>适合原型、脚本、自动化、代码改造和项目验收。</small></div>
+    <div class="tool-card"><b>视觉创作</b><span>image 2</span><span>即梦</span><span>豆包</span><span>Midjourney</span><span>可灵</span><span>Runway</span><small>适合封面、课程配图、概念视觉、短视频和海报。</small></div>
+    <div class="tool-card"><b>国产 Worker</b><span>WorkBuddy</span><span>Coze 扣子</span><span>有道龙虾</span><span>Manus</span><span>崔璀 Work</span><span>通义 / 文心</span><small>适合办公自动化、Agent、工作流和本地任务执行。</small></div>
+  </div>
+</div></section>
+<section class="slide"><div class="panel">
+  <h2 class="title">AI 书籍：先建认知，再补原理</h2>
+  <p class="sub">建议从微信读书等平台搜索阅读，先看得懂趋势，再逐步补大模型、产品和未来社会的底层知识。</p>
+  <div class="book-grid">
+    <div class="book"><strong>《GPT图解：大模型是怎样构建的》</strong><small>用图解方式理解 Transformer、GPT 到 ChatGPT。</small></div>
+    <div class="book"><strong>《这就是 ChatGPT》</strong><small>适合快速了解 ChatGPT 的能力、边界和使用方式。</small></div>
+    <div class="book"><strong>《迈向 AGI 时代》</strong><small>理解从大模型到通用人工智能的变化路径。</small></div>
+    <div class="book"><strong>《AI 未来进行式》</strong><small>从产业和社会视角看 AI 影响。</small></div>
+    <div class="book"><strong>《生命 3.0》</strong><small>从长期主义角度思考智能、社会和未来。</small></div>
+    <div class="book"><strong>《AI 超级智能》</strong><small>理解超级智能的机会、风险和治理问题。</small></div>
+    <div class="book"><strong>《AI 产品经理方法论》</strong><small>适合产品经理把 AI 落到产品流程和需求设计。</small></div>
+    <div class="book"><strong>《未来简史》</strong><small>帮助理解技术、数据和人的关系变化。</small></div>
+    <div class="book"><strong>《大模型时代》</strong><small>适合建立大模型产业与应用全景。</small></div>
+    <div class="book"><strong>《智能时代》</strong><small>理解数据、智能和商业效率的关系。</small></div>
+    <div class="book"><strong>《AI 2041》</strong><small>用未来故事理解 AI 在不同场景中的变化。</small></div>
+    <div class="book"><strong>更多书单</strong><small>持续补充产品、组织、技术和商业相关书籍。</small></div>
+  </div>
+  <div class="book-note">先建立认知地图，再回到自己的产品、项目和工作场景里验证。</div>
+</div></section>
+<section class="slide"><div class="panel">
+  <h2 class="title">入门课程：推荐先看一些视频课</h2>
+  <p class="sub">视频课适合快速建立框架，看完以后再回到自己的项目里验证。这里优先放免费、可搜索、适合入门的资源。</p>
+  <div class="course-grid">
+    <div class="course"><em>吴恩达</em><b>Generative AI for Everyone</b><span>理解生成式 AI 是什么、能做什么、怎样用于工作。</span></div>
+    <div class="course"><em>李宏毅</em><b>生成式 AI 导论 2024</b><span>适合中文学习者系统理解生成式 AI。</span></div>
+    <div class="course"><em>NVIDIA</em><b>生成式 AI 入门</b><span>快速理解生成式 AI 概念、应用与基础流程。</span></div>
+    <div class="course"><em>Microsoft</em><b>Generative AI for Beginners</b><span>面向初学者的开源课程，适合边学边做。</span></div>
+    <div class="course"><em>Karpathy</em><b>Intro to Large Language Models</b><span>大模型入门经典视频，适合补 LLM 直觉。</span></div>
+    <div class="course"><em>Google</em><b>Introduction to LLMs</b><span>快速了解大语言模型的概念和应用方式。</span></div>
+    <div class="course"><em>DeepMind</em><b>Experience AI</b><span>适合年轻人和零基础学习 AI 概念。</span></div>
+    <div class="course"><em>更多课程</em><b>WaytoAGI 课程表</b><span>适合持续追踪中文课程、手册和学习路径。</span></div>
+  </div>
+</div></section>
+<section class="slide"><div class="panel">
+  <h2 class="title">值得关注的 AI 博主 / 自媒体</h2>
+  <p class="sub">这里不是唯一清单，而是一组比较适合持续跟踪工具、案例、方法论和产品实践的信息源。</p>
+  <div class="kol-grid">
+    <div class="kol"><b>宝玉 @dotey</b><span>Prompt、工程管理、AI 实战。</span></div><div class="kol"><b>归藏 @op7418</b><span>AI 工具、图像视频、工作流。</span></div><div class="kol"><b>张咋啦</b><span>Frontend Slides、Vibe Coding。</span></div><div class="kol"><b>李继刚</b><span>提示词、表达和 AI 阅读。</span></div><div class="kol"><b>shao__meng</b><span>AI Agent、开源和创业观察。</span></div>
+    <div class="kol"><b>宝玉的分享</b><span>模型动态、翻译和实践整理。</span></div><div class="kol"><b>歸藏 AI 资讯</b><span>工具动态和 AIGC 周刊。</span></div><div class="kol"><b>WaytoAGI</b><span>课程、手册、学习路径。</span></div><div class="kol"><b>机器之心</b><span>AI 研究、产业和论文动态。</span></div><div class="kol"><b>量子位</b><span>AI 产品、公司和技术新闻。</span></div>
+    <div class="kol"><b>InfoQ AI 前线</b><span>工程实践与行业案例。</span></div><div class="kol"><b>Founder Park</b><span>AI 创业和产品访谈。</span></div><div class="kol"><b>少数派 Matrix</b><span>效率工具和个人工作流。</span></div><div class="kol"><b>硅星人</b><span>硅谷 AI 产品与创业观察。</span></div><div class="kol"><b>晚点科技</b><span>大厂、产品和商业动态。</span></div>
+    <div class="kol"><b>AI 科技评论</b><span>技术趋势和产业评论。</span></div><div class="kol"><b>甲子光年</b><span>AI 商业化和行业研究。</span></div><div class="kol"><b>小互 / Gorden Sun</b><span>AI 产品和热点工具。</span></div><div class="kol"><b>thinkingjimmy</b><span>普通用户视角和效率实践。</span></div><div class="kol"><b>更多关注</b><span>跟着项目和问题持续扩展。</span></div>
+  </div>
+</div></section>
+<section class="slide"><div class="panel">
+  <h2 class="title">社群的价值</h2>
+  <p class="value-sentence">这门课的价值，不只是学 AI 工具和 Skills，更重要的是把 <span>产品经验</span>、<span>AI 思维</span> 和 <span>持续实践</span> 连接起来，让大家在真实交流中共同成长。</p>
+  <div class="community">
+    <div class="tag-board">
+      <div class="idea">产品方法论</div><div class="idea">产品专业经验</div><div class="idea">产品思维训练</div><div class="idea">AI 思维训练</div><div class="idea">真实项目反馈</div><div class="idea">工具与 Skill 共创</div><div class="idea">互相启发</div><div class="idea">持续迭代</div>
+      <div class="arrow" id="arrow">➜</div>
+      <div class="typed" id="typed"></div>
+    </div>
+    <div class="qr-stack">
+      <div class="qr-card"><img src="course_materials/个人微信二维码.jpg" alt="个人微信二维码"><b>个人微信</b></div>
+      <div class="qr-card"><img src="course_materials/公众号二维码.jpg" alt="公众号二维码"><b>AI 产品大峡谷</b></div>
+    </div>
+  </div>
+</div></section>
+<section class="slide"><div class="ending"><div>
+  <h2 class="ending-title" id="endingTitle"></h2>
+  <p>加入我们 共同探索 AI 的乐趣</p>
+</div></div></section>
+</main>
+<div class="nav"><button onclick="prevSlide()">‹</button><div class="page"><span id="pageNo">1</span>/7</div><button onclick="nextSlide()">›</button></div>
+<button class="draw-toggle" onclick="enterDraw()">标注</button>
+<div class="tools"><button class="swatch" style="background:#ff3b30" onclick="setPen('#ff3b30')"></button><button class="swatch" style="background:#ffd60a" onclick="setPen('#ffd60a')"></button><button class="swatch" style="background:#30d158" onclick="setPen('#30d158')"></button><button class="clear" onclick="clearDraw()">清空</button><button class="clear" onclick="exitDraw()">退出</button></div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let current=0,communityStage=0,typeTimer=null,endingTimer=null;
+const pageNo=document.getElementById('pageNo');
+const revealed=new Map();
+function showSlide(i){
+  slides[current].classList.remove('active');
+  current=(i+slides.length)%slides.length;
+  slides[current].classList.add('active');
+  pageNo.textContent=current+1;
+  clearDraw();
+  clearInterval(typeTimer);
+  if(current===5)resetCommunity();
+  if(current===6)startEndingTyping();
+}
+function nextSlide(){showSlide(current+1)}
+function prevSlide(){showSlide(current-1)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')nextSlide();if(e.key==='ArrowLeft')prevSlide();if(e.key==='f'||e.key==='F')toggleFullscreen()});
+function toggleFullscreen(){document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.()}
+function revealGroup(sel){
+  const group=[...slides[current].querySelectorAll(sel)];
+  if(!group.length)return false;
+  const key=current+sel;
+  const idx=revealed.get(key)||0;
+  if(idx>=group.length)return false;
+  for(let i=idx;i<Math.min(idx+5,group.length);i++)group[i].classList.add('show');
+  revealed.set(key,idx+5);
+  return true;
+}
+function handleDeckClick(e){
+  if(e.target.closest('button,.tools,.draw-toggle,.fullscreen,a')||document.body.classList.contains('drawing'))return;
+  if(current===1){if(revealGroup('.tool-card'))return;nextSlide();return}
+  if(current===2){if(revealGroup('.book'))return;nextSlide();return}
+  if(current===3){if(revealGroup('.course'))return;nextSlide();return}
+  if(current===4){if(revealGroup('.kol'))return;nextSlide();return}
+  if(current===5){if(advanceCommunity())return;nextSlide();return}
+  nextSlide();
+}
+document.querySelector('.deck').addEventListener('click',handleDeckClick);
+function resetCommunity(){
+  communityStage=0;
+  clearInterval(typeTimer);
+  document.querySelectorAll('.idea,.qr-card').forEach(el=>el.classList.remove('show'));
+  document.getElementById('arrow').classList.remove('show');
+  const t=document.getElementById('typed');
+  t.classList.remove('show');
+  t.textContent='';
+}
+function advanceCommunity(){
+  if(current!==5)return false;
+  const ideas=[...document.querySelectorAll('.idea')],qrs=[...document.querySelectorAll('.qr-card')],typed=document.getElementById('typed');
+  if(communityStage<ideas.length){ideas[communityStage++].classList.add('show');return true}
+  if(communityStage===ideas.length){document.getElementById('arrow').classList.add('show');qrs.forEach(q=>q.classList.add('show'));communityStage++;return true}
+  if(communityStage===ideas.length+1){
+    const text='链接到社群，在 AI 的语境之中互相交流，持续迭代。';
+    typed.textContent='';
+    typed.classList.add('show');
+    let i=0;
+    typeTimer=setInterval(()=>{typed.textContent=text.slice(0,i++);if(i>text.length)clearInterval(typeTimer)},38);
+    communityStage++;
+    return true;
+  }
+  return false;
+}
+function startEndingTyping(){
+  clearInterval(endingTimer);
+  const el=document.getElementById('endingTitle');
+  const text='以善念结缘 与智者同行';
+  el.textContent='';
+  el.classList.add('typing');
+  let i=0;
+  endingTimer=setInterval(()=>{el.textContent=text.slice(0,i++);if(i>text.length){clearInterval(endingTimer);el.classList.remove('typing')}},52);
+}
+const canvas=document.getElementById('drawCanvas'),ctx=canvas.getContext('2d');
+let drawing=false,pen='#ff3b30';
+function resizeCanvas(){const dpr=devicePixelRatio||1;canvas.width=innerWidth*dpr;canvas.height=innerHeight*dpr;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.lineCap='round';ctx.lineJoin='round'}
+resizeCanvas();
+addEventListener('resize',resizeCanvas);
+function enterDraw(){document.body.classList.add('drawing')}
+function setPen(c){pen=c;enterDraw()}
+function exitDraw(){drawing=false;document.body.classList.remove('drawing')}
+canvas.addEventListener('pointerdown',e=>{drawing=true;ctx.beginPath();ctx.moveTo(e.clientX,e.clientY)});
+canvas.addEventListener('pointermove',e=>{if(!drawing)return;ctx.strokeStyle=pen;ctx.lineWidth=4;ctx.lineTo(e.clientX,e.clientY);ctx.stroke()});
+addEventListener('pointerup',()=>drawing=false);
+function clearDraw(){ctx.clearRect(0,0,canvas.width,canvas.height)}
+</script>
+</body>
+</html>

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>市场洞察 Skills · 30 分钟做出老板愿意看的市场洞察</title>
+  <style>
+    :root{
+      --bg:#080a17;
+      --panel:#111827;
+      --ink:#f9fbff;
+      --soft:#d2d8e8;
+      --muted:#98a4bd;
+      --line:rgba(255,255,255,.12);
+      --blue:#60a5fa;
+      --green:#2dd4bf;
+      --amber:#f59e0b;
+      --red:#f472b6;
+      --violet:#a78bfa;
+      --coral:#fb7185;
+      --shadow:0 28px 80px rgba(0,0,0,.42);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        linear-gradient(130deg,rgba(96,165,250,.18),transparent 28%),
+        linear-gradient(230deg,rgba(244,114,182,.18),transparent 30%),
+        linear-gradient(180deg,#080a17 0%,#111827 100%);
+      overflow-x:hidden;
+    }
+    .topbar{
+      position:sticky;top:0;z-index:10;
+      background:rgba(8,10,23,.80);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar-inner{max-width:1360px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
+    .brand{font-weight:900;letter-spacing:.02em}
+    .brand small{display:block;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+    .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--red));box-shadow:0 0 24px rgba(244,114,182,.65)}
+    .spacer{flex:1}
+    .hint{color:var(--muted);font-size:13px}
+    kbd{font-family:inherit;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:6px;padding:1px 6px;color:var(--soft)}
+    .progress{height:3px;background:rgba(255,255,255,.06)}
+    .progress span{display:block;height:100%;width:7.14%;background:linear-gradient(90deg,var(--blue),var(--red),var(--amber));transition:.25s}
+    .deck{max-width:1360px;margin:0 auto;padding:24px 24px 100px}
+    .slide{
+      display:none;
+      min-height:720px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:linear-gradient(180deg,rgba(17,24,39,.93),rgba(10,13,28,.90));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .slide.active{display:block;animation:in .35s ease}
+    @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .slide:before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+        linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(180deg,black,transparent 80%);
+    }
+    .inner{position:relative;z-index:1;padding:54px;min-height:720px;display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center}
+    .inner.full{grid-template-columns:1fr}
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--soft);
+      border-radius:999px;
+      padding:6px 12px;
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-weight:800;
+      margin-bottom:18px;
+    }
+    .tag:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 14px var(--red)}
+    h1{font-size:54px;line-height:1.08;margin:0 0 18px;letter-spacing:-.02em}
+    h2{font-size:38px;line-height:1.18;margin:0 0 16px;letter-spacing:-.01em}
+    h3{margin:0 0 10px;font-size:21px}
+    p{font-size:19px;line-height:1.72;color:var(--soft);margin:0}
+    b,.strong{color:white}
+    .hl{background:linear-gradient(120deg,var(--blue),var(--red),var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .mark{
+      display:inline;
+      color:#fff;
+      font-weight:900;
+      padding:2px 7px 3px;
+      margin:0 2px;
+      border:2px solid rgba(244,114,182,.92);
+      border-radius:7px;
+      background:rgba(244,114,182,.08);
+      box-shadow:0 0 0 1px rgba(244,114,182,.22),0 0 18px rgba(244,114,182,.12);
+      box-decoration-break:clone;
+      -webkit-box-decoration-break:clone;
+    }
+    .mark.green{border-color:rgba(52,211,153,.9);background:rgba(52,211,153,.09);box-shadow:0 0 0 1px rgba(52,211,153,.18),0 0 18px rgba(52,211,153,.12)}
+    .mark.amber{border-color:rgba(251,191,36,.9);background:rgba(251,191,36,.10);box-shadow:0 0 0 1px rgba(251,191,36,.18),0 0 18px rgba(251,191,36,.12)}
+    .focus-line{
+      margin-top:18px;
+      border:1px solid rgba(96,165,250,.34);
+      border-left:5px solid var(--blue);
+      border-radius:14px;
+      padding:14px 16px;
+      background:linear-gradient(90deg,rgba(96,165,250,.14),rgba(244,114,182,.07));
+      color:#eff6ff;
+      font-size:17px;
+      font-weight:850;
+      line-height:1.55;
+    }
+    .hero-card,.panel,.code,.doc{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+      border-radius:18px;
+      padding:22px;
+    }
+    .hero-card{min-height:470px;display:flex;flex-direction:column;justify-content:space-between}
+    .metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .metric{border:1px solid var(--line);border-radius:16px;padding:18px;background:rgba(255,255,255,.045)}
+    .metric strong{display:block;font-size:30px;color:var(--red);line-height:1}
+    .metric span{display:block;color:var(--soft);font-size:14px;line-height:1.45;margin-top:7px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .panel p,.panel li{font-size:16px;color:var(--soft);line-height:1.62}
+    .panel.focus{border-color:rgba(96,165,250,.45);background:linear-gradient(180deg,rgba(96,165,250,.10),rgba(255,255,255,.025))}
+    .panel.warn{border-color:rgba(244,114,182,.45);background:linear-gradient(180deg,rgba(244,114,182,.10),rgba(255,255,255,.025))}
+    .panel.key{border-color:rgba(251,191,36,.45);background:linear-gradient(180deg,rgba(251,191,36,.10),rgba(255,255,255,.025))}
+    .panel.violet{border-color:rgba(167,139,250,.45);background:linear-gradient(180deg,rgba(167,139,250,.10),rgba(255,255,255,.025))}
+    .panel h3{display:flex;align-items:center;gap:8px}
+    .panel h3:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 12px var(--blue)}
+    .panel.key h3:before{background:var(--amber);box-shadow:0 0 12px var(--amber)}
+    .panel.warn h3:before{background:var(--red);box-shadow:0 0 12px var(--red)}
+    .panel.violet h3:before{background:var(--violet);box-shadow:0 0 12px var(--violet)}
+    ul{margin:10px 0 0 20px;padding:0}
+    li{margin:6px 0}
+    li.hot{color:#fff;font-weight:850}
+    li.hot::marker{color:var(--red)}
+    li.good{color:#fff;font-weight:850}
+    li.good::marker{color:var(--green)}
+    .pill{
+      display:inline-flex;align-items:center;border-radius:999px;
+      border:1px solid var(--line);
+      padding:5px 10px;margin:4px 4px 0 0;
+      background:rgba(255,255,255,.055);
+      color:var(--soft);
+      font-size:13px;font-weight:700;
+    }
+    .pill.blue{color:#bae6fd;border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.1)}
+    .pill.green{color:#bbf7d0;border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.1)}
+    .pill.amber{color:#fde68a;border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.1)}
+    .pill.red{color:#fecdd3;border-color:rgba(251,113,133,.35);background:rgba(251,113,133,.1)}
+    .code{
+      font-family:"SFMono-Regular",Consolas,monospace;
+      color:#d9f99d;
+      font-size:14px;
+      line-height:1.62;
+      white-space:pre-wrap;
+      max-height:520px;
+      overflow:auto;
+    }
+    .code strong{color:#fff;background:rgba(251,191,36,.18);border:1px solid rgba(251,191,36,.36);border-radius:6px;padding:1px 5px}
+    .doc{max-height:540px;overflow:auto;color:var(--soft);font-size:15px;line-height:1.65}
+    .doc h4{color:#fff;margin:0 0 10px;font-size:17px}
+    .table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:16px;overflow:hidden;font-size:15px}
+    .table th,.table td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}
+    .table th{background:rgba(255,255,255,.08);color:#fff}
+    .table tr:last-child td{border-bottom:0}
+    .table th:last-child,.table td:last-child{border-right:0}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:24px}
+    .step{border:1px solid var(--line);border-radius:16px;padding:16px;background:rgba(255,255,255,.045);min-height:152px}
+    .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--red));font-weight:900;margin-bottom:12px}
+    .step b{display:block;font-size:16px;margin-bottom:8px}
+    .step span{color:var(--soft);font-size:14px;line-height:1.5}
+    .path{font-family:"SFMono-Regular",Consolas,monospace;color:#d9f99d;font-size:14px;line-height:1.7}
+    .structure-board{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+      border-radius:20px;
+      padding:20px;
+      min-height:500px;
+    }
+    .switcher{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+    .switch-btn{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--soft);
+      border-radius:999px;
+      padding:9px 14px;
+      font-size:14px;
+      font-weight:900;
+    }
+    .switch-btn.active{
+      color:#fff;
+      border-color:rgba(244,114,182,.58);
+      background:linear-gradient(135deg,rgba(96,165,250,.28),rgba(244,114,182,.25));
+      box-shadow:0 0 24px rgba(244,114,182,.16);
+    }
+    .structure-view{display:none;animation:in .25s ease}
+    .structure-view.active{display:block}
+    .tree-wrap{
+      display:grid;
+      grid-template-columns:1fr 1.05fr;
+      gap:16px;
+      align-items:stretch;
+    }
+    .tree-root,.tree-card,.flow-card,.role-card{
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(8,10,23,.45);
+      padding:16px;
+    }
+    .tree-root b,.tree-card b,.flow-card b,.role-card b{display:block;font-size:17px;margin-bottom:8px}
+    .tree-root span,.tree-card span,.flow-card span,.role-card span{display:block;color:var(--soft);font-size:14px;line-height:1.5}
+    .tree-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .tree-card.blue{border-color:rgba(96,165,250,.42)}
+    .tree-card.green{border-color:rgba(45,212,191,.42)}
+    .tree-card.amber{border-color:rgba(245,158,11,.42)}
+    .tree-card.red{border-color:rgba(244,114,182,.42)}
+    .skill-flow{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:10px;
+      align-items:stretch;
+    }
+    .flow-card{position:relative;min-height:170px}
+    .flow-card:after{
+      content:"→";
+      position:absolute;
+      right:-14px;
+      top:50%;
+      transform:translateY(-50%);
+      color:var(--amber);
+      font-size:22px;
+      font-weight:900;
+    }
+    .flow-card:last-child:after{display:none}
+    .role-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .role-card strong{color:#fff}
+    .tiny-label{display:inline-flex;margin-bottom:8px;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.08);color:var(--muted)}
+    .usage-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .terminal{
+      border:1px solid rgba(96,165,250,.36);
+      border-radius:18px;
+      overflow:hidden;
+      background:#070b16;
+      box-shadow:0 22px 60px rgba(0,0,0,.28);
+    }
+    .terminal-head{display:flex;align-items:center;gap:7px;padding:12px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.06)}
+    .terminal-head span{width:10px;height:10px;border-radius:50%;background:var(--red)}
+    .terminal-head span:nth-child(2){background:var(--amber)}
+    .terminal-head span:nth-child(3){background:var(--green)}
+    .terminal-code{
+      font-family:"SFMono-Regular",Consolas,monospace;
+      color:#d9f99d;
+      font-size:14px;
+      line-height:1.7;
+      white-space:pre-wrap;
+      padding:18px;
+    }
+    .prompt-card{
+      border:1px solid rgba(244,114,182,.38);
+      border-radius:18px;
+      padding:18px;
+      background:linear-gradient(180deg,rgba(244,114,182,.10),rgba(255,255,255,.025));
+      min-height:100%;
+    }
+    .prompt-card h3{margin-bottom:12px}
+    .prompt-text{
+      font-size:15px;
+      line-height:1.68;
+      color:#f4f7ff;
+      border-left:4px solid var(--red);
+      padding-left:13px;
+      background:rgba(255,255,255,.04);
+      border-radius:10px;
+      padding-top:12px;
+      padding-bottom:12px;
+      padding-right:12px;
+    }
+    .use-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+    .use-step{border:1px solid var(--line);border-radius:16px;padding:15px;background:rgba(255,255,255,.045)}
+    .use-step b{display:block;margin-bottom:6px}
+    .use-step span{display:block;color:var(--soft);font-size:14px;line-height:1.5}
+    .mock-report{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .report-card{border:1px solid var(--line);border-radius:16px;padding:16px;background:rgba(255,255,255,.045)}
+    .report-card b{display:block;font-size:16px;margin-bottom:6px}
+    .report-card span{font-size:14px;color:var(--soft);line-height:1.5}
+    .big-quote{font-size:29px;line-height:1.42;font-weight:900;color:white}
+    .speaker{border-left:4px solid var(--blue);padding-left:14px;color:var(--soft);font-size:16px;line-height:1.68}
+    .cover-inner{
+      position:relative;z-index:1;min-height:720px;padding:46px 58px 92px;
+      display:grid;grid-template-columns:1.05fr .95fr;gap:42px;align-items:center;
+    }
+    .cover-slide{
+      background:
+        linear-gradient(120deg,rgba(96,165,250,.32),transparent 35%),
+        linear-gradient(300deg,rgba(244,114,182,.28),transparent 38%),
+        linear-gradient(180deg,rgba(17,24,39,.96),rgba(8,10,23,.94));
+    }
+    .cover-slide:after{
+      content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+      background:
+        linear-gradient(115deg,transparent 0 18%,rgba(255,255,255,.10) 18% 18.4%,transparent 18.4% 100%),
+        linear-gradient(145deg,transparent 0 56%,rgba(245,158,11,.22) 56% 56.8%,transparent 56.8% 100%);
+    }
+    .cover-kicker{font-size:13px;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:#fecdd3;margin-bottom:18px}
+    .cover-title{font-size:68px;line-height:1.02;margin:0 0 20px;font-weight:950;letter-spacing:-.03em}
+    .cover-subtitle{font-size:22px;line-height:1.65;color:#eef2ff;max-width:720px}
+    .cover-board{
+      min-height:430px;border:1px solid rgba(255,255,255,.18);border-radius:22px;padding:24px;
+      background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.035));
+      display:grid;grid-template-rows:auto 1fr;gap:24px;box-shadow:0 24px 80px rgba(0,0,0,.32);
+    }
+    .radar{
+      min-height:270px;border-radius:18px;position:relative;overflow:hidden;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px),
+        linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+        conic-gradient(from 210deg,rgba(96,165,250,.28),rgba(244,114,182,.28),rgba(245,158,11,.24),rgba(45,212,191,.22),rgba(96,165,250,.28));
+      background-size:36px 36px,36px 36px,100% 100%;
+    }
+    .radar:before,.radar:after{
+      content:"";position:absolute;border:1px solid rgba(255,255,255,.24);border-radius:50%;inset:16%;
+    }
+    .radar:after{inset:32%;border-color:rgba(255,255,255,.16)}
+    .radar-line{position:absolute;left:50%;top:50%;width:45%;height:2px;background:linear-gradient(90deg,var(--amber),transparent);transform-origin:left center;transform:rotate(-28deg)}
+    .radar-point{position:absolute;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 22px rgba(255,255,255,.9)}
+    .pt1{left:62%;top:26%}.pt2{left:34%;top:58%}.pt3{left:74%;top:67%}
+    .cover-mini{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .mini-card{border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:14px;background:rgba(8,10,23,.45);font-size:14px;color:var(--soft);line-height:1.45}
+    .mini-card b{display:block;color:#fff;font-size:18px;margin-bottom:4px}
+    .controls{
+      position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+      display:flex;align-items:center;gap:10px;z-index:20;
+      border:1px solid var(--line);background:rgba(8,10,23,.84);
+      backdrop-filter:blur(14px);padding:10px;border-radius:999px;
+    }
+    button{border:0;border-radius:999px;padding:10px 16px;font-weight:900;background:linear-gradient(135deg,var(--blue),var(--red));color:#fff;cursor:pointer}
+    button.secondary{background:rgba(255,255,255,.08);color:var(--soft);border:1px solid var(--line)}
+    .page-no{color:var(--soft);font-size:13px;min-width:58px;text-align:center}
+    .note-trigger{
+      position:fixed;right:24px;bottom:24px;z-index:25;width:42px;height:42px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.18);background:rgba(8,10,23,.86);color:#fff;
+      display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:950;box-shadow:0 16px 44px rgba(0,0,0,.34);
+    }
+    .note-modal{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.50)}
+    .note-modal.open{display:flex}
+    .note-box{width:min(620px,100%);border:1px solid rgba(255,255,255,.18);border-radius:18px;background:#101525;box-shadow:0 28px 90px rgba(0,0,0,.55);padding:24px}
+    .note-box h3{margin-bottom:12px}
+    .note-box p{font-size:16px}
+    .note-actions{margin-top:18px;display:flex;justify-content:flex-end}
+    @media(max-width:980px){
+      .inner,.inner.full{grid-template-columns:1fr;padding:28px}
+      h1{font-size:38px}.cover-title{font-size:46px}h2{font-size:30px}.cover-inner,.flow,.grid-4,.grid-3,.grid-2,.mock-report,.tree-wrap,.skill-flow,.role-grid,.usage-grid,.use-steps{grid-template-columns:1fr}
+      .flow-card:after{display:none}
+      .hint{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="dot"></span>
+      <div class="brand">AI 增强型产品经理 <small>Chapter 1 · 市场洞察 Skills</small></div>
+      <div class="spacer"></div>
+      <div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页</div>
+    </div>
+    <div class="progress"><span id="bar"></span></div>
+  </div>
+
+  <main class="deck">
+    <section class="slide cover-slide active" data-note="开场页只负责建立期待：这节课不是泛泛讲市场分析，而是用一个可复用 Skill，把碎片资料变成可用于决策的洞察报告。讲完这一页后再进入能力拆解。">
+      <div class="cover-inner">
+        <div>
+          <div class="cover-kicker">Market Insight Skill</div>
+          <h1 class="cover-title">市场洞察<br><span class="hl">从资料到决策</span></h1>
+          <p class="cover-subtitle">内置 SWOT、PESTEL、KANO 和优先级矩阵，让 AI 不只整理信息，更能补上业务判断、行动建议和老板关心的决策依据。</p>
+          <div style="margin-top:26px">
+            <span class="pill blue">行业趋势</span>
+            <span class="pill red">用户变化</span>
+            <span class="pill amber">竞品动作</span>
+            <span class="pill green">业务机会</span>
+          </div>
+        </div>
+        <div class="cover-board">
+          <div>
+            <h3>今天我们要跑通的闭环</h3>
+            <p>资料输入、幕后分析、结构化数据、HTML 报告、决策建议。</p>
+          </div>
+          <div class="radar">
+            <span class="radar-line"></span>
+            <span class="radar-point pt1"></span>
+            <span class="radar-point pt2"></span>
+            <span class="radar-point pt3"></span>
+          </div>
+          <div class="cover-mini">
+            <div class="mini-card"><b>30min</b>从资料到报告初稿</div>
+            <div class="mini-card"><b>1 page</b>老板可读执行摘要</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页讲清楚课程目标：它不是让 AI 写行业作文，而是用固定工作流把分析变成可讨论、可判断、可行动的业务报告。">
+      <div class="inner">
+        <div>
+          <div class="tag">Market Insight Skill</div>
+          <h1>用一个 Skill 做出<span class="hl">老板愿意看的市场洞察</span></h1>
+          <p>这一节我们讲市场洞察 Skills。它不是让 AI 写一篇行业作文，而是把<span class="mark">行业趋势、用户变化、竞品动作、业务机会</span>四类输入，转成能进入评审会的洞察报告。</p>
+          <p style="margin-top:14px">重点不是模型名有多高级，而是补上产品经理最容易缺的两件事：<span class="mark green">业务判断</span>和<span class="mark amber">老板决策建议</span>。</p>
+          <div class="focus-line">本节课一句话：让 AI 不只“分析”，还要帮我们“判断该不该做、先做什么、不做什么”。</div>
+        </div>
+        <div class="hero-card">
+          <div>
+            <h3>本节课最终讲清楚</h3>
+            <p>从 skill 能力、实现结构到实操路径，学员能直接复刻。</p>
+          </div>
+          <div class="metric-grid">
+            <div class="metric"><strong>4</strong><span>行业趋势 / 用户变化 / 竞品动作 / 业务机会</span></div>
+            <div class="metric"><strong>4+</strong><span>SWOT / PESTEL / KANO / 优先级矩阵</span></div>
+            <div class="metric"><strong>8</strong><span>执行摘要到行动方案的报告章节</span></div>
+            <div class="metric"><strong>30min</strong><span>从资料到可汇报 HTML 报告</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里可以对比普通提示词的不稳定性，强调 Skill 把角色、输入、方法论和交付格式固化下来，适合在真实项目里重复使用。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Why Skill</div>
+          <h2>为什么不用普通 Prompt，而要做成 Skill？</h2>
+          <p>普通 Prompt 最大的问题是<span class="mark">每次都要重新解释工作流</span>，而且模型容易把 SWOT、PESTEL 变成机械填表。Skill 的价值，是把角色、输入、方法论、输出结构和脚本生成流程固定下来。</p>
+          <div class="grid-3" style="margin-top:28px">
+            <div class="panel warn">
+              <h3>普通 Prompt 常见问题</h3>
+              <ul>
+                <li class="hot">结论像行业作文</li>
+                <li>章节堆模型，缺少叙事</li>
+                <li>没有区分事实、推断、待验证</li>
+                <li class="hot">最后不给老板可拍板建议</li>
+              </ul>
+            </div>
+            <div class="panel focus">
+              <h3>Skill 固化什么</h3>
+              <ul>
+                <li class="good">角色：产品战略顾问</li>
+                <li>输入：产品、行业、资料、目的</li>
+                <li>流程：先分析，再综合，再判断</li>
+                <li class="good">交付：HTML 决策报告</li>
+              </ul>
+            </div>
+            <div class="panel key">
+              <h3>课程要强调什么</h3>
+              <ul>
+                <li class="hot">模型只是幕后工具</li>
+                <li>报告要按决策叙事组织</li>
+                <li>PM 要用 AI 逼近业务判断</li>
+                <li class="hot">最终要能指导行动</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="资料越贴近真实业务，报告越不像套话；四类输入可以作为学员课后准备资料的检查清单。">
+      <div class="inner">
+        <div>
+          <div class="tag">Inputs</div>
+          <h2>这个 Skill 主要吃四类输入</h2>
+          <p>市场洞察不是凭空生成。我们要把输入拆成四类，让 AI 知道从哪里找信号、怎么交叉验证、最后如何形成判断。</p>
+          <div class="focus-line">关键判断：资料越贴近真实业务，报告越不像套话。</div>
+        </div>
+        <div class="grid-2">
+          <div class="panel focus"><h3>行业趋势</h3><p>政策、技术、资本、渠道、宏观环境变化。回答“为什么是现在”。</p></div>
+          <div class="panel key"><h3>用户变化</h3><p>用户行为、需求迁移、付费意愿、使用场景变化。回答“谁真的痛”。</p></div>
+          <div class="panel violet"><h3>竞品动作</h3><p>竞品发布、定位变化、价格策略、渠道打法。回答“对手在往哪打”。</p></div>
+          <div class="panel warn"><h3>业务机会</h3><p>我方资源、客户线索、现有能力、增长瓶颈。回答“我们能切哪里”。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="强调模型不是展示用的名词，而是支撑判断的工具；老板关心的是结论、依据和行动。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Behind The Scenes</div>
+          <h2>方法论在幕后，不直接堆在报告里</h2>
+          <p>这个 Skill 最关键的设计，是把 SWOT、PESTEL、KANO、优先级矩阵当成<span class="mark green">分析引擎</span>，而不是报告目录。老板不关心你用了几个模型，老板关心结论能不能拍板。</p>
+          <div class="grid-4" style="margin-top:26px">
+            <div class="panel focus"><h3>PESTEL</h3><p>扫描外部推动力：政策、经济、社会、技术、环境、法律。</p></div>
+            <div class="panel key"><h3>SWOT / TOWS</h3><p>把我方能力和市场机会组合起来，形成策略打法。</p></div>
+            <div class="panel violet"><h3>KANO</h3><p>判断需求是入场券、满意度杠杆，还是差异化惊喜。</p></div>
+            <div class="panel warn"><h3>优先级矩阵</h3><p>把业务价值、可行性、风险和周期放到同一张表里。</p></div>
+          </div>
+          <div class="focus-line">讲法建议：不要说“AI 帮我套模型”，要说“AI 用模型帮我支撑判断”。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页适合快速过一遍报告骨架，重点停在执行摘要、业务判断和行动方案。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Report Spine</div>
+          <h2>最终报告不是模型合集，而是一条决策叙事</h2>
+          <p>Skill 规定了 8 个核心章节，从一页纸执行摘要开始，到行动路线图结束。这样的结构非常适合向老板汇报：先给结论，再给依据，最后给行动。</p>
+          <div class="flow">
+            <div class="step"><span class="num">0</span><b>执行摘要</b><span>一句话结论 + Top 3 行动。</span></div>
+            <div class="step"><span class="num">1</span><b>市场全景</b><span>市场规模、增长、玩家、阶段。</span></div>
+            <div class="step"><span class="num">2</span><b>环境扫描</b><span>外部力量如何推动或阻碍。</span></div>
+            <div class="step"><span class="num">3</span><b>能力审视</b><span>优势、劣势、机会、威胁。</span></div>
+            <div class="step"><span class="num">4</span><b>用户需求</b><span>基本型、期望型、兴奋型需求。</span></div>
+          </div>
+          <div class="flow" style="grid-template-columns:repeat(4,1fr)">
+            <div class="step"><span class="num">5</span><b>综合洞察</b><span>行业、用户、竞品、业务机会。</span></div>
+            <div class="step"><span class="num">6</span><b>业务判断</b><span>价值、可行性、风险、关键假设。</span></div>
+            <div class="step"><span class="num">7</span><b>行动方案</b><span>做什么、不做什么、节奏怎么排。</span></div>
+            <div class="step"><span class="num">A</span><b>监测计划</b><span>信号、数据来源、检查频率。</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页可以通过三个按钮切换：先讲目录结构，再讲数据流，最后讲各文件职责。重点让学员理解：Skill 不是一个文件，而是一套可复用的交付系统。">
+      <div class="inner">
+        <div>
+          <div class="tag">Implementation</div>
+          <h2>这个 Skill 在 GitHub 里到底长什么样？</h2>
+          <p>它不是只有一个提示词文件，而是由<span class="mark">主指令、方法论参考、生成脚本、报告模板</span>组成的一套小型交付系统。</p>
+          <p style="margin-top:14px">理解这个结构之后，学员就能知道：哪些内容负责“让 AI 会分析”，哪些内容负责“让报告稳定生成”。</p>
+        </div>
+        <div class="structure-board">
+          <div class="switcher">
+            <button class="switch-btn active" onclick="switchStructure('tree', this)">仓库目录</button>
+            <button class="switch-btn" onclick="switchStructure('flow', this)">生成流程</button>
+            <button class="switch-btn" onclick="switchStructure('roles', this)">文件职责</button>
+          </div>
+
+          <div class="structure-view active" id="structure-tree">
+            <div class="tree-wrap">
+              <div class="tree-root">
+                <span class="tiny-label">Root Path</span>
+                <b>skills/market-insight/</b>
+                <span>市场洞察 Skill 的完整目录。真正要理解的是：每个文件都对应一个稳定职责。</span>
+                <div class="path" style="margin-top:16px">第1章_市场洞察/
+└── 02_市场洞察Skills/
+    └── skills/
+        └── market-insight/</div>
+              </div>
+              <div class="tree-grid">
+                <div class="tree-card blue"><b>SKILL.md</b><span>定义 AI 的角色、输入要求、分析流程、报告结构和关键约束。</span></div>
+                <div class="tree-card green"><b>reference/</b><span>存放 SWOT、PESTEL、KANO 等方法论说明，供模型调用。</span></div>
+                <div class="tree-card amber"><b>scripts/</b><span>存放生成脚本，把结构化 JSON 转成可看的 HTML 报告。</span></div>
+                <div class="tree-card red"><b>assets/</b><span>存放 HTML 报告模板，决定最终报告的视觉和版式。</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="structure-view" id="structure-flow">
+            <div class="skill-flow">
+              <div class="flow-card"><span class="tiny-label">1 Input</span><b>业务资料</b><span>产品、行业、用户反馈、竞品动作、分析目的。</span></div>
+              <div class="flow-card"><span class="tiny-label">2 Skill</span><b>SKILL.md</b><span>约束 AI 按固定流程完成分析，而不是自由发挥。</span></div>
+              <div class="flow-card"><span class="tiny-label">3 Method</span><b>Reference</b><span>调用 SWOT、PESTEL、KANO 等幕后框架支撑判断。</span></div>
+              <div class="flow-card"><span class="tiny-label">4 Data</span><b>JSON</b><span>把结论整理成稳定字段，方便脚本读取。</span></div>
+              <div class="flow-card"><span class="tiny-label">5 Output</span><b>HTML 报告</b><span>脚本套模板生成可汇报、可交付的市场洞察。</span></div>
+            </div>
+            <div class="focus-line">核心逻辑：AI 负责判断和结构化，脚本负责稳定交付。</div>
+          </div>
+
+          <div class="structure-view" id="structure-roles">
+            <div class="role-grid">
+              <div class="role-card"><span class="tiny-label">Brain</span><b>SKILL.md 是“大脑”</b><span>告诉 AI 该扮演谁、问什么、按什么章节输出、哪些红线不能碰。</span></div>
+              <div class="role-card"><span class="tiny-label">Knowledge</span><b>reference 是“方法库”</b><span>把 SWOT、PESTEL、KANO 的分析逻辑沉淀下来，减少每次重复解释。</span></div>
+              <div class="role-card"><span class="tiny-label">Engine</span><b>generate-report.py 是“引擎”</b><span>读取 JSON，替换模板变量，生成最终 HTML 文件。</span></div>
+              <div class="role-card"><span class="tiny-label">Skin</span><b>report-template.html 是“外观”</b><span>统一报告样式，保证每次输出不跑偏，也方便后续升级视觉。</span></div>
+            </div>
+            <div class="focus-line">记住一句话：Skill = 分析规则 + 方法论 + 生成器 + 模板。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里讲工程化思维：AI 产出 JSON，脚本负责渲染 HTML，避免每次生成的版式不可控。">
+      <div class="inner">
+        <div>
+          <div class="tag">Generation Rule</div>
+          <h2>关键约束：报告必须通过脚本生成</h2>
+          <p>这个 Skill 里有一个很重要的工程化约束：<span class="mark">不要让 AI 自己手写 HTML</span>。AI 负责分析和整理 JSON，脚本负责把 JSON 填进模板。</p>
+          <div class="focus-line">这就是课程里可以强调的“产品经理也要懂一点工程化思维”：把不可控的生成，变成可复用的流程。</div>
+        </div>
+        <div class="code"># 1. AI 先整理结构化数据
+{
+  "product": "产品名称",
+  "executive_summary": {
+    "conclusion": "一句话结论",
+    "top_actions": [
+      {"priority": "P0", "action": "行动内容", "effect": "预期效果"}
+    ]
+  },
+  "business_judgment": {
+    "risks": [],
+    "assumptions": []
+  },
+  "decision": {
+    "actions": [],
+    "not_do": [],
+    "roadmap": []
+  }
+}
+
+# 2. 再用脚本生成 HTML 报告
+python3 skills/market-insight/scripts/generate-report.py \
+  产品-data.json 市场洞察报告_产品_日期.html</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页要解决学员实操前的第一道门槛：先装到 Claude Code 能识别的位置，再用触发语句调用，最后按输入模板补材料。命令中的仓库路径按实际克隆位置调整。">
+      <div class="inner full">
+        <div>
+          <div class="tag">How To Use</div>
+          <h2>实操前先搞清楚：这个 Skill 怎么安装、怎么调用？</h2>
+          <p>使用路径很简单：先把 `market-insight` 复制到 Claude Code 的 skills 目录，然后在对话里明确说“使用 market-insight skill”，再补充产品、行业、资料和分析目的。</p>
+          <div class="usage-grid" style="margin-top:24px">
+            <div class="terminal">
+              <div class="terminal-head"><span></span><span></span><span></span></div>
+              <div class="terminal-code"># 1. 克隆课程仓库
+gh repo clone shangbianai/pm-ai-guide
+
+# 2. 创建 Claude Code skills 目录
+mkdir -p ~/.claude/skills
+
+# 3. 安装 market-insight skill
+cp -R "pm-ai-guide/第1章_市场洞察/02_市场洞察Skills：内置SWOT模型等方法论/skills/market-insight" \
+  ~/.claude/skills/market-insight</div>
+            </div>
+            <div class="prompt-card">
+              <h3>第一次调用可以这样说</h3>
+              <div class="prompt-text">请使用 market-insight skill，帮我分析一个市场机会。<br><br>
+产品：连锁口腔机构 AI 线索分析工具<br>
+行业：本地生活医疗服务 / 口腔连锁<br>
+资料：我会粘贴客户访谈、竞品观察和业务数据<br>
+目的：判断这个方向是否值得做，以及第一阶段 MVP 应该怎么切。</div>
+            </div>
+          </div>
+          <div class="use-steps">
+            <div class="use-step"><b>1. 安装</b><span>把 skill 放进 `~/.claude/skills/market-insight`，让 Claude Code 能识别。</span></div>
+            <div class="use-step"><b>2. 唤起</b><span>在需求里明确写“使用 market-insight skill”，并说明分析目的。</span></div>
+            <div class="use-step"><b>3. 补材料</b><span>粘贴行业趋势、用户反馈、竞品动作、业务机会四类信息。</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页用于承接后面的实操：先用连锁口腔机构这类具体场景，让输入、判断和输出之间的关系更直观。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Demo Scenario</div>
+          <h2>从碎片资料到老板决策页</h2>
+          <p>我们用一个具体业务场景来跑通，比如“连锁口腔机构 AI 线索分析产品”。先把行业趋势、用户反馈、竞品动作和我方业务机会输入给 skill，再让它输出市场洞察报告。</p>
+          <table class="table" style="margin-top:24px">
+            <tr><th>输入</th><th>示例内容</th><th>AI 应该产出什么判断</th></tr>
+            <tr><td>行业趋势</td><td>线上获客成本上升，机构更关注有效线索和转化质量。</td><td>市场从“买流量”进入“提转化”阶段。</td></tr>
+            <tr><td>用户变化</td><td>咨询团队被重复线索、低意向线索和话术质检拖累。</td><td>痛点不是缺线索，而是线索质量和承接效率。</td></tr>
+            <tr><td>竞品动作</td><td>CRM 和营销工具多记录结果，较少分析对话内容和掉点原因。</td><td>可以从“AI 线索洞察 + 咨询质检”切入。</td></tr>
+            <tr><td>业务机会</td><td>客户愿意为到店率提升、咨询效率提升评估预算。</td><td>MVP 要绑定业务指标，而不是做大而全 CRM。</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页要重讲：分析报告的价值不在厚，而在让老板知道做什么、不做什么、什么时候验证。">
+      <div class="inner">
+        <div>
+          <div class="tag">Boss Page</div>
+          <h2>真正值钱的是“老板决策建议”</h2>
+          <p>这类报告最后一定要落到一句话：<span class="mark green">建议做什么、为什么现在做、先投入多少资源、多久看结果</span>。否则就是分析很漂亮，但决策没发生。</p>
+          <div class="speaker" style="margin-top:24px">
+            市场洞察不是给老板看“我很努力查了很多资料”，而是让老板看完知道：这件事值不值得做，如果做，第一步怎么做，什么情况应该停。
+          </div>
+        </div>
+        <div class="mock-report">
+          <div class="report-card"><b>P0：先做 30 天验证</b><span>选择 2 家门店、3 个渠道，验证线索清洗和咨询质检对有效到店率的影响。</span></div>
+          <div class="report-card"><b>P1：搭建轻量看板</b><span>展示渠道质量、线索重复、意向等级、咨询跟进质量，服务周会复盘。</span></div>
+          <div class="report-card"><b>P2：扩展到多门店</b><span>验证有效后再复制到区域门店，避免一开始做全量系统替换。</span></div>
+          <div class="report-card"><b>NOT TO DO</b><span>暂不替换 CRM，不做复杂排班，不把 AI 质检直接变成强考核。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="优势页不要讲成工具夸奖，重点讲工作流稳定、交付稳定、判断更接近业务讨论。">
+      <div class="inner full">
+        <div>
+          <div class="tag">Advantages</div>
+          <h2>这个 Skill 的优势：快，但不是浅</h2>
+          <p>它的价值不是“自动写报告”这么简单，而是把产品经理做市场判断时的一套思考路径固化下来，让每次输出都更接近可汇报、可讨论、可行动。</p>
+          <div class="grid-3" style="margin-top:26px">
+            <div class="panel focus"><h3>结构稳定</h3><p>输入、分析、判断、行动都有固定路径，减少每次从零写 Prompt 的成本。</p></div>
+            <div class="panel key"><h3>方法完整</h3><p>SWOT、PESTEL、KANO、优先级矩阵共同支撑结论，而不是各讲各的。</p></div>
+            <div class="panel violet"><h3>交付专业</h3><p>通过模板生成 HTML 报告，视觉和信息结构更适合汇报。</p></div>
+            <div class="panel warn"><h3>逼近决策</h3><p>要求量化业务价值、识别风险、写清 NOT TO DO，避免空泛建议。</p></div>
+            <div class="panel focus"><h3>可复用</h3><p>换行业、换产品、换资料，也能沿用同一套分析框架。</p></div>
+            <div class="panel key"><h3>可迭代</h3><p>后续可以继续往 reference 里补行业方法论、案例和模板。</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页是讲师自己的过渡备忘：理解完页面内容后，下一步进入仓库和 Skill 的实操演示。">
+      <div class="inner">
+        <div>
+          <div class="tag">Practice Bridge</div>
+          <h2>从理解到上手：实操前先看清路线</h2>
+          <p>理解这个 Skill 之后，我们会进入真实目录和业务案例。先看清楚主指令、方法论参考、脚本和模板之间的关系，再把资料跑成一份完整报告。</p>
+          <div class="focus-line">接下来要做的事：打开仓库、找到 Skill、输入业务资料、生成结构化数据，再产出 HTML 洞察报告。</div>
+        </div>
+        <div class="panel key">
+          <h3>实操路径</h3>
+          <ul>
+            <li class="good">打开 GitHub 仓库和 skill 目录</li>
+            <li>讲 SKILL.md 的角色、输入和报告结构</li>
+            <li>展示 reference 三个方法论文件</li>
+            <li>展示 generate-report.py 和模板</li>
+            <li class="good">输入业务资料，生成 JSON 和 HTML 报告</li>
+            <li class="hot">重点讲业务判断和老板决策建议</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="结尾要自然承接：这部分课程页面讲完后，直接进入实操环节，打开仓库和 Skill 文件开始跑案例。">
+      <div class="inner">
+        <div>
+          <div class="tag">Summary</div>
+          <h2>这节课你能获得什么</h2>
+          <p>第一，市场洞察不是套模型，而是用模型支撑<span class="mark green">业务判断</span>。</p>
+          <p style="margin-top:12px">第二，Skill 把一次性的提示词变成<span class="mark">可复用工作流</span>，让输出更稳定。</p>
+          <p style="margin-top:12px">第三，老板真正需要的不是厚报告，而是<span class="mark amber">明确行动、资源投入、风险边界和验证节奏</span>。</p>
+          <div class="focus-line">接下来，我们进入实操环节：打开市场洞察 Skill，跑一遍从资料到 HTML 报告的完整流程。</div>
+        </div>
+        <div class="hero-card">
+          <div class="big-quote">30 分钟做出一份市场洞察，不是为了快点写完，而是更快进入正确的业务讨论。</div>
+          <div>
+            <span class="pill blue">行业趋势</span>
+            <span class="pill green">用户变化</span>
+            <span class="pill amber">竞品动作</span>
+            <span class="pill red">业务机会</span>
+            <span class="pill blue">老板决策页</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls">
+    <button class="secondary" onclick="prevSlide()">上一页</button>
+    <span class="page-no" id="pageNo">1 / 14</span>
+    <button onclick="nextSlide()">下一页</button>
+  </div>
+
+  <button class="note-trigger" onclick="openNote()" aria-label="讲师备注">?</button>
+  <div class="note-modal" id="noteModal" onclick="closeNote(event)">
+    <div class="note-box" role="dialog" aria-modal="true" aria-labelledby="noteTitle">
+      <h3 id="noteTitle">讲师备注</h3>
+      <p id="noteText"></p>
+      <div class="note-actions">
+        <button class="secondary" onclick="closeNote()">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const slides=[...document.querySelectorAll('.slide')];
+    const bar=document.getElementById('bar');
+    const pageNo=document.getElementById('pageNo');
+    const noteModal=document.getElementById('noteModal');
+    const noteText=document.getElementById('noteText');
+    let idx=0;
+    function show(i){
+      idx=Math.max(0,Math.min(slides.length-1,i));
+      slides.forEach((s,n)=>s.classList.toggle('active',n===idx));
+      bar.style.width=((idx+1)/slides.length*100)+'%';
+      pageNo.textContent=(idx+1)+' / '+slides.length;
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    function nextSlide(){show(idx+1)}
+    function prevSlide(){show(idx-1)}
+    function switchStructure(view, btn){
+      const board=btn.closest('.structure-board');
+      board.querySelectorAll('.switch-btn').forEach(b=>b.classList.toggle('active',b===btn));
+      board.querySelectorAll('.structure-view').forEach(v=>v.classList.toggle('active',v.id==='structure-'+view));
+    }
+    function openNote(){
+      noteText.textContent=slides[idx].dataset.note||'这一页暂无备注。';
+      noteModal.classList.add('open');
+    }
+    function closeNote(event){
+      if(event&&event.target!==noteModal)return;
+      noteModal.classList.remove('open');
+    }
+    window.addEventListener('keydown',e=>{
+      if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ')nextSlide();
+      if(e.key==='ArrowLeft'||e.key==='PageUp')prevSlide();
+      if(e.key==='Escape')closeNote();
+    });
+    show(0);
+  </script>
+</body>
+</html>

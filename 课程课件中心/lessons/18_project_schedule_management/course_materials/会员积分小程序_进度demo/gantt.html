@@ -1,0 +1,115 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>会员积分小程序 - 项目甘特图</title>
+<style>
+*{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;margin:0;background:#0f172a;color:#e2e8f0;padding:24px}
+h1{font-size:20px;margin:0 0 4px}.meta{color:#94a3b8;font-size:13px;margin-bottom:18px}
+.wrap{background:#1e293b;border-radius:14px;padding:18px;overflow:auto;border:1px solid #334155}
+.legend{margin-bottom:14px;display:flex;flex-wrap:wrap;gap:10px}.lg{display:inline-flex;align-items:center;gap:5px;font-size:12px}.lg i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.head{display:flex;align-items:center;border-bottom:1px solid #334155;padding-bottom:8px;margin-bottom:4px}
+.spacer{width:320px;flex:none}
+.dates{position:relative;height:24px;flex:none;width:1054px}
+.dates .d,.dates .d_{position:absolute;top:0;width:34px;text-align:center;font-size:11px;color:#94a3b8}
+.d_{color:#475569}
+.body{position:relative;width:calc(320px + 1054px)}
+.wkend{position:absolute;top:0;bottom:0;width:68px;background:rgba(100,116,139,.12)}
+.tr{display:flex;align-items:center;height:30px;border-bottom:1px solid rgba(51,65,85,.4)}
+.lbl{width:320px;flex:none;font-size:12px;padding-right:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lbl b{color:#38bdf8;margin-right:4px}.own{float:right;color:#64748b;font-size:11px}
+.track{position:relative;width:1054px;flex:none;height:30px}
+.bar{position:absolute;height:18px;top:6px;border-radius:6px;font-size:11px;color:#fff;padding:3px 8px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.bar.crit{outline:2px solid #fbbf24;outline-offset:1px}
+.risk{float:right;background:rgba(0,0,0,.25)!important;border-radius:4px;padding:0 5px;font-size:10px;margin-left:4px}
+.ms{position:absolute;top:-4px;color:#fbbf24;font-size:16px;z-index:5;text-align:center;width:0}
+.msl{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;color:#fbbf24;white-space:nowrap}
+.note{margin-top:14px;font-size:12px;color:#94a3b8;line-height:1.7;background:#0f172a;padding:12px 14px;border-radius:10px;border:1px solid #334155}
+.note b{color:#fbbf24}
+</style></head><body>
+<h1>会员积分小程序上线 · 项目甘特图</h1>
+<div class="meta">会员积分小程序上线 ｜ 周期 2026-07-01 ~ 2026-07-31 ｜ 23 个工作日 ｜ 26 个任务</div>
+<div class="wrap">
+  <div class="legend"><span class="lg"><i style="background:#6366f1"></i>需求</span><span class="lg"><i style="background:#0ea5e9"></i>设计</span><span class="lg"><i style="background:#22c55e"></i>开发</span><span class="lg"><i style="background:#f59e0b"></i>联调</span><span class="lg"><i style="background:#ec4899"></i>测试</span><span class="lg"><i style="background:#a855f7"></i>验收</span><span class="lg"><i style="background:#ef4444"></i>上线</span><span class="lg"><i style="background:#64748b"></i>复盘</span><span class="lg"><i style="background:transparent;border:2px solid #fbbf24"></i>关键路径</span><span class="lg"><i style="background:rgba(100,116,139,.4)"></i>周末</span></div>
+  <div class="head"><div class="spacer"></div><div class="dates"><div class="d">1</div><div class="d">2</div><div class="d">3</div><div class="d_">4</div><div class="d_">5</div><div class="d">6</div><div class="d">7</div><div class="d">8</div><div class="d">9</div><div class="d">10</div><div class="d_">11</div><div class="d_">12</div><div class="d">13</div><div class="d">14</div><div class="d">15</div><div class="d">16</div><div class="d">17</div><div class="d_">18</div><div class="d_">19</div><div class="d">20</div><div class="d">21</div><div class="d">22</div><div class="d">23</div><div class="d">24</div><div class="d_">25</div><div class="d_">26</div><div class="d">27</div><div class="d">28</div><div class="d">29</div><div class="d">30</div><div class="d">31</div></div></div>
+  <div class="body"><div style="position:absolute;left:320px;top:0;height:780px;width:1054px"><div class="wkend" style="left:102px"></div><div class="wkend" style="left:136px"></div><div class="wkend" style="left:340px"></div><div class="wkend" style="left:374px"></div><div class="wkend" style="left:578px"></div><div class="wkend" style="left:612px"></div><div class="wkend" style="left:816px"></div><div class="wkend" style="left:850px"></div><div class="ms" style="left:182px" title="需求冻结(原7/5)">◆<div class="msl">需求冻结(原7/5)</div></div><div class="ms" style="left:318px" title="高保真原型(原7/12)">◆<div class="msl">高保真原型(原7/12)</div></div><div class="ms" style="left:726px" title="开发联调完成">◆<div class="msl">开发联调完成</div></div><div class="ms" style="left:930px" title="验收完成">◆<div class="msl">验收完成</div></div><div class="ms" style="left:1032px" title="上线">◆<div class="msl">上线</div></div></div><div class="tr">
+      <div class="lbl"><b>T1</b> 项目启动会 &amp; 范围拆解(锁定5模块)<span class="own">产品</span></div>
+      <div class="track"><div class="bar crit" style="left:0px;width:30px;background:#6366f1" title="项目启动会 &amp; 范围拆解(锁定5模块) 2026-07-01~2026-07-01">1d<span class="risk" style="background:#f59e0b">中</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T2</b> PRD编写<span class="own">产品</span></div>
+      <div class="track"><div class="bar crit" style="left:0px;width:98px;background:#6366f1" title="PRD编写 2026-07-01~2026-07-03">3d<span class="risk" style="background:#f59e0b">中</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T3</b> 积分接口老系统对接方案 &amp; 接口人确认<span class="own">后端+产品</span></div>
+      <div class="track"><div class="bar " style="left:34px;width:64px;background:#6366f1" title="积分接口老系统对接方案 &amp; 接口人确认 2026-07-02~2026-07-03">2d<span class="risk" style="background:#ef4444">高</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T4</b> 需求评审 &amp; 需求冻结<span class="own">全员</span></div>
+      <div class="track"><div class="bar crit" style="left:170px;width:30px;background:#6366f1" title="需求评审 &amp; 需求冻结 2026-07-06~2026-07-06">0.5d<span class="risk" style="background:#f59e0b">中</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T5</b> 信息架构 &amp; 交互原型<span class="own">UI+产品</span></div>
+      <div class="track"><div class="bar " style="left:170px;width:64px;background:#0ea5e9" title="信息架构 &amp; 交互原型 2026-07-06~2026-07-07">2d<span class="risk" style="background:#10b981">低</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T6</b> 视觉设计 &amp; 高保真原型<span class="own">UI</span></div>
+      <div class="track"><div class="bar " style="left:238px;width:98px;background:#0ea5e9" title="视觉设计 &amp; 高保真原型 2026-07-08~2026-07-10">3d<span class="risk" style="background:#f59e0b">中</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T7</b> 优惠券规则 &amp; 积分兑换逻辑细化<span class="own">产品+后端</span></div>
+      <div class="track"><div class="bar " style="left:170px;width:98px;background:#0ea5e9" title="优惠券规则 &amp; 积分兑换逻辑细化 2026-07-06~2026-07-08">2d<span class="risk" style="background:#ef4444">高</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T8</b> 技术方案 &amp; 接口契约(Mock)定义<span class="own">前端+后端</span></div>
+      <div class="track"><div class="bar crit" style="left:170px;width:98px;background:#0ea5e9" title="技术方案 &amp; 接口契约(Mock)定义 2026-07-06~2026-07-08">2d<span class="risk" style="background:#f59e0b">中</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T9</b> 积分查询接口(对接老系统)<span class="own">后端A</span></div>
+      <div class="track"><div class="bar crit" style="left:408px;width:98px;background:#22c55e" title="积分查询接口(对接老系统) 2026-07-13~2026-07-15">3d<span class="risk" style="background:#ef4444">高</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T10</b> 历史订单接口<span class="own">后端A</span></div>
+      <div class="track"><div class="bar crit" style="left:510px;width:64px;background:#22c55e" title="历史订单接口 2026-07-16~2026-07-17">2d<span class="risk" style="background:#f59e0b">中</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T11</b> 门店核销接口<span class="own">后端A</span></div>
+      <div class="track"><div class="bar crit" style="left:646px;width:64px;background:#22c55e" title="门店核销接口 2026-07-20~2026-07-21">2d<span class="risk" style="background:#ef4444">高</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T12</b> 积分兑换接口<span class="own">后端B</span></div>
+      <div class="track"><div class="bar " style="left:408px;width:98px;background:#22c55e" title="积分兑换接口 2026-07-13~2026-07-15">3d<span class="risk" style="background:#f59e0b">中</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T13</b> 优惠券规则引擎 + 领取接口<span class="own">后端B</span></div>
+      <div class="track"><div class="bar " style="left:510px;width:166px;background:#22c55e" title="优惠券规则引擎 + 领取接口 2026-07-16~2026-07-20">3d<span class="risk" style="background:#ef4444">高</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T14</b> 积分查询页<span class="own">前端A</span></div>
+      <div class="track"><div class="bar " style="left:408px;width:64px;background:#22c55e" title="积分查询页 2026-07-13~2026-07-14">2d<span class="risk" style="background:#10b981">低</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T15</b> 历史订单页<span class="own">前端A</span></div>
+      <div class="track"><div class="bar " style="left:476px;width:64px;background:#22c55e" title="历史订单页 2026-07-15~2026-07-16">2d<span class="risk" style="background:#10b981">低</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T16</b> 门店核销页(扫码)<span class="own">前端A</span></div>
+      <div class="track"><div class="bar " style="left:646px;width:64px;background:#22c55e" title="门店核销页(扫码) 2026-07-20~2026-07-21">2d<span class="risk" style="background:#ef4444">高</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T17</b> 积分兑换流程页<span class="own">前端B</span></div>
+      <div class="track"><div class="bar " style="left:408px;width:98px;background:#22c55e" title="积分兑换流程页 2026-07-13~2026-07-15">3d<span class="risk" style="background:#f59e0b">中</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T18</b> 优惠券领取页<span class="own">前端B</span></div>
+      <div class="track"><div class="bar " style="left:510px;width:64px;background:#22c55e" title="优惠券领取页 2026-07-16~2026-07-17">2d<span class="risk" style="background:#f59e0b">中</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T19</b> 前后端联调 &amp; 冒烟通过<span class="own">前后端全员</span></div>
+      <div class="track"><div class="bar crit" style="left:714px;width:30px;background:#f59e0b" title="前后端联调 &amp; 冒烟通过 2026-07-22~2026-07-22">1d<span class="risk" style="background:#ef4444">高</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T20</b> 测试用例编写<span class="own">测试</span></div>
+      <div class="track"><div class="bar " style="left:408px;width:132px;background:#ec4899" title="测试用例编写 2026-07-13~2026-07-16">3d<span class="risk" style="background:#f59e0b">中</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T21</b> 门店核销操作手册 &amp; 线下培训<span class="own">运营</span></div>
+      <div class="track"><div class="bar " style="left:748px;width:166px;background:#ec4899" title="门店核销操作手册 &amp; 线下培训 2026-07-23~2026-07-27">3d<span class="risk" style="background:#ef4444">高</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T22</b> 功能测试 + 缺陷修复<span class="own">测试+开发</span></div>
+      <div class="track"><div class="bar crit" style="left:748px;width:166px;background:#ec4899" title="功能测试 + 缺陷修复 2026-07-23~2026-07-27">3d<span class="risk" style="background:#ef4444">高</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T23</b> 回归测试 &amp; UAT验收<span class="own">测试+产品+业务</span></div>
+      <div class="track"><div class="bar crit" style="left:918px;width:30px;background:#a855f7" title="回归测试 &amp; UAT验收 2026-07-28~2026-07-28">1d<span class="risk" style="background:#ef4444">高</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T24</b> 上线准备(灰度/配置/素材/核销设备)<span class="own">后端+运营</span></div>
+      <div class="track"><div class="bar crit" style="left:952px;width:64px;background:#ef4444" title="上线准备(灰度/配置/素材/核销设备) 2026-07-29~2026-07-30">2d<span class="risk" style="background:#f59e0b">中</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T25</b> 正式发布上线<span class="own">全员</span></div>
+      <div class="track"><div class="bar crit" style="left:1020px;width:30px;background:#ef4444" title="正式发布上线 2026-07-31~2026-07-31">0.5d<span class="risk" style="background:#ef4444">高</span></div></div>
+    </div><div class="tr">
+      <div class="lbl"><b>T26</b> 上线复盘 &amp; 遗留问题<span class="own">产品</span></div>
+      <div class="track"><div class="bar " style="left:1122px;width:30px;background:#64748b" title="上线复盘 &amp; 遗留问题 2026-08-03~2026-08-03">1d<span class="risk" style="background:#10b981">低</span></div></div>
+    </div></div>
+</div>
+<div class="note">
+<b>◆ 固定里程碑</b>（黄钻）：7/6 需求冻结 · 7/10 高保真原型 · 7/22 开发联调完成 · 7/28 验收完成 · 7/31 上线<br>
+<b>⚠ 注意</b>：原定 7/5、7/12 两个节点落在周日，已分别顺延/提前到工作日。黄色描边任务为<b>关键路径</b>，任一延期直接推迟 7/31 上线。
+</div>
+</body></html>

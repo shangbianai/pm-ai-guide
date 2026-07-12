@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>原型 Demo 入口</title>
+  <style>
+    body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;background:radial-gradient(760px 520px at 0 0,rgba(37,99,235,.16),transparent 60%),radial-gradient(760px 520px at 100% 0,rgba(34,197,94,.12),transparent 62%),linear-gradient(180deg,#f8fbff,#e8eef7);color:#101827}.wrap{width:min(920px,calc(100% - 48px));border:1px solid rgba(16,24,39,.12);border-radius:30px;background:rgba(255,255,255,.88);box-shadow:0 30px 90px rgba(15,23,42,.16);padding:34px}h1{font-size:42px;margin:0 0 10px}p{color:#667085;line-height:1.7;margin:0 0 24px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{border:1px solid rgba(16,24,39,.12);border-radius:22px;background:white;padding:24px;text-decoration:none;color:#101827}.card b{font-size:24px}.card span{display:block;color:#667085;line-height:1.6;margin-top:8px}.card:hover{border-color:#2563eb;box-shadow:0 18px 44px rgba(37,99,235,.16)}@media(max-width:760px){.grid{grid-template-columns:1fr}h1{font-size:32px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>原型 Demo 已拆成两个项目</h1>
+    <p>小程序端和后台运营端现在是两个独立 HTML，便于分别讲解、分别迭代。</p>
+    <div class="grid">
+      <a class="card" href="miniapp_prototype.html"><b>小程序原型</b><span>手机壳居中、左侧抽屉导航、高低保真切换、轮播、菜单、商品详情、订单、会员等二级功能。</span></a>
+      <a class="card" href="admin_operations_prototype.html"><b>后台运营原型</b><span>登录/注册、运营总览、商品、订单、会员、门店、系统设置等管理模块。</span></a>
+    </div>
+  </main>
+</body>
+</html>

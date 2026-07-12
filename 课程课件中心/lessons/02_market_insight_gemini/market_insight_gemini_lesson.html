@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>市场洞察 · 用 Gemini 把业务资料变成问题清单和洞察报告</title>
+  <style>
+    :root{
+      --bg:#071014;
+      --panel:#0f1d22;
+      --panel2:#13262d;
+      --ink:#f4f8fb;
+      --soft:#c7d7df;
+      --muted:#7f98a4;
+      --line:rgba(255,255,255,.12);
+      --blue:#38bdf8;
+      --green:#34d399;
+      --amber:#fbbf24;
+      --red:#fb7185;
+      --violet:#a78bfa;
+      --shadow:0 28px 80px rgba(0,0,0,.42);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(900px 540px at 12% -5%,rgba(56,189,248,.20),transparent 60%),
+        radial-gradient(850px 520px at 105% 0%,rgba(52,211,153,.16),transparent 60%),
+        linear-gradient(180deg,#071014 0%,#0a151a 100%);
+      overflow-x:hidden;
+    }
+    .topbar{
+      position:sticky;top:0;z-index:10;
+      background:rgba(7,16,20,.78);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar-inner{max-width:1360px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
+    .brand{font-weight:900;letter-spacing:.02em}
+    .brand small{display:block;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+    .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));box-shadow:0 0 24px rgba(56,189,248,.7)}
+    .spacer{flex:1}
+    .hint{color:var(--muted);font-size:13px}
+    kbd{font-family:inherit;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:6px;padding:1px 6px;color:var(--soft)}
+    .progress{height:3px;background:rgba(255,255,255,.06)}
+    .progress span{display:block;height:100%;width:8.33%;background:linear-gradient(90deg,var(--blue),var(--green),var(--amber));transition:.25s}
+    .deck{max-width:1360px;margin:0 auto;padding:24px 24px 100px}
+    .slide{
+      display:none;
+      min-height:720px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:linear-gradient(180deg,rgba(15,29,34,.92),rgba(12,24,29,.86));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .slide.active{display:block;animation:in .35s ease}
+    @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .slide:before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+        linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(180deg,black,transparent 80%);
+    }
+    .inner{position:relative;z-index:1;padding:54px;min-height:720px;display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center}
+    .inner.full{grid-template-columns:1fr}
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--soft);
+      border-radius:999px;
+      padding:6px 12px;
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-weight:800;
+      margin-bottom:18px;
+    }
+    .tag:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 14px var(--green)}
+    h1{font-size:54px;line-height:1.08;margin:0 0 18px;letter-spacing:-.02em}
+    h2{font-size:38px;line-height:1.18;margin:0 0 16px;letter-spacing:-.01em}
+    h3{margin:0 0 10px;font-size:21px}
+    p{font-size:19px;line-height:1.72;color:var(--soft);margin:0}
+    b,.strong{color:white}
+    .hl{background:linear-gradient(120deg,var(--blue),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .mark{
+      display:inline;
+      color:#fff;
+      font-weight:900;
+      padding:2px 7px 3px;
+      margin:0 2px;
+      border:2px solid rgba(251,113,133,.92);
+      border-radius:7px;
+      background:rgba(251,113,133,.08);
+      box-shadow:0 0 0 1px rgba(251,113,133,.22),0 0 18px rgba(251,113,133,.12);
+      box-decoration-break:clone;
+      -webkit-box-decoration-break:clone;
+    }
+    .mark.green{border-color:rgba(52,211,153,.9);background:rgba(52,211,153,.09);box-shadow:0 0 0 1px rgba(52,211,153,.18),0 0 18px rgba(52,211,153,.12)}
+    .mark.amber{border-color:rgba(251,191,36,.9);background:rgba(251,191,36,.10);box-shadow:0 0 0 1px rgba(251,191,36,.18),0 0 18px rgba(251,191,36,.12)}
+    .underline{
+      color:#fff;
+      font-weight:900;
+      text-decoration:underline;
+      text-decoration-color:rgba(52,211,153,.9);
+      text-decoration-thickness:4px;
+      text-underline-offset:5px;
+    }
+    .focus-line{
+      margin-top:18px;
+      border:1px solid rgba(52,211,153,.32);
+      border-left:5px solid var(--green);
+      border-radius:14px;
+      padding:14px 16px;
+      background:linear-gradient(90deg,rgba(52,211,153,.14),rgba(56,189,248,.06));
+      color:#eafff5;
+      font-size:17px;
+      font-weight:850;
+      line-height:1.55;
+    }
+    .hero-card,.panel,.code,.doc{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+      border-radius:18px;
+      padding:22px;
+    }
+    .hero-card{min-height:470px;display:flex;flex-direction:column;justify-content:space-between}
+    .metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .metric{border:1px solid var(--line);border-radius:16px;padding:18px;background:rgba(255,255,255,.045)}
+    .metric strong{display:block;font-size:28px;color:var(--green);line-height:1}
+    .metric span{display:block;color:var(--soft);font-size:14px;line-height:1.45;margin-top:7px}
+    .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
+    .step{border:1px solid var(--line);border-radius:16px;padding:18px;background:rgba(255,255,255,.045);min-height:150px}
+    .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--green));font-weight:900;margin-bottom:12px}
+    .step b{display:block;font-size:17px;margin-bottom:8px}
+    .step span{color:var(--soft);font-size:14px;line-height:1.55}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .panel p,.panel li{font-size:16px;color:var(--soft);line-height:1.62}
+    .panel.focus{border-color:rgba(52,211,153,.45);background:linear-gradient(180deg,rgba(52,211,153,.10),rgba(255,255,255,.025))}
+    .panel.warn{border-color:rgba(251,113,133,.45);background:linear-gradient(180deg,rgba(251,113,133,.10),rgba(255,255,255,.025))}
+    .panel.key{border-color:rgba(251,191,36,.45);background:linear-gradient(180deg,rgba(251,191,36,.10),rgba(255,255,255,.025))}
+    .panel.focus h3,.panel.key h3,.panel.warn h3{display:flex;align-items:center;gap:8px}
+    .panel.focus h3:before,.panel.key h3:before,.panel.warn h3:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+    .panel.key h3:before{background:var(--amber);box-shadow:0 0 12px var(--amber)}
+    .panel.warn h3:before{background:var(--red);box-shadow:0 0 12px var(--red)}
+    ul{margin:10px 0 0 20px;padding:0}
+    li{margin:6px 0}
+    li.hot{color:#fff;font-weight:850}
+    li.hot::marker{color:var(--red)}
+    li.good{color:#fff;font-weight:850}
+    li.good::marker{color:var(--green)}
+    .pill{
+      display:inline-flex;align-items:center;border-radius:999px;
+      border:1px solid var(--line);
+      padding:5px 10px;margin:4px 4px 0 0;
+      background:rgba(255,255,255,.055);
+      color:var(--soft);
+      font-size:13px;font-weight:700;
+    }
+    .pill.blue{color:#bae6fd;border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.1)}
+    .pill.green{color:#bbf7d0;border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.1)}
+    .pill.amber{color:#fde68a;border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.1)}
+    .code{
+      font-family:"SFMono-Regular",Consolas,monospace;
+      color:#d9f99d;
+      font-size:14px;
+      line-height:1.62;
+      white-space:pre-wrap;
+      max-height:520px;
+      overflow:auto;
+    }
+    .code strong{color:#fff;background:rgba(251,191,36,.18);border:1px solid rgba(251,191,36,.36);border-radius:6px;padding:1px 5px}
+    .doc{
+      max-height:540px;
+      overflow:auto;
+      color:var(--soft);
+      font-size:15px;
+      line-height:1.65;
+    }
+    .doc h4{color:#fff;margin:0 0 10px;font-size:17px}
+    .doc table{width:100%;border-collapse:collapse;margin:12px 0}
+    .doc th,.doc td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+    .doc th{color:white;background:rgba(255,255,255,.07)}
+    .mock-output{display:grid;gap:12px}
+    .out-row{display:grid;grid-template-columns:150px 1fr 100px;gap:12px;align-items:start;border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,255,255,.04)}
+    .out-row b{font-size:15px}
+    .out-row span{font-size:14px;color:var(--soft);line-height:1.55}
+    .out-row.hot{border-color:rgba(251,113,133,.45);background:linear-gradient(90deg,rgba(251,113,133,.13),rgba(255,255,255,.035))}
+    .out-row.hot b{color:#fecdd3}
+    .priority{justify-self:end;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:900}
+    .high{background:rgba(251,113,133,.15);color:#fecdd3;border:1px solid rgba(251,113,133,.35)}
+    .mid{background:rgba(251,191,36,.13);color:#fde68a;border:1px solid rgba(251,191,36,.35)}
+    .table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:16px;overflow:hidden;font-size:15px}
+    .table th,.table td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}
+    .table th{background:rgba(255,255,255,.08);color:#fff}
+    .table tr:last-child td{border-bottom:0}
+    .table th:last-child,.table td:last-child{border-right:0}
+    .score{display:inline-flex;min-width:48px;justify-content:center;border-radius:999px;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.35);color:#bbf7d0;font-weight:900}
+    .evidence{color:#fff;font-weight:900}
+    .controls{
+      position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+      display:flex;align-items:center;gap:10px;z-index:20;
+      border:1px solid var(--line);background:rgba(7,16,20,.82);
+      backdrop-filter:blur(14px);padding:10px;border-radius:999px;
+    }
+    button{border:0;border-radius:999px;padding:10px 16px;font-weight:900;background:linear-gradient(135deg,var(--blue),var(--green));color:#062018;cursor:pointer}
+    button.secondary{background:rgba(255,255,255,.08);color:var(--soft);border:1px solid var(--line)}
+    .page-no{color:var(--soft);font-size:13px;min-width:58px;text-align:center}
+    .speaker{border-left:4px solid var(--green);padding-left:14px;color:var(--soft);font-size:16px;line-height:1.68}
+    .speaker b{display:block;margin-bottom:4px}
+    @media(max-width:980px){
+      .inner,.inner.full{grid-template-columns:1fr;padding:28px}
+      h1{font-size:38px}h2{font-size:30px}.flow,.grid-3,.grid-2{grid-template-columns:1fr}
+      .out-row{grid-template-columns:1fr}.priority{justify-self:start}
+      .hint{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="dot"></span>
+      <div class="brand">AI 增强型产品经理 <small>Chapter 2 · 市场洞察</small></div>
+      <div class="spacer"></div>
+      <div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页</div>
+    </div>
+    <div class="progress"><span id="bar"></span></div>
+  </div>
+
+  <main class="deck">
+    <section class="slide active">
+      <div class="inner">
+        <div>
+          <div class="tag">Gemini Market Insight</div>
+          <h1>用 Gemini 把业务资料变成<span class="hl">市场洞察</span></h1>
+          <p>今天分享的是 Gemini 在产品经理市场洞察场景里的用法。我们会由浅入深，先从一份客户业务资料开始，让 Gemini <span class="mark">生成问题清单</span>，再进一步产出<span class="mark green">市场洞察报告</span>。</p>
+          <p style="margin-top:14px">后面章节会继续深入竞品分析、需求调研、PRD 和原型。本章节先解决一个核心问题：<b>产品经理如何把杂乱资料变成<span class="underline">可讨论、可决策、可验证</span>的洞察。</b></p>
+          <div class="focus-line">本节课的关键动作：先让 Gemini 问对问题，再让 Gemini 写清洞察。</div>
+        </div>
+        <div class="hero-card">
+          <div>
+            <h3>本节课最终交付</h3>
+            <p>不是讲一堆概念，而是跑通一个<span class="mark amber">完整的 AI 工作流</span>。</p>
+          </div>
+          <div class="metric-grid">
+            <div class="metric"><strong>1</strong><span>一份模拟客户业务访谈资料</span></div>
+            <div class="metric"><strong>2</strong><span>两段核心 Gemini Prompt</span></div>
+            <div class="metric"><strong>30+</strong><span>自动生成业务问题清单</span></div>
+            <div class="metric"><strong>1</strong><span>市场洞察报告和老板建议</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner full">
+        <div>
+          <div class="tag">Learning Path</div>
+          <h2>本章节做什么，不做什么</h2>
+          <p>这一节不是教大家写一篇漂亮的行业报告，而是教大家如何把<span class="mark">客户说的话、业务现场的信息、零散数据</span>，变成产品决策前必须回答的问题。</p>
+          <div class="grid-3" style="margin-top:28px">
+            <div class="panel focus">
+              <h3>做什么</h3>
+              <ul>
+                <li>把业务资料拆成结构化信息</li>
+                <li class="good">让 Gemini 先追问，再下结论</li>
+                <li class="good">输出产品经理能继续验证的问题清单</li>
+                <li>生成市场洞察报告和决策建议</li>
+              </ul>
+            </div>
+            <div class="panel warn">
+              <h3>暂时不做什么</h3>
+              <ul>
+                <li>不展开复杂行业数据库检索</li>
+                <li>不做完整竞品拆解</li>
+                <li>不把 PEST、SWOT 当填空题</li>
+                <li class="hot">不把 AI 输出当最终事实</li>
+              </ul>
+            </div>
+            <div class="panel key">
+              <h3>产品经理要抓住什么</h3>
+              <ul>
+                <li class="hot">谁最痛</li>
+                <li class="hot">为什么现在要解决</li>
+                <li class="hot">谁愿意付钱</li>
+                <li class="hot">MVP 应该先做哪一刀</li>
+                <li class="hot">哪些判断还缺证据</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner full">
+        <div>
+          <div class="tag">Workflow</div>
+          <h2>整套 Gemini 工作流</h2>
+          <p>市场洞察<span class="mark">不要一上来就让 AI 写报告</span>。更好的做法是先让 AI 变成研究助理，帮我们把资料里的<span class="mark green">信息缺口</span>问出来。</p>
+          <div class="focus-line">顺序很重要：资料 → 问题清单 → 补充回答 → 洞察报告。</div>
+          <div class="flow">
+            <div class="step"><span class="num">1</span><b>上传业务资料</b><span>客户访谈、销售反馈、会议纪要、CRM 字段、聊天记录样例。</span></div>
+            <div class="step"><span class="num">2</span><b>生成问题清单</b><span>先识别已知信息和未知信息，避免直接生成空泛结论。</span></div>
+            <div class="step"><span class="num">3</span><b>补充回答</b><span>PM 根据业务认知补充关键数字、角色、竞品和限制条件。</span></div>
+            <div class="step"><span class="num">4</span><b>输出洞察报告</b><span>形成市场机会判断、MVP 建议、风险验证和老板决策页。</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <div>
+          <div class="tag">Input Document</div>
+          <h2>第一步：准备一份业务资料</h2>
+          <p>我们用一份模拟线下客户访谈纪要来演示。它不是整理得特别完美的报告，而是非常接近真实业务现场的会议记录：有<span class="mark">客户原话</span>、有<span class="mark amber">角色冲突</span>、有<span class="mark green">数据估算</span>，也有很多不确定信息。</p>
+          <p style="margin-top:14px">真实工作里，Gemini 最适合处理的就是这种<span class="mark">“资料很多但还没形成判断”</span>的阶段。</p>
+          <div style="margin-top:18px">
+            <span class="pill blue">客户访谈</span>
+            <span class="pill green">业务流程</span>
+            <span class="pill amber">关键数字</span>
+            <span class="pill blue">角色分歧</span>
+            <span class="pill green">系统现状</span>
+          </div>
+        </div>
+        <div class="doc">
+          <h4>模拟资料片段：连锁口腔机构访谈</h4>
+          <p>明皓口腔目前有 <span class="mark green">18 家门店</span>，线上线索来源包括抖音、美团、百度、小红书和私域。客户反馈：<span class="mark">线索量上来了，但有效到店和成交没有同步提升</span>。</p>
+          <table>
+            <tr><th>角色</th><th>关注点</th></tr>
+            <tr><td>林总</td><td>想看清钱花在哪里浪费了，哪个环节该改，谁负责。</td></tr>
+            <tr><td>周经理</td><td>想判断渠道质量，不只看线索成本。</td></tr>
+            <tr><td>陈主管</td><td>想提升咨询话术和新人跟进质量。</td></tr>
+            <tr><td>赵工</td><td>担心隐私、安全、系统集成和实施成本。</td></tr>
+          </table>
+          <p>客户估算：月均新增线索约 <span class="mark green">18,000 条</span>，有效线索 <span class="mark amber">45%-55%</span>，重复线索 <span class="mark amber">12%-18%</span>。如果有效到店率提升 <span class="mark">5 个百分点</span>，或者咨询人员少花 <span class="mark">20% 时间</span> 在线索整理上，客户愿意评估预算。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <div>
+          <div class="tag">Prompt 1</div>
+          <h2>第二步：不要先写报告，先让 Gemini 生成问题清单</h2>
+          <p>这个 Prompt 的关键是让 Gemini 做三件事：<span class="mark green">先理解业务</span>，再<span class="mark green">提取已知信息</span>，最后提出<span class="mark">后续必须追问的问题</span>。</p>
+          <p style="margin-top:14px">这样做的好处是，AI 不会一上来编一个看似完整的报告，而是先<span class="mark">暴露信息缺口</span>，帮助产品经理判断下一步该问谁、补什么资料。</p>
+          <div class="focus-line">讲这页时强调：好的市场洞察，不是先给答案，而是先把问题问完整。</div>
+        </div>
+        <div class="code">你是一名资深 B2B 产品经理和市场研究顾问。
+现在我会上传一份业务资料。
+
+你的任务<strong>不是直接写结论</strong>，而是先帮我把资料拆成<strong>「后续做市场洞察必须追问的问题清单」</strong>。
+
+请按以下步骤：
+1. 快速理解业务背景、关键角色和核心矛盾。
+2. 提取已知信息：客户背景、流程、痛点、目标、限制、竞品、关键数字、待核实信息。
+3. 围绕行业趋势、目标客户、业务流程、购买决策、竞品替代、MVP、商业模式、风险验证，生成<strong>不少于 30 个问题</strong>。
+4. 给每个问题标注高 / 中 / 低优先级。
+5. 给出 7 天内的下一步行动计划。
+
+要求：<strong>不要空泛</strong>；资料不足要明确标注；问题要像真实 PM 会追问客户的问题。</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner full">
+        <div>
+          <div class="tag">Question List</div>
+          <h2>Gemini 输出效果：问题清单会长什么样</h2>
+          <p>下面是演示时可以重点讲的输出效果。注意它<span class="mark">不是普通摘要</span>，而是把产品经理需要<span class="mark green">继续追问的问题</span>拉出来。</p>
+          <div class="mock-output" style="margin-top:24px">
+            <div class="out-row hot"><b>目标客户</b><span>明皓口腔这类区域连锁机构是否是第一优先级？单体门店、全国连锁、医美机构是否也有同类问题？</span><em class="priority high">高</em></div>
+            <div class="out-row hot"><b>付费逻辑</b><span>最终预算来自市场部、运营部还是总部数字化预算？谁是实际拍板人？</span><em class="priority high">高</em></div>
+            <div class="out-row hot"><b>真实痛点</b><span>线索重复、咨询话术、门店承接三类问题里，哪一个对成交损失最大？是否有数据证明？</span><em class="priority high">高</em></div>
+            <div class="out-row hot"><b>MVP 范围</b><span>第一阶段应该先做线索清洗、对话分析、咨询质检，还是经营看板？哪个能最快产生业务价值？</span><em class="priority high">高</em></div>
+            <div class="out-row"><b>风险验证</b><span>聊天记录能否合规脱敏用于 AI 分析？咨询人员是否愿意接受 AI 质检？</span><em class="priority mid">中</em></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <div>
+          <div class="tag">Prompt 2</div>
+          <h2>第三步：用问题清单反推市场洞察报告</h2>
+          <p>等问题清单出来后，产品经理可以补充自己的判断，然后再让 Gemini 生成报告。报告结构要<span class="mark">直接服务内部评审</span>，而不是为了显得很厚。</p>
+          <p style="margin-top:14px">核心结构是：<span class="mark green">一句话结论</span>、客户角色、机会评分、痛点优先级、<span class="mark amber">MVP</span>、指标、风险验证、老板决策建议。</p>
+        </div>
+        <div class="code">你是一名资深市场洞察专家、B2B 产品负责人和产品战略顾问。
+
+请基于我上传的业务资料、问题清单和补充回答，生成一份「产品经理可用于内部评审的市场洞察报告」。
+
+报告结构：
+1. 一句话结论
+2. 业务背景
+3. 目标客户与关键角色
+4. 市场机会判断，按需求强度、付费意愿、替代方案、进入时机、可复制性打<strong> 1-5 分</strong>
+5. 核心痛点优先级
+6. 竞品与替代方案分析
+7. 产品机会与 MVP 建议
+8. 商业价值与指标
+9. 风险、未知与验证计划
+10. 一页老板决策建议
+
+要求：<strong>事实、推断、待验证必须分开</strong>；不要贪大求全；输出要能复制到飞书或 PPT。</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner full">
+        <div>
+          <div class="tag">Insight Output</div>
+          <h2>市场机会判断：让 AI 输出可讨论的评分</h2>
+          <p>市场洞察最怕<span class="mark">“看起来都有道理”</span>。所以我们要让 Gemini 把判断拆成维度，并给出理由，方便 PM 和业务方讨论。</p>
+          <table class="table" style="margin-top:24px">
+            <tr><th>维度</th><th>评分</th><th>判断理由</th></tr>
+            <tr><td>需求强度</td><td><span class="score">4.5</span></td><td><span class="evidence">月均 18,000 条线索、32 名咨询人员</span>、重复录入和人工清洗消耗明显，问题高频且影响经营。</td></tr>
+            <tr><td>付费意愿</td><td><span class="score">4.0</span></td><td>客户明确提出<span class="evidence">有效到店率提升 5 个百分点</span>或<span class="evidence">节省 20% 咨询整理时间</span>即可评估预算。</td></tr>
+            <tr><td>替代方案不足</td><td><span class="score">4.0</span></td><td>现有 CRM 记录结果数据，但对<span class="evidence">聊天内容、用户顾虑、漏斗掉点</span>缺少结构化分析。</td></tr>
+            <tr><td>进入时机</td><td><span class="score">4.0</span></td><td>线上获客成本上升，管理层开始从<span class="evidence">“要线索”转向“要有效线索和转化质量”</span>。</td></tr>
+            <tr><td>可复制性</td><td><span class="score">3.5</span></td><td>口腔连锁特征明确，但是否能扩展到医美、体检、教培、本地生活，需要进一步验证。</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner full">
+        <div>
+          <div class="tag">MVP Scope</div>
+          <h2>产品机会：第一阶段不要做完整 CRM</h2>
+          <p>Gemini 的报告里，最有价值的不是<span class="mark">“行业很有前景”</span>，而是帮助我们<span class="mark green">收敛第一阶段到底做什么</span>。</p>
+          <div class="grid-2" style="margin-top:24px">
+            <div class="panel focus">
+              <h3>建议先做</h3>
+              <ul>
+                <li class="good">多渠道线索去重和基础清洗</li>
+                <li class="good">咨询对话结构化分析</li>
+                <li>用户意向等级识别</li>
+                <li>用户顾虑类型提取</li>
+                <li class="good">咨询质检和下一步话术建议</li>
+                <li>渠道质量 + 咨询转化漏斗看板</li>
+              </ul>
+            </div>
+            <div class="panel warn">
+              <h3>暂不建议做</h3>
+              <ul>
+                <li class="hot">替换客户现有 CRM</li>
+                <li>做全门店全渠道大规模上线</li>
+                <li>复杂医生排班和门店经营系统</li>
+                <li>一开始就做自动成交预测</li>
+                <li class="hot">要求员工额外填大量字段</li>
+                <li>把 AI 质检直接用于强考核</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <div>
+          <div class="tag">PM Judgment</div>
+          <h2>产品经理不能直接照抄 AI 输出</h2>
+          <p>Gemini 可以快速生成洞察，但 <span class="mark">PM 必须负责判断</span>。尤其是市场洞察阶段，我们要检查每个结论有没有证据，哪些只是推断，哪些必须通过访谈或数据验证。</p>
+          <div class="speaker" style="margin-top:24px">
+            AI 给我们的<span class="mark">不是最终答案</span>，而是一个高质量的初稿。真正的产品经理价值在于：知道哪些结论能用，哪些结论要打问号，哪些结论应该拿去找客户验证。
+          </div>
+        </div>
+        <div class="panel key">
+          <h3>质检 Prompt 的检查项</h3>
+          <ul>
+            <li>结论是否清晰</li>
+            <li class="hot">是否真正基于资料证据</li>
+            <li class="hot">是否区分事实、推断和假设</li>
+            <li>是否识别真实付费角色</li>
+            <li>痛点是否足够具体</li>
+            <li class="hot">MVP 是否收敛</li>
+            <li>商业价值是否能打动老板</li>
+            <li>验证计划是否可执行</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <div>
+          <div class="tag">Summary</div>
+          <h2>本节课你要让学员记住什么</h2>
+          <p>第一，Gemini 不是只用来写文章，它可以作为产品经理的<span class="mark green">市场研究助理</span>。</p>
+          <p style="margin-top:12px">第二，资料上传后<span class="mark">不要急着生成报告</span>，先让 AI 生成问题清单，暴露未知信息。</p>
+          <p style="margin-top:12px">第三，市场洞察的最终目标不是“看起来专业”，而是形成<span class="mark amber">下一步产品决策</span>。</p>
+        </div>
+        <div class="hero-card">
+          <h3>最终交付物</h3>
+          <div>
+            <span class="pill blue">业务问题清单</span>
+            <span class="pill green">市场洞察报告</span>
+            <span class="pill amber">MVP 建议</span>
+            <span class="pill blue">验证计划</span>
+            <span class="pill green">老板决策页</span>
+          </div>
+          <p style="margin-top:24px"><b>一句话总结：</b><br>让 Gemini <span class="mark">先帮我们把问题问对</span>，再帮我们<span class="mark green">把洞察写清楚</span>。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls">
+    <button class="secondary" onclick="prevSlide()">上一页</button>
+    <span class="page-no" id="pageNo">1 / 12</span>
+    <button onclick="nextSlide()">下一页</button>
+  </div>
+
+  <script>
+    const slides=[...document.querySelectorAll('.slide')];
+    const bar=document.getElementById('bar');
+    const pageNo=document.getElementById('pageNo');
+    let idx=0;
+    function show(i){
+      idx=Math.max(0,Math.min(slides.length-1,i));
+      slides.forEach((s,n)=>s.classList.toggle('active',n===idx));
+      bar.style.width=((idx+1)/slides.length*100)+'%';
+      pageNo.textContent=(idx+1)+' / '+slides.length;
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    function nextSlide(){show(idx+1)}
+    function prevSlide(){show(idx-1)}
+    window.addEventListener('keydown',e=>{
+      if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ')nextSlide();
+      if(e.key==='ArrowLeft'||e.key==='PageUp')prevSlide();
+    });
+    show(0);
+  </script>
+</body>
+</html>

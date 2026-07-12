@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 生成 PPT Skill</title>
+<style>
+:root{--accent:#ff7a59;--accent2:#ffd166;--bg:#100d12;--ink:#fffaf4;--muted:#d6c9bf;--line:rgba(255,255,255,.16)}*{box-sizing:border-box}body{margin:0;overflow:hidden;background:radial-gradient(circle at 12% 12%,rgba(255,122,89,.23),transparent 30%),radial-gradient(circle at 78% 8%,rgba(255,209,102,.17),transparent 26%),linear-gradient(135deg,#0b0d13,#17101a 55%,#1b1511);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink)}body:before{content:"";position:fixed;inset:84px 0 0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:70px 70px;pointer-events:none;mask-image:linear-gradient(to bottom,transparent,#000 10%,#000 90%,transparent)}.top{height:84px;padding:0 42px;border-bottom:1px solid var(--line);background:rgba(12,10,14,.82);display:flex;align-items:center;justify-content:space-between;position:relative;z-index:90;backdrop-filter:blur(16px)}.brand{display:flex;gap:16px;align-items:center}.dot{width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 28px rgba(255,122,89,.52)}.brand b{font-size:24px}.brand span{display:block;color:#b7aca5;font-size:13px;font-weight:900;letter-spacing:7px;margin-top:4px}.arrows{display:flex;align-items:center;gap:12px}.arrows button{width:42px;height:42px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.08);color:white;font-size:22px;font-weight:900;cursor:pointer}.deck{height:calc(100vh - 84px);display:flex;align-items:center;justify-content:center;padding:30px 34px 92px;position:relative;z-index:2}.slide{display:none;width:min(1500px,calc(100vw - 72px));height:min(800px,calc(100vh - 185px));border:1px solid var(--line);border-radius:32px;padding:52px 60px;background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.035));box-shadow:0 28px 70px rgba(0,0,0,.36);overflow:hidden}.slide.active{display:block;animation:in .32s ease both}@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}.content{height:100%;display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}.full{grid-column:1/-1}i{display:inline-flex;gap:10px;align-items:center;font-style:normal;padding:10px 20px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.08);letter-spacing:6px;font-weight:950;color:#fff2e8;margin-bottom:24px}i:before{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent)}h1{font-size:68px;line-height:1.05;margin:0 0 24px}h2{font-size:52px;line-height:1.1;margin:0 0 20px}h3{font-size:23px;margin:0 0 10px}p,li{font-size:22px;line-height:1.72;color:#eaded7;font-weight:760}ul{padding-left:1.15em}li{margin:9px 0}a{color:#ffe0a3;text-decoration:underline;text-underline-offset:5px;font-weight:950}code{font-family:"SFMono-Regular",Consolas,monospace}.chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}.chips span,.tabs button{padding:9px 16px;border-radius:999px;border:1px solid rgba(255,122,89,.58);background:rgba(255,122,89,.16);font-weight:950;color:#fff6ed}.dash,.cards,.codebox{border:1px solid var(--line);border-radius:28px;background:rgba(255,255,255,.075);box-shadow:inset 0 1px rgba(255,255,255,.08);padding:26px}.dash{display:grid;grid-template-columns:1fr 1fr;gap:18px}.metric{min-height:122px;border:1px solid var(--line);background:rgba(0,0,0,.22);border-radius:22px;padding:22px}.metric b{display:block;font-size:38px;color:var(--accent2)}.metric em{display:block;font-style:normal;color:#d9cac1;font-weight:850;margin-top:8px}.cards{display:grid;grid-template-columns:1fr 1fr;gap:18px}.cards.onecol{grid-template-columns:1fr}.card{border:1px solid var(--line);border-radius:22px;background:rgba(0,0,0,.16);padding:21px}.card p{font-size:18px;margin:0;color:#dacdc4}.steps{display:grid;gap:12px}.step{display:grid;grid-template-columns:54px 1fr;gap:16px;align-items:start;border:1px solid var(--line);background:rgba(0,0,0,.18);border-radius:20px;padding:18px}.num{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#211008;display:grid;place-items:center;font-weight:1000;font-size:20px}.tabs{display:flex;gap:12px;margin-bottom:16px}.tabs button{cursor:pointer}.tabs .active{background:var(--accent);color:#190d09}pre{font-family:"SFMono-Regular",Consolas,monospace;white-space:pre-wrap;line-height:1.55}.pane{display:none;margin:0;color:#fff0c7;font-size:19px}.pane.active{display:block}.prompt{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:22px;padding:22px;color:#fff2cf;font-size:17px;max-height:390px;overflow:auto}table{width:100%;border-collapse:separate;border-spacing:0 12px}th{text-align:left;color:#fff;font-size:18px;padding:0 18px 6px}td{background:rgba(255,255,255,.08);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:15px 16px;font-size:18px;color:#eaded7;font-weight:760}td:first-child{border-left:1px solid var(--line);border-radius:16px 0 0 16px;color:#fff;font-weight:950}td:last-child{border-right:1px solid var(--line);border-radius:0 16px 16px 0}.nav{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:100;display:flex;gap:12px;align-items:center;padding:9px 13px;border-radius:999px;background:rgba(14,11,16,.78);border:1px solid var(--line);backdrop-filter:blur(16px)}.nav button{height:40px;min-width:86px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.1);color:#fff;font-weight:950;cursor:pointer}.nav .primary{background:var(--accent2);color:#211008;border:0}.page{min-width:56px;text-align:center;font-weight:950}.draw-toggle,.draw-tools{position:fixed;right:42px;top:104px;z-index:105;align-items:center;border-radius:999px;background:rgba(14,11,16,.78);border:1px solid var(--line);backdrop-filter:blur(16px)}.draw-toggle{display:inline-flex;justify-content:center;height:38px;min-width:82px;padding:0 18px;color:#fff;font-size:14px;font-weight:950;cursor:pointer}.draw-tools{display:none;gap:8px;padding:8px}body.drawing .draw-toggle{display:none}body.drawing .draw-tools{display:flex}.swatch{width:28px;height:28px;border:2px solid rgba(255,255,255,.72);border-radius:50%;cursor:pointer}.clear{height:28px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.1);color:white;padding:0 11px;font-weight:950;cursor:pointer}.help{position:fixed;right:42px;bottom:22px;z-index:105;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:rgba(14,11,16,.78);color:white;font-size:24px;font-weight:950;cursor:pointer}#drawCanvas{position:fixed;inset:84px 0 0;z-index:70;pointer-events:none}body.drawing #drawCanvas{pointer-events:auto;cursor:crosshair}.top,.nav,.draw-toggle,.draw-tools,.help,.modal{pointer-events:auto}.modal{display:none;position:fixed;inset:0;z-index:130;align-items:center;justify-content:center;background:rgba(0,0,0,.44);padding:28px}.modal.active{display:flex}.modal-card{width:min(860px,92vw);max-height:76vh;overflow:auto;background:white;color:#241914;border-radius:24px;padding:34px}.modal-card h3{font-size:30px;margin:0 0 14px}.modal-card p{white-space:pre-wrap;font-size:18px;color:#35251f}@media(max-width:1100px){.content,.cards{grid-template-columns:1fr}h1{font-size:44px}h2{font-size:38px}p,li{font-size:18px}.slide{padding:34px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><div class="dot"></div><div><b>AI 增强型产品经理</b><span>CHAPTER 6 · 其他日常工作</span></div></div><div class="arrows"><button onclick="prevSlide()">‹</button><button onclick="nextSlide()">›</button><b>翻页</b></div></header>
+<canvas id="drawCanvas"></canvas>
+<main class="deck">
+<section class="slide active" data-note="开场强调：这节课讲的是把材料稳定转成一套可交付 PPT，而不是单页美化。"><div class="content"><div><i>SLIDE DECK</i><h1>AI 生成 PPT Skill</h1><p>把一段资料变成大纲、逐页提示词、幻灯片图片，再合并成 PPTX 和 PDF。核心不是“让 AI 随便画”，而是把生成过程标准化。</p><div class="chips"><span>大纲</span><span>逐页提示词</span><span>图片生成</span><span>PPTX / PDF</span></div></div><aside class="dash"><div class="metric"><b>01</b><em>先讲它解决什么问题</em></div><div class="metric"><b>02</b><em>再看 GitHub 和安装方式</em></div><div class="metric"><b>03</b><em>拆开生成流水线</em></div><div class="metric"><b>04</b><em>用一个主题跑测试</em></div></aside></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>WHY</i><h2>做 PPT 最难的不是写几页字</h2><p>AI 很容易生成一堆页面，但难点是：结构是否完整、风格是否统一、每页能否复现、最后能不能交付成文件。</p><ul><li>先定结构：主题、受众、页数、叙事顺序。</li><li>再定风格：预设风格或四个视觉维度。</li><li>最后产出：图片、PPTX、PDF 和可复用提示词。</li></ul></div><div class="cards"><div class="card"><h3>不是即兴排版</h3><p>先生成标准大纲，再生成每页提示词。</p></div><div class="card"><h3>不是一次性结果</h3><p>提示词文件会保存，方便重试和复现。</p></div><div class="card"><h3>不是只看截图</h3><p>最终可以合并成 PPTX 和 PDF。</p></div><div class="card"><h3>不是只有一种风格</h3><p>内置多种风格和维度组合。</p></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>GITHUB</i><h2>GitHub 地址和安装指令</h2><p>这节课使用的是课程仓库中的 <code>pm-slide-deck</code> Skill。</p></div><div class="cards onecol"><div class="card"><h3>GitHub 章节地址</h3><p><a href="https://github.com/shangbianai/pm-ai-guide/tree/5ee48f67ca63289aafcc75a707473be6006b1fcd/第6章_其他日常工作/06_AI生成PPT Skill/skills/pm-slide-deck" target="_blank" rel="noopener">pm-slide-deck Skill</a></p></div><div class="card"><h3>Skill 安装指令</h3><pre class="prompt">帮我安装这个 skills：
+https://github.com/shangbianai/pm-ai-guide/tree/5ee48f67ca63289aafcc75a707473be6006b1fcd/第6章_其他日常工作/06_AI生成PPT Skill/skills/pm-slide-deck</pre></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div class="full"><i>IMPLEMENTATION</i><h2>这个 Skill 的仓库结构</h2><p>它把规则、风格、脚本拆开管理，让生成过程更稳定。</p><div class="tabs"><button onclick="showTab(this,'repo')" class="active">仓库结构</button><button onclick="showTab(this,'flow')">生成流程</button><button onclick="showTab(this,'outputs')">输出物</button></div><div class="codebox"><pre id="repo" class="pane active">pm-slide-deck/
+├─ SKILL.md                         主指令：触发条件、流程、后端选择
+├─ references/
+│  ├─ outline-template.md            大纲模板
+│  ├─ design-guidelines.md           设计指南
+│  ├─ content-rules.md               内容规则
+│  ├─ styles/                        预设风格
+│  └─ dimensions/                    质感、氛围、排版、密度
+└─ scripts/
+   ├─ generate-slides.ts             批量生成幻灯片图片
+   ├─ merge-to-pptx.ts               合并为 PowerPoint
+   └─ merge-to-pdf.ts                合并为 PDF</pre><pre id="flow" class="pane">输入资料
+  ↓
+分析主题、受众、页数、风格
+  ↓
+生成 outline.md
+  ↓
+生成 prompts/NN-slide-*.md
+  ↓
+调用图片后端生成 PNG
+  ↓
+合并为 PPTX / PDF</pre><pre id="outputs" class="pane">slide-deck/{topic-slug}/
+├─ source-{slug}.{ext}
+├─ outline.md
+├─ prompts/01-slide-cover.md
+├─ 01-slide-cover.png
+├─ ...
+├─ {topic-slug}.pptx
+└─ {topic-slug}.pdf</pre></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div class="full"><i>OPTIONS</i><h2>使用前，先确认四类关键输入</h2><p>这些参数决定了 PPT 是给谁看、要多少页、长什么样、用哪个图片生成后端。</p><table><thead><tr><th>输入项</th><th>作用</th><th>示例</th></tr></thead><tbody><tr><td>受众</td><td>决定信息密度和表达深度</td><td>beginners / executives / general</td></tr><tr><td>页数</td><td>决定叙事颗粒度</td><td>8 页、12 页、15 页</td></tr><tr><td>风格</td><td>决定视觉语言</td><td>blueprint、corporate、sketch-notes</td></tr><tr><td>图片后端</td><td>决定生成通道和清晰度</td><td>豆包、GPT-image-2、Nano Banana</td></tr><tr><td>输出形式</td><td>决定最终交付物</td><td>PNG、PPTX、PDF</td></tr></tbody></table></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>BACKEND</i><h2>图片后端不是细节，是质量开关</h2><p>Skill 内置三种图片生成后端。选择前要确认 API Key，因为没有有效 Key 就不能进入图片生成环节。</p></div><div class="cards"><div class="card"><h3>豆包 Seedream</h3><p>国内访问稳定，支持 2K 高清，适合批量生成。</p></div><div class="card"><h3>GPT-image-2</h3><p>文字渲染质量高，适合对页面文字要求更高的场景。</p></div><div class="card"><h3>Nano Banana</h3><p>Gemini 图片通道，适合尝试不同视觉路线。</p></div><div class="card"><h3>统一原则</h3><p>提示词先落盘，再生成图片，失败可以重试。</p></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>CASE</i><h2>模拟测试：生成一套产品复盘 PPT</h2><p>这段输入可以直接用于测试 Skill 的完整流程。</p><pre class="prompt">请使用 pm-slide-deck Skill，帮我生成一套 8 页中文 PPT。
+
+主题：会员积分小程序上线复盘
+受众：产品团队和业务负责人
+风格：corporate
+输出：先给大纲，再生成逐页提示词，最后生成图片并合并 PPTX/PDF
+
+核心材料：
+1. 项目目标：提升会员活跃和复购。
+2. 上线功能：积分查询、积分兑换、优惠券领取、门店核销、历史订单。
+3. 上线结果：DAU 提升 18%，优惠券核销率 12%，会员复购率提升 6%。
+4. 主要问题：门店培训不足、兑换规则理解成本高、历史订单查询入口不明显。
+5. 后续动作：优化入口、补充门店物料、增加自动提醒。</pre></div><div class="cards onecol"><div class="card"><h3>观察点 1</h3><p>大纲是否先讲背景、目标、结果，再讲问题和下一步。</p></div><div class="card"><h3>观察点 2</h3><p>每页提示词是否带有明确视觉和布局描述。</p></div><div class="card"><h3>观察点 3</h3><p>最终是否能生成 PNG、PPTX 和 PDF。</p></div></div></div></section>
+<section class="slide" data-note=""><div class="content"><div><i>SUMMARY</i><h2>回顾重点：这节课的价值</h2><p>这节课要带走的是一条“资料到可交付 PPT”的流水线。只要输入足够清楚，AI 就能稳定生成结构、风格和文件。</p><ul><li>先用大纲控制内容结构。</li><li>再用风格系统控制视觉一致性。</li><li>最后用脚本把图片合并成 PPTX 和 PDF。</li></ul></div><div class="cards"><div class="card"><h3>更稳定</h3><p>每页提示词可复现。</p></div><div class="card"><h3>更完整</h3><p>从大纲到文件交付闭环。</p></div><div class="card"><h3>更可控</h3><p>受众、风格、页数、后端都可配置。</p></div></div></div></section>
+</main>
+<div class="nav"><button onclick="prevSlide()">上一页</button><div class="page"><span id="pageNo">1</span> / 8</div><button class="primary" onclick="nextSlide()">下一页</button></div>
+<button class="draw-toggle" onclick="enterDraw()">标注</button>
+<div class="draw-tools"><button class="swatch" style="background:#ff3b30" onclick="setPen('#ff3b30')"></button><button class="swatch" style="background:#ffd60a" onclick="setPen('#ffd60a')"></button><button class="swatch" style="background:#30d158" onclick="setPen('#30d158')"></button><button class="clear" onclick="clearDraw()">清空</button><button class="clear" onclick="exitDraw()">退出</button></div>
+<button class="help" onclick="openNote()">?</button>
+<div class="modal" id="noteModal" onclick="closeModal(event)"><div class="modal-card"><h3>讲师备注</h3><p id="modalText"></p></div></div>
+<script>
+function showTab(btn,id){btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');btn.closest('.slide').querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
+const slides=Array.from(document.querySelectorAll('.slide'));let current=0;const pageNo=document.getElementById('pageNo'),modal=document.getElementById('noteModal'),modalText=document.getElementById('modalText');
+function showSlide(i){slides[current].classList.remove('active');current=(i+slides.length)%slides.length;slides[current].classList.add('active');pageNo.textContent=current+1;clearDraw();drawing=false}
+function nextSlide(){showSlide(current+1)}function prevSlide(){showSlide(current-1)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')nextSlide();if(e.key==='ArrowLeft')prevSlide();if(e.key==='Escape')modal.classList.remove('active')});
+function openNote(){modalText.textContent=slides[current].dataset.note||'这一页没有额外备注。';modal.classList.add('active')}function closeModal(e){if(e.target.id==='noteModal')modal.classList.remove('active')}
+const canvas=document.getElementById('drawCanvas'),ctx=canvas.getContext('2d');let drawing=false,pen='#ff3b30';
+function resizeCanvas(){const dpr=devicePixelRatio||1;canvas.width=innerWidth*dpr;canvas.height=(innerHeight-84)*dpr;canvas.style.width=innerWidth+'px';canvas.style.height=(innerHeight-84)+'px';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.lineCap='round';ctx.lineJoin='round'}
+resizeCanvas();addEventListener('resize',resizeCanvas);
+function enterDraw(){document.body.classList.add('drawing')}function setPen(c){pen=c;enterDraw()}function exitDraw(){drawing=false;document.body.classList.remove('drawing')}
+function pos(e){return{x:e.clientX,y:e.clientY-84}}
+canvas.addEventListener('pointerdown',e=>{drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)});
+canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e);ctx.strokeStyle=pen;ctx.lineWidth=4;ctx.lineTo(p.x,p.y);ctx.stroke()});
+addEventListener('pointerup',()=>drawing=false);
+function clearDraw(){ctx.clearRect(0,0,canvas.width,canvas.height)}
+</script>
+</body>
+</html>

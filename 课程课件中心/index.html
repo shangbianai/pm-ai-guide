@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI 增强型产品经理课程 HTML 课件聚合入口，覆盖市场洞察、需求调研、产品设计、运营管理、项目管理和 AI 效率工具。">
+  <title>AI 增强型产品经理 · 课程课件中心</title>
+  <style>
+    @import url("assets/fonts/lxgw-wenkai/lxgwwenkai-regular.css");
+
+    :root {
+      --bg: #071018;
+      --panel: rgba(10, 24, 36, 0.82);
+      --panel-strong: rgba(8, 18, 28, 0.94);
+      --line: rgba(148, 163, 184, 0.18);
+      --text: #f8fafc;
+      --muted: #a7b4c4;
+      --cyan: #22d3ee;
+      --blue: #60a5fa;
+      --violet: #a78bfa;
+      --gold: #fde047;
+      --green: #86efac;
+      --pink: #fb7185;
+      --font: "LXGW WenKai", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: var(--font);
+      letter-spacing: 0;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(253, 224, 71, 0.12), transparent 24rem),
+        radial-gradient(circle at 88% 8%, rgba(34, 211, 238, 0.16), transparent 29rem),
+        radial-gradient(circle at 60% 100%, rgba(167, 139, 250, 0.12), transparent 34rem),
+        linear-gradient(135deg, #071018 0%, #091421 52%, #081018 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.42;
+      background-image:
+        linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+        repeating-conic-gradient(from 45deg, rgba(255,255,255,0.025) 0 25%, transparent 0 50%);
+      background-size: 64px 64px, 64px 64px, 18px 18px;
+      mask-image: linear-gradient(to bottom, black 0%, rgba(0,0,0,0.72) 64%, transparent 100%);
+    }
+
+    a { color: inherit; }
+    button, input { font: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 76px;
+      padding: 14px clamp(20px, 4vw, 72px);
+      background: rgba(5, 13, 21, 0.78);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      border: 1px solid rgba(96, 165, 250, 0.8);
+      box-shadow: 0 0 24px rgba(34, 211, 238, 0.2);
+    }
+
+    .brand strong { display: block; font-size: 17px; }
+    .brand small { color: var(--muted); font-size: 12px; }
+
+    .top-links { display: flex; align-items: center; gap: 10px; }
+    .icon-link {
+      display: inline-grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.72);
+      text-decoration: none;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+    .icon-link:hover {
+      transform: translateY(-2px);
+      border-color: rgba(34, 211, 238, 0.7);
+      box-shadow: 0 0 24px rgba(34, 211, 238, 0.18);
+    }
+
+    main { position: relative; z-index: 1; }
+    .hero {
+      min-height: 62vh;
+      display: grid;
+      align-items: center;
+      padding: clamp(64px, 9vw, 136px) clamp(20px, 7vw, 124px) 70px;
+    }
+
+    .hero-inner { max-width: 1180px; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      color: #d9f7ff;
+      font-size: 13px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 16px var(--cyan);
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 0;
+      font-size: clamp(46px, 7vw, 104px);
+      line-height: 1.02;
+      font-weight: 800;
+    }
+    h1 span {
+      color: transparent;
+      background: linear-gradient(100deg, #fff2b6, var(--gold) 24%, #c4b5fd 52%, var(--cyan) 78%, var(--green));
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .hero p {
+      max-width: 820px;
+      margin: 28px 0 0;
+      color: #c7d2df;
+      font-size: clamp(18px, 2vw, 27px);
+      line-height: 1.65;
+    }
+
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 26px;
+      margin-top: 34px;
+      color: var(--muted);
+    }
+    .hero-stats strong { color: var(--text); font-size: 24px; margin-right: 6px; }
+
+    .workspace {
+      width: min(1540px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 0 100px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 42px;
+    }
+    .search-wrap { position: relative; }
+    .search-wrap::before {
+      content: "⌕";
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--cyan);
+      font-size: 26px;
+      pointer-events: none;
+    }
+    .search {
+      width: 100%;
+      height: 52px;
+      padding: 0 18px 0 52px;
+      color: var(--text);
+      background: rgba(15, 23, 42, 0.68);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .search:focus {
+      border-color: rgba(34, 211, 238, 0.65);
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.12);
+    }
+
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .filter {
+      min-height: 42px;
+      padding: 0 15px;
+      color: #cbd5e1;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: rgba(15, 23, 42, 0.7);
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    .filter:hover, .filter.active {
+      color: #061018;
+      border-color: var(--cyan);
+      background: linear-gradient(100deg, var(--gold), var(--cyan));
+      box-shadow: 0 8px 24px rgba(34, 211, 238, 0.16);
+    }
+
+    .chapter { margin: 0 0 58px; }
+    .chapter-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .chapter-head h2 { margin: 0; font-size: clamp(26px, 3vw, 42px); }
+    .chapter-head p { margin: 0; color: var(--muted); }
+    .chapter-no { color: var(--cyan); margin-right: 12px; }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .course-card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 326px;
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px;
+      background: linear-gradient(160deg, rgba(21, 35, 50, 0.94), rgba(7, 17, 28, 0.9));
+      box-shadow: inset 0 1px rgba(255,255,255,0.05), 0 18px 38px rgba(0,0,0,0.24);
+      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
+    .course-card::after {
+      content: "";
+      position: absolute;
+      top: -30%;
+      left: -70%;
+      width: 48%;
+      height: 170%;
+      transform: rotate(18deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      transition: left .72s ease;
+      pointer-events: none;
+    }
+    .course-card:hover {
+      transform: translateY(-7px);
+      border-color: rgba(253, 224, 71, 0.5);
+      box-shadow: 0 22px 58px rgba(0,0,0,0.38), 0 0 30px rgba(34, 211, 238, 0.1);
+    }
+    .course-card:hover::after { left: 130%; }
+    .course-card[hidden] { display: none; }
+
+    .cover {
+      position: relative;
+      height: 178px;
+      overflow: hidden;
+      background: #0c1724;
+      border-bottom: 1px solid var(--line);
+    }
+    .cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0.9;
+      transition: transform .55s ease, filter .4s ease;
+    }
+    .course-card:hover .cover img { transform: scale(1.045); filter: saturate(1.16) brightness(1.08); }
+    .badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 2;
+      padding: 5px 9px;
+      color: #061018;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 4px;
+      background: var(--accent, var(--cyan));
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    .card-body { display: flex; flex: 1; flex-direction: column; padding: 18px; }
+    .card-body h3 { margin: 0; font-size: 20px; line-height: 1.38; }
+    .card-body p { margin: 10px 0 16px; color: var(--muted); line-height: 1.6; font-size: 14px; }
+    .card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; }
+    .tags { color: var(--accent, var(--cyan)); font-size: 12px; }
+    .open-mark {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      color: #061018;
+      background: var(--accent, var(--cyan));
+      transition: transform .2s ease;
+    }
+    .course-card:hover .open-mark { transform: translateX(3px); }
+
+    .empty {
+      display: none;
+      padding: 70px 20px;
+      text-align: center;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .cta-band {
+      display: grid;
+      grid-template-columns: 1.2fr auto;
+      gap: 30px;
+      align-items: center;
+      margin-top: 70px;
+      padding: 32px clamp(24px, 4vw, 52px);
+      border: 1px solid rgba(253, 224, 71, 0.35);
+      border-radius: 8px;
+      background: linear-gradient(110deg, rgba(253,224,71,0.12), rgba(167,139,250,0.1), rgba(34,211,238,0.12));
+      box-shadow: inset 0 1px rgba(255,255,255,.07), 0 20px 50px rgba(0,0,0,.26);
+    }
+    .cta-band h2 { margin: 0 0 8px; font-size: clamp(25px, 3vw, 42px); }
+    .cta-band p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.6; }
+    .primary-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      color: #061018;
+      font-weight: 800;
+      text-decoration: none;
+      border-radius: 6px;
+      background: linear-gradient(100deg, var(--gold), var(--cyan));
+      box-shadow: 0 10px 32px rgba(34,211,238,.18);
+    }
+
+    footer {
+      padding: 30px 20px 46px;
+      text-align: center;
+      color: #748397;
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 1180px) {
+      .course-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .toolbar { grid-template-columns: 1fr; }
+      .filters { justify-content: flex-start; }
+    }
+    @media (max-width: 820px) {
+      .topbar { align-items: flex-start; }
+      .brand small { display: none; }
+      .hero { min-height: 54vh; }
+      .course-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .chapter-head { align-items: flex-start; flex-direction: column; }
+      .cta-band { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .topbar { padding: 12px 16px; }
+      .brand strong { font-size: 15px; }
+      .hero { padding: 72px 20px 50px; }
+      .workspace { width: min(100% - 24px, 1540px); }
+      .course-grid { grid-template-columns: 1fr; }
+      .course-card { min-height: 310px; }
+      .filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .filter { padding: 0 8px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="assets/ai_product_canyon_avatar.png" alt="AI 产品大峡谷">
+      <div>
+        <strong>AI 产品大峡谷</strong>
+        <small>AI 增强型产品经理 · 课程课件中心</small>
+      </div>
+    </div>
+    <nav class="top-links" aria-label="外部链接">
+      <a class="icon-link" href="https://zcnotzbbokcu.feishu.cn/wiki/OxOTwH9Bnix1f8ktiyVcudzwnXe?from=from_copylink" target="_blank" rel="noopener" title="课程知识库" aria-label="课程知识库">▣</a>
+      <a class="icon-link" href="https://github.com/shangbianai/pm-ai-guide" target="_blank" rel="noopener" title="GitHub 课程仓库" aria-label="GitHub 课程仓库">↗</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="eyebrow">AI PRODUCT MANAGER COURSE</div>
+        <h1>把 AI 放进<span>产品经理真实工作流</span></h1>
+        <p>从市场洞察、需求调研、原型设计、PRD、需求评审，到项目管理、运营复盘与 Vibe Coding。这里汇总了课程全部 HTML 课件和可交互 Demo。</p>
+        <div class="hero-stats">
+          <span><strong>32</strong>个课件入口</span>
+          <span><strong>7</strong>个课程章节</span>
+          <span><strong>1</strong>条完整工作流</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <div class="toolbar">
+        <label class="search-wrap">
+          <span class="sr-only" hidden>搜索课件</span>
+          <input id="search" class="search" type="search" placeholder="搜索：市场洞察、PRD、项目管理、Vibe Coding……" autocomplete="off">
+        </label>
+        <div class="filters" role="group" aria-label="章节筛选">
+          <button class="filter active" type="button" data-filter="all">全部</button>
+          <button class="filter" type="button" data-filter="0">序章</button>
+          <button class="filter" type="button" data-filter="1">市场洞察</button>
+          <button class="filter" type="button" data-filter="2">需求调研</button>
+          <button class="filter" type="button" data-filter="3">产品设计</button>
+          <button class="filter" type="button" data-filter="4">运营管理</button>
+          <button class="filter" type="button" data-filter="5">项目管理</button>
+          <button class="filter" type="button" data-filter="6">日常工作</button>
+          <button class="filter" type="button" data-filter="7">新天地</button>
+        </div>
+      </div>
+
+      <div id="courseList">
+        <section class="chapter" data-chapter="0">
+          <div class="chapter-head"><h2><span class="chapter-no">00</span>课程导览</h2><p>先看课程定位和完整能力地图</p></div>
+          <div class="course-grid">
+            <a class="course-card" style="--accent:#fde047" data-search="序章 谁适合学 AI 增强型产品经理 课程导览" href="lessons/ai_pm_intro_who_should_learn.html" target="_blank">
+              <div class="cover"><span class="badge">FREE</span><img src="assets/thumbnails/00-intro.png" alt="谁适合学 AI 增强型产品经理课程"></div>
+              <div class="card-body"><h3>谁适合学 AI 增强型产品经理</h3><p>从传统产品升级为 AI 增强型产品，先判断这门课是否适合你。</p><div class="card-foot"><span class="tags">定位 · 人群 · 价值</span><span class="open-mark">→</span></div></div>
+            </a>
+            <a class="course-card" style="--accent:#22d3ee" data-search="课程宣传导览 能力地图 知识库 社群陪伴" href="lessons/29_course_promo_highlights/ai_pm_workflow_promo_deck.html" target="_blank">
+              <div class="cover"><span class="badge">OVERVIEW</span><img src="assets/thumbnails/31-promo.png" alt="课程宣传导览"></div>
+              <div class="card-body"><h3>AI 增强型产品经理课程导览</h3><p>一页看懂课程工作流、知识库、配套资料和长期社群陪伴。</p><div class="card-foot"><span class="tags">课程地图 · 交付物</span><span class="open-mark">→</span></div></div>
+            </a>
+          </div>
+        </section>
+
+        <section class="chapter" data-chapter="1">
+          <div class="chapter-head"><h2><span class="chapter-no">01</span>市场洞察</h2><p>从资料、信号到业务判断</p></div>
+          <div class="course-grid">
+            <a class="course-card" style="--accent:#60a5fa" data-search="Gemini 市场洞察 问题清单 业务资料" href="lessons/02_market_insight_gemini/market_insight_gemini_lesson.html" target="_blank"><div class="cover"><span class="badge">GEMINI</span><img src="assets/thumbnails/01-market-gemini.png" alt="Gemini 市场洞察"></div><div class="card-body"><h3>Gemini：业务资料变问题清单</h3><p>用真实资料识别行业、用户、竞品和机会信号。</p><div class="card-foot"><span class="tags">问题清单 · 洞察报告</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#86efac" data-search="市场洞察 Skill SWOT PESTEL KANO 优先级矩阵" href="lessons/03_market_insight_skills/market_insight_skills_lesson.html" target="_blank"><div class="cover"><span class="badge">SKILL</span><img src="assets/thumbnails/02-market-skill.png" alt="市场洞察 Skill"></div><div class="card-body"><h3>市场洞察 Skill</h3><p>把 SWOT、PESTEL、KANO 与优先级矩阵放进同一套洞察流程。</p><div class="card-foot"><span class="tags">方法论 · 决策建议</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#c4b5fd" data-search="BRD MRD 文档 业务需求 市场需求" href="lessons/03_brd_mrd_skills_document_generation/brd_mrd_skills_lesson.html" target="_blank"><div class="cover"><span class="badge">DOCUMENT</span><img src="assets/thumbnails/03-brd-mrd.png" alt="BRD MRD 文档生成"></div><div class="card-body"><h3>BRD / MRD 文档生成</h3><p>从市场判断继续生成结构化、可评审的业务与市场需求文档。</p><div class="card-foot"><span class="tags">BRD · MRD · 模板</span><span class="open-mark">→</span></div></div></a>
+          </div>
+        </section>
+
+        <section class="chapter" data-chapter="2">
+          <div class="chapter-head"><h2><span class="chapter-no">02</span>需求调研</h2><p>把声音、反馈和竞品动作变成需求</p></div>
+          <div class="course-grid">
+            <a class="course-card" style="--accent:#22d3ee" data-search="VoC 用户声音 需求池 功能清单" href="lessons/04_pm_requirements_voc/pm_requirements_voc_lesson.html" target="_blank"><div class="cover"><span class="badge">VOC</span><img src="assets/thumbnails/04-voc.png" alt="VoC 用户声音变需求池"></div><div class="card-body"><h3>VoC 用户声音变需求池</h3><p>判断需求真伪、归类场景、排序优先级并沉淀版本留痕。</p><div class="card-foot"><span class="tags">访谈 · 需求池</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#fde047" data-search="竞品分析 差异化 机会点 Skill" href="lessons/05_pm_compete_analysis/pm_compete_analysis_lesson.html" target="_blank"><div class="cover"><span class="badge">SKILL</span><img src="assets/thumbnails/05-competitor.png" alt="竞品分析 Skill"></div><div class="card-body"><h3>竞品分析 Skill</h3><p>从竞品动作、定位和体验中找到机会点与差异化打法。</p><div class="card-foot"><span class="tags">竞品 · 机会 · 差异化</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#fb7185" data-search="Agent 竞品调研 OpenClaw Hermes 龙虾" href="lessons/07_agent_competitor_research_demo/agent_competitor_research_demo.html" target="_blank"><div class="cover"><span class="badge">AGENT</span><img src="assets/thumbnails/07-agent-research.png" alt="Agent 竞品调研"></div><div class="card-body"><h3>Agent 竞品调研 Demo</h3><p>把网址交给 Agent，持续追踪竞品变化并输出调研报告。</p><div class="card-foot"><span class="tags">OpenClaw · Hermes</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#86efac" data-search="用户反馈 信息分析 产品接口 龙虾 OpenClaw" href="lessons/20_feedback_info_analysis_openclaw/feedback_info_analysis_lesson.html" target="_blank"><div class="cover"><span class="badge">OPENCLAW</span><img src="assets/thumbnails/22-feedback.png" alt="用户反馈信息分析"></div><div class="card-body"><h3>用户反馈信息分析</h3><p>对接产品接口，提炼公开反馈并持续转化为可跟进需求。</p><div class="card-foot"><span class="tags">反馈 · 接口 · 需求</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#60a5fa" data-search="龙虾 飞书 需求管理 总线 OpenClaw" href="lessons/24_openclaw_feishu_requirement/openclaw_feishu_requirement_lesson.html" target="_blank"><div class="cover"><span class="badge">BUS</span><img src="assets/thumbnails/26-openclaw.png" alt="龙虾飞书需求管理"></div><div class="card-body"><h3>用龙虾做飞书需求管理</h3><p>一句话描述需求，经总线提炼并同步到飞书需求池。</p><div class="card-foot"><span class="tags">飞书 · 总线 · 自动同步</span><span class="open-mark">→</span></div></div></a>
+          </div>
+        </section>
+
+        <section class="chapter" data-chapter="3">
+          <div class="chapter-head"><h2><span class="chapter-no">03</span>产品设计</h2><p>从架构、原型到完整需求文档</p></div>
+          <div class="course-grid">
+            <a class="course-card" style="--accent:#22d3ee" data-search="产品架构图 C4 架构 方法 工具" href="lessons/06_product_architecture_tools/product_architecture_tools_lesson.html" target="_blank"><div class="cover"><span class="badge">ARCH</span><img src="assets/thumbnails/06-architecture.png" alt="产品架构图工具和方法"></div><div class="card-body"><h3>产品架构图：工具与方法</h3><p>从传统梳理到 AI 辅助，讲清层级、边界和表达方法。</p><div class="card-foot"><span class="tags">C4 · 架构 · 方法</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#c4b5fd" data-search="AI 原型设计 Cursor Codex 高保真 低保真" href="lessons/08_prototype_design_cursor/prototype_design_cursor_lesson.html" target="_blank"><div class="cover"><span class="badge">PROTOTYPE</span><img src="assets/thumbnails/08-prototype.png" alt="AI 原型设计"></div><div class="card-body"><h3>AI 原型设计方法课</h3><p>用项目规则、提示词和验收清单保持高低保真原型一致性。</p><div class="card-foot"><span class="tags">Cursor · Codex · Rules</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#86efac" data-search="小程序 原型 Demo 高保真 低保真" href="lessons/08_prototype_design_cursor/miniapp_prototype.html" target="_blank"><div class="cover"><span class="badge">DEMO</span><img src="assets/thumbnails/09-miniapp.png" alt="小程序原型 Demo"></div><div class="card-body"><h3>小程序原型 Demo</h3><p>可切换高低保真、页面导航和完整交互的移动端原型。</p><div class="card-foot"><span class="tags">小程序 · 交互 · 双模式</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#60a5fa" data-search="后台 原型 Demo 商品 订单 会员 运营" href="lessons/08_prototype_design_cursor/admin_operations_prototype.html#app" target="_blank"><div class="cover"><span class="badge">DEMO</span><img src="assets/thumbnails/10-admin.png" alt="后台运营原型 Demo"></div><div class="card-body"><h3>后台运营原型 Demo</h3><p>包含总览、商品、订单、会员、门店和抽屉详情的完整后台。</p><div class="card-foot"><span class="tags">后台 · 表格 · 表单</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#fde047" data-search="业务流程图 Mermaid Flow 泳道图" href="lessons/09_business_process_diagram/business_process_diagram_lesson.html" target="_blank"><div class="cover"><span class="badge">FLOW</span><img src="assets/thumbnails/11-process.png" alt="业务流程图"></div><div class="card-body"><h3>业务流程图方法课</h3><p>比较 Gemini、Mermaid 与在线泳道图工具的三种画法。</p><div class="card-foot"><span class="tags">Mermaid · Flow · 泳道图</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#fb7185" data-search="PRD 需求文档 模板 页面元素 业务规则" href="lessons/10_prd_document_generation/prd_document_lesson.html" target="_blank"><div class="cover"><span class="badge">PRD</span><img src="assets/thumbnails/12-prd.png" alt="PRD 需求文档"></div><div class="card-body"><h3>PRD 需求文档生成</h3><p>从原型继续生成包含页面元素、业务规则和验收标准的完整 PRD。</p><div class="card-foot"><span class="tags">模板 · 结构 · 规则</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#22d3ee" data-search="需求评审 模拟 前端 后端 测试 设计 业务" href="lessons/11_requirement_review_master/requirement_review_master_lesson.html" target="_blank"><div class="cover"><span class="badge">REVIEW</span><img src="assets/thumbnails/13-review.png" alt="需求评审大师"></div><div class="card-body"><h3>需求评审大师 Skill</h3><p>用多角色模拟提前发现疏漏，准备问题清单与现场应对口径。</p><div class="card-foot"><span class="tags">评审 · 角色挑战 · 话术</span><span class="open-mark">→</span></div></div></a>
+          </div>
+        </section>
+
+        <section class="chapter" data-chapter="4">
+          <div class="chapter-head"><h2><span class="chapter-no">04</span>产品运营与管理</h2><p>从命名、验收到复盘和向上沟通</p></div>
+          <div class="course-grid">
+            <a class="course-card" style="--accent:#c4b5fd" data-search="产品命名 品牌 名字 Skill" href="lessons/12_product_naming_skill/product_naming_skill_lesson.html" target="_blank"><div class="cover"><span class="badge">NAMING</span><img src="assets/thumbnails/14-naming.png" alt="产品命名 Skill"></div><div class="card-body"><h3>产品命名 Skill</h3><p>从定位、记忆点和风险检查出发，系统生成并筛选产品名称。</p><div class="card-foot"><span class="tags">命名 · 定位 · 筛选</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#fde047" data-search="验收测试 Agent Codex Chrome 自动化 测试报告" href="lessons/13_acceptance_testing_agent/acceptance_testing_agent_lesson.html" target="_blank"><div class="cover"><span class="badge">TEST</span><img src="assets/thumbnails/15-testing.png" alt="AI Agent 验收测试"></div><div class="card-body"><h3>AI Agent 自动化验收</h3><p>用 Codex 联动浏览器执行验收，并输出带截图的专业报告。</p><div class="card-foot"><span class="tags">自动化 · 截图 · 报告</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#86efac" data-search="靠谱 向上管理 领导汇报 沟通" href="lessons/14_kaopu_upward_management/kaopu_upward_management_lesson.html" target="_blank"><div class="cover"><span class="badge">MENTOR</span><img src="assets/thumbnails/16-upward.png" alt="靠谱向上管理"></div><div class="card-body"><h3>靠谱向上管理 Skill</h3><p>把《靠谱》的咨询式工作方法变成随时可调用的汇报导师。</p><div class="card-foot"><span class="tags">汇报 · 沟通 · 决策</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#22d3ee" data-search="运营数据复盘 AARRR HEART 5Why" href="lessons/15_ops_data_review_skill/ops_data_review_lesson.html" target="_blank"><div class="cover"><span class="badge">DATA</span><img src="assets/thumbnails/17-ops.png" alt="运营数据复盘 Skill"></div><div class="card-body"><h3>运营数据复盘 Skill</h3><p>用 AARRR 看链路、HEART 看体验、5-Why 找到数据变化原因。</p><div class="card-foot"><span class="tags">AARRR · HEART · 5-Why</span><span class="open-mark">→</span></div></div></a>
+          </div>
+        </section>
+
+        <section class="chapter" data-chapter="5">
+          <div class="chapter-head"><h2><span class="chapter-no">05</span>项目管理</h2><p>从项目导师到进度、风险与沟通</p></div>
+          <div class="course-grid">
+            <a class="course-card" style="--accent:#60a5fa" data-search="PMBOK 项目导师 风险 进度 沟通" href="lessons/16_pmbok_project_mentor/pmbok_project_mentor_lesson.html" target="_blank"><div class="cover"><span class="badge">PMBOK</span><img src="assets/thumbnails/18-pmbok.png" alt="PMBOK 项目导师"></div><div class="card-body"><h3>PMBOK 项目导师 Skill</h3><p>把 PMBOK 蒸馏成项目诊断、规划和决策建议能力。</p><div class="card-foot"><span class="tags">PMBOK · 导师 · 决策</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#86efac" data-search="综合项目管理 项目章程 计划 风险 干系人" href="lessons/17_project_management_master/project_management_master_lesson.html" target="_blank"><div class="cover"><span class="badge">MASTER</span><img src="assets/thumbnails/19-project-master.png" alt="综合项目管理 Skill"></div><div class="card-body"><h3>综合项目管理 Skill</h3><p>把项目资料整理成章程、计划、风险清单和推进建议。</p><div class="card-foot"><span class="tags">章程 · 风险 · 干系人</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#fde047" data-search="项目进度 甘特图 Excel HTML 关键路径" href="lessons/18_project_schedule_management/schedule_management_lesson.html" target="_blank"><div class="cover"><span class="badge">SCHEDULE</span><img src="assets/thumbnails/20-schedule.png" alt="项目进度管理"></div><div class="card-body"><h3>项目进度管理 Skill</h3><p>生成甘特图、Excel 进度表、任务依赖和延期预警。</p><div class="card-foot"><span class="tags">甘特图 · Excel · 关键路径</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#c4b5fd" data-search="女娲 Skill 同事 沟通管理 人物视角" href="lessons/19_nuwa_colleague_skills/nuwa_colleague_skills_lesson.html" target="_blank"><div class="cover"><span class="badge">PEOPLE</span><img src="assets/thumbnails/21-nuwa.png" alt="女娲与同事 Skill"></div><div class="card-body"><h3>女娲与同事 Skills</h3><p>蒸馏人物思维方式，辅助复杂沟通、协作和判断。</p><div class="card-foot"><span class="tags">沟通 · 视角 · 蒸馏</span><span class="open-mark">→</span></div></div></a>
+          </div>
+        </section>
+
+        <section class="chapter" data-chapter="6">
+          <div class="chapter-head"><h2><span class="chapter-no">06</span>其他日常工作</h2><p>把高频交付做成可复用能力</p></div>
+          <div class="course-grid">
+            <a class="course-card" style="--accent:#fb7185" data-search="AI 生成 PPT Skill 生图 HTML 幻灯片" href="lessons/21_ai_ppt_generation_skill/ai_ppt_generation_lesson.html" target="_blank"><div class="cover"><span class="badge">PPT</span><img src="assets/thumbnails/23-ai-ppt.png" alt="AI 生成 PPT Skill"></div><div class="card-body"><h3>AI 生成 PPT Skill</h3><p>从内容结构到视觉页，讲清 AI 做 PPT 的完整流程和质量控制。</p><div class="card-foot"><span class="tags">PPT · 生图 · 结构</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#22d3ee" data-search="超长文档 建设方案 200页 文档工程" href="lessons/22_technical_solution_skill/technical_solution_skill_lesson.html" target="_blank"><div class="cover"><span class="badge">LONG DOC</span><img src="assets/thumbnails/24-build-plan.png" alt="超长建设方案 Skill"></div><div class="card-body"><h3>超长文档（建设方案）Skill</h3><p>把两百页级建设方案拆成可维护、可协作、可审查的文档工程。</p><div class="card-foot"><span class="tags">建设方案 · 长文档</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#c4b5fd" data-search="PPT Skills 总览 HTML 商务风 传统 生图" href="lessons/23_ppt_skills_overview/ppt_skills_overview_lesson.html" target="_blank"><div class="cover"><span class="badge">LINKS</span><img src="assets/thumbnails/25-ppt-overview.png" alt="PPT Skills 总览"></div><div class="card-body"><h3>PPT Skills 总览</h3><p>比较 HTML 商务风、生图模型、传统 PPT 与社区方案。</p><div class="card-foot"><span class="tags">HTML · 生图 · 社区</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#86efac" data-search="HTML 报告 生成 Skill 可视化 报告" href="lessons/25_html_report_skill/html_report_skill_lesson.html" target="_blank"><div class="cover"><span class="badge">REPORT</span><img src="assets/thumbnails/27-html-report.png" alt="HTML 报告生成 Skill"></div><div class="card-body"><h3>HTML 报告生成 Skill</h3><p>把结构化内容转成可分享、可交互、可长期复用的在线报告。</p><div class="card-foot"><span class="tags">HTML · 报告 · 分享</span><span class="open-mark">→</span></div></div></a>
+          </div>
+        </section>
+
+        <section class="chapter" data-chapter="7">
+          <div class="chapter-head"><h2><span class="chapter-no">07</span>新天地</h2><p>认知、行动、项目与长期链接</p></div>
+          <div class="course-grid">
+            <a class="course-card" style="--accent:#fde047" data-search="新认知 普通人 AI 四个要素 认知 激情 行动 团队" href="lessons/26_new_cognition_ai_learning/new_cognition_lesson.html" target="_blank"><div class="cover"><span class="badge">COGNITION</span><img src="assets/thumbnails/28-cognition.png" alt="AI 学习四个要素"></div><div class="card-body"><h3>普通人学习 AI 的四个要素</h3><p>认知、激情、行动、团队。先把学习 AI 的基本条件配齐。</p><div class="card-foot"><span class="tags">认知 · 激情 · 行动 · 团队</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#22d3ee" data-search="Vibe Coding 产品项目 QuickNote 发票 AI热点 流程图" href="lessons/27_vibe_coding_projects_share/vibe_coding_projects_lesson.html" target="_blank"><div class="cover"><span class="badge">VIBE</span><img src="assets/thumbnails/29-vibe.png" alt="Vibe Coding 项目分享"></div><div class="card-body"><h3>Vibe Coding 项目分享</h3><p>从 QuickNote、发票管理、AI 热点到流程图，分享真实项目和踩坑。</p><div class="card-foot"><span class="tags">项目 · 实践 · 兴趣</span><span class="open-mark">→</span></div></div></a>
+            <a class="course-card" style="--accent:#c4b5fd" data-search="AI 工具 书籍 课程 KOL 社群 链接" href="lessons/28_ai_links_resources/ai_links_resources_lesson.html" target="_blank"><div class="cover"><span class="badge">RESOURCES</span><img src="assets/thumbnails/30-links.png" alt="AI 新链接"></div><div class="card-body"><h3>AI 新链接</h3><p>汇总常用 AI 工具、中文书籍、入门课程、KOL 和社群入口。</p><div class="card-foot"><span class="tags">工具 · 书籍 · KOL · 社群</span><span class="open-mark">→</span></div></div></a>
+          </div>
+        </section>
+      </div>
+
+      <div id="empty" class="empty">没有找到匹配的课件，试试“PRD”“项目管理”或“Vibe Coding”。</div>
+
+      <section class="cta-band">
+        <div><h2>课程资料不只在视频里</h2><p>飞书知识库里还有安装指南、Skill、模板、案例与持续更新的资源链接。</p></div>
+        <a class="primary-link" href="https://zcnotzbbokcu.feishu.cn/wiki/OxOTwH9Bnix1f8ktiyVcudzwnXe?from=from_copylink" target="_blank" rel="noopener">打开课程知识库 ↗</a>
+      </section>
+    </section>
+  </main>
+
+  <footer>AI 产品大峡谷 · AI 增强型产品经理课程</footer>
+
+  <script>
+    const search = document.getElementById('search');
+    const filters = [...document.querySelectorAll('.filter')];
+    const chapters = [...document.querySelectorAll('.chapter')];
+    const cards = [...document.querySelectorAll('.course-card')];
+    const empty = document.getElementById('empty');
+    let activeChapter = 'all';
+
+    function normalize(value) {
+      return value.toLowerCase().replace(/\s+/g, ' ').trim();
+    }
+
+    function applyFilters() {
+      const keyword = normalize(search.value);
+      let visibleTotal = 0;
+
+      chapters.forEach(chapter => {
+        const chapterMatches = activeChapter === 'all' || chapter.dataset.chapter === activeChapter;
+        let visibleInChapter = 0;
+
+        chapter.querySelectorAll('.course-card').forEach(card => {
+          const matchesText = !keyword || normalize(card.dataset.search + ' ' + card.textContent).includes(keyword);
+          const visible = chapterMatches && matchesText;
+          card.hidden = !visible;
+          if (visible) visibleInChapter += 1;
+        });
+
+        chapter.hidden = visibleInChapter === 0;
+        visibleTotal += visibleInChapter;
+      });
+
+      empty.style.display = visibleTotal ? 'none' : 'block';
+    }
+
+    filters.forEach(button => {
+      button.addEventListener('click', () => {
+        activeChapter = button.dataset.filter;
+        filters.forEach(item => item.classList.toggle('active', item === button));
+        applyFilters();
+      });
+    });
+
+    search.addEventListener('input', applyFilters);
+  </script>
+</body>
+</html>

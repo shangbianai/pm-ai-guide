@@ -1,0 +1,1141 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 增强型产品经理｜课程宣传导览</title>
+<style>
+@import url("../../assets/fonts/lxgw-wenkai/lxgwwenkai-regular.css");
+@import url("../../assets/fonts/lxgw-wenkai/lxgwwenkai-bold.css");
+:root{
+  --ink:#f8fafc;
+  --soft:#dbeafe;
+  --muted:#9fb1c9;
+  --line:rgba(255,255,255,.16);
+  --panel:rgba(8,14,30,.62);
+  --cyan:#22d3ee;
+  --blue:#60a5fa;
+  --violet:#a78bfa;
+  --pink:#fb7185;
+  --gold:#fde047;
+  --green:#86efac;
+  --course-bg-image:none;
+  --display:"LXGW WenKai","PingFang SC","Microsoft YaHei",sans-serif;
+  --brush:"LXGW WenKai","PingFang SC","Microsoft YaHei",sans-serif;
+  --text:"LXGW WenKai","PingFang SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  overflow:hidden;
+  color:var(--ink);
+  font-family:var(--text);
+  background:#040615;
+}
+.pixel-bg{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    var(--course-bg-image),
+    radial-gradient(circle at 16% 12%,rgba(253,224,71,.20),transparent 25%),
+    radial-gradient(circle at 80% 20%,rgba(34,211,238,.23),transparent 30%),
+    radial-gradient(circle at 60% 82%,rgba(167,139,250,.20),transparent 32%),
+    linear-gradient(135deg,#030411 0%,#061323 48%,#110819 100%);
+  background-size:cover,auto,auto,auto,auto;
+  background-position:center,center,center,center,center;
+}
+.pixel-bg:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  opacity:.38;
+  background-image:
+    linear-gradient(rgba(255,255,255,.042) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.042) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(circle at center,#000 0 62%,transparent 100%);
+}
+.pixel-bg:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(115deg,transparent 0 42%,rgba(34,211,238,.13) 43%,transparent 45% 100%),
+    linear-gradient(62deg,transparent 0 72%,rgba(167,139,250,.16) 73%,transparent 75% 100%),
+    repeating-conic-gradient(from 45deg at 86% 76%,rgba(34,211,238,.22) 0 25%,transparent 0 50%) 0 0/22px 22px,
+    repeating-conic-gradient(from 45deg at 8% 82%,rgba(253,224,71,.18) 0 25%,transparent 0 50%) 0 0/28px 28px;
+  opacity:.24;
+  animation:bgDrift 18s ease-in-out infinite alternate;
+}
+@keyframes bgDrift{to{transform:translate3d(-18px,10px,0) scale(1.03)}}
+.watermark{
+  position:fixed;
+  right:34px;
+  top:28px;
+  z-index:30;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:9px 14px 9px 9px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+  background:rgba(5,10,24,.52);
+  backdrop-filter:blur(18px);
+  box-shadow:0 18px 60px rgba(0,0,0,.25);
+}
+.watermark img{width:42px;height:42px;border-radius:50%;object-fit:cover}
+.watermark span{font-size:17px;font-weight:1000;color:#e0f2fe;letter-spacing:1px}
+.fullscreen{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:31;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:999px;
+  padding:12px 22px;
+  background:rgba(5,10,24,.58);
+  color:#fff;
+  font-weight:950;
+  cursor:pointer;
+  backdrop-filter:blur(18px);
+}
+.page-count{
+  position:fixed;
+  left:24px;
+  bottom:22px;
+  z-index:31;
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(5,10,24,.58);
+  color:#fff;
+  backdrop-filter:blur(18px);
+  font-weight:1000;
+  letter-spacing:1px;
+}
+.page-count .now{font-size:25px;color:#fef08a}
+.page-count .total{font-size:17px;color:#dbeafe}
+.nav-controls{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  z-index:31;
+  display:flex;
+  gap:12px;
+  padding:8px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(5,10,24,.58);
+  backdrop-filter:blur(18px);
+}
+.nav-controls button{
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+  padding:12px 24px;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-family:var(--text);
+  font-size:17px;
+  font-weight:1000;
+  cursor:pointer;
+}
+.nav-controls button:last-child{
+  background:linear-gradient(90deg,rgba(167,139,250,.92),rgba(34,211,238,.92));
+  color:#061323;
+}
+.deck{position:relative;height:100vh}
+.slide{
+  position:absolute;
+  inset:0;
+  display:none;
+  padding:82px 92px 70px;
+}
+.slide.active{display:block;animation:slideIn .5s cubic-bezier(.16,1,.3,1) both}
+@keyframes slideIn{from{opacity:0;transform:translateY(18px) scale(.99)}to{opacity:1;transform:none}}
+.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.07);
+  color:#bae6fd;
+  font-size:14px;
+  font-weight:1000;
+  letter-spacing:4px;
+}
+.kicker:before{content:"";width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--cyan),var(--green));box-shadow:0 0 20px rgba(34,211,238,.7)}
+h1,h2,h3,p{margin:0}
+.title{
+  font-family:var(--display);
+  font-size:clamp(60px,7.1vw,124px);
+  line-height:1.02;
+  font-weight:1000;
+  letter-spacing:.01em;
+  text-shadow:
+    0 10px 0 rgba(2,6,23,.35),
+    0 24px 70px rgba(34,211,238,.22);
+}
+.title.one-line{white-space:nowrap;font-size:clamp(54px,6.4vw,106px)}
+.title-spark{
+  position:relative;
+  display:inline-block;
+  padding-bottom:.08em;
+}
+.title-spark:after{
+  content:"";
+  position:absolute;
+  left:2%;
+  right:4%;
+  bottom:-.02em;
+  height:.08em;
+  border-radius:999px;
+  background:linear-gradient(90deg,#fde047,#22d3ee,#86efac);
+  transform-origin:left center;
+  animation:underlineSweep 2.8s ease-in-out infinite;
+  box-shadow:0 0 28px rgba(34,211,238,.55);
+}
+.title-spark:before{
+  content:"";
+  position:absolute;
+  bottom:-.04em;
+  left:0;
+  width:.16em;
+  height:.16em;
+  border-radius:50%;
+  background:#fde047;
+  box-shadow:0 0 30px rgba(253,224,71,.8);
+  animation:dotRun 2.8s ease-in-out infinite;
+}
+@keyframes underlineSweep{0%,100%{transform:scaleX(.18);opacity:.7}48%,72%{transform:scaleX(1);opacity:1}}
+@keyframes dotRun{0%,100%{transform:translateX(0)}55%{transform:translateX(5.9em)}}
+.grad{
+  background:linear-gradient(120deg,#fff 4%,#fde047 28%,#a78bfa 48%,#22d3ee 70%,#86efac 92%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.lead{
+  margin-top:24px;
+  max-width:1060px;
+  color:#e2e8f0;
+  font-size:clamp(24px,2.3vw,36px);
+  line-height:1.48;
+  font-weight:900;
+}
+.hero{
+  height:100%;
+  display:grid;
+  grid-template-rows:auto 1fr;
+  gap:26px;
+}
+.hero-head{text-align:center;max-width:1440px;margin:0 auto}
+.hero-head .lead{margin:24px auto 0;max-width:1360px;font-size:clamp(25px,2.05vw,34px)}
+.hero-grid{
+  display:grid;
+  grid-template-columns:.86fr 1.14fr;
+  gap:34px;
+  min-height:0;
+}
+.deliveries,.sticky-board,.glass{
+  border:1px solid rgba(255,255,255,.16);
+  background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.045));
+  box-shadow:0 30px 100px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.12);
+  backdrop-filter:blur(18px);
+}
+.deliveries{border-radius:34px;padding:26px;display:grid;grid-template-columns:1fr;gap:14px}
+.delivery{
+  position:relative;
+  display:grid;
+  grid-template-columns:58px 1fr auto;
+  gap:14px;
+  align-items:center;
+  min-height:76px;
+  padding:14px 16px;
+  border-radius:24px;
+  background:rgba(4,8,22,.58);
+  border:1px solid rgba(255,255,255,.12);
+  animation:floaty 5.8s ease-in-out infinite;
+}
+.delivery:nth-child(2){animation-delay:.4s}.delivery:nth-child(3){animation-delay:.8s}.delivery:nth-child(4){animation-delay:1.2s}.delivery:nth-child(5){animation-delay:1.6s}
+@keyframes floaty{50%{transform:translateY(-7px)}}
+.delivery.featured{
+  background:linear-gradient(135deg,rgba(251,113,133,.20),rgba(253,224,71,.14),rgba(34,211,238,.13));
+  border-color:rgba(253,224,71,.42);
+  box-shadow:0 18px 60px rgba(253,224,71,.12),inset 0 1px 0 rgba(255,255,255,.18);
+}
+.icon{
+  width:58px;height:58px;border-radius:18px;
+  display:grid;place-items:center;
+  font-size:30px;
+  background:linear-gradient(135deg,rgba(34,211,238,.2),rgba(167,139,250,.2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
+}
+.delivery b{font-size:24px;color:#fff}
+.delivery p{margin-top:4px;font-size:15px;color:#b9c8dd;font-weight:800;line-height:1.35}
+.hot{
+  padding:5px 9px;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--pink),var(--gold));
+  color:#1f1020;
+  font-size:12px;
+  font-weight:1000;
+}
+.sticky-board{position:relative;border-radius:34px;padding:30px;overflow:hidden}
+.sticky-board:before{
+  content:"";
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 80% 20%,rgba(34,211,238,.18),transparent 30%);
+}
+.sticky-grid{
+  position:relative;
+  height:100%;
+  display:flex;
+  flex-wrap:wrap;
+  gap:13px;
+  align-content:space-between;
+}
+.sticky{
+  --r:0deg;
+  padding:10px 14px;
+  min-width:100px;
+  border-radius:16px 16px 22px 16px;
+  background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(216,235,255,.80));
+  color:#0b1220;
+  font-size:18px;
+  font-weight:1000;
+  box-shadow:0 18px 44px rgba(0,0,0,.24);
+  transform:rotate(var(--r));
+  animation:stickyFloat 6s ease-in-out infinite;
+}
+.sticky:nth-child(3n+1){background:linear-gradient(145deg,#fef3c7,#fde68a)}
+.sticky:nth-child(3n+2){background:linear-gradient(145deg,#dbeafe,#93c5fd)}
+.sticky:nth-child(3n+3){background:linear-gradient(145deg,#ede9fe,#c4b5fd)}
+.sticky:nth-child(4n){background:linear-gradient(145deg,#dcfce7,#86efac)}
+.sticky:nth-child(2n){animation-delay:.7s}
+@keyframes stickyFloat{50%{transform:rotate(var(--r)) translateY(-9px)}}
+.pain-grid,.scene-grid,.knowledge-grid,.mentor-grid{
+  display:grid;
+  gap:22px;
+}
+.pain-layout{height:100%;display:grid;grid-template-rows:auto 1fr auto;gap:24px}
+.pain-titlebar{display:flex;align-items:flex-start;justify-content:space-between;gap:28px;padding-top:2px}
+.pain-titlebar .title{font-size:clamp(54px,6vw,96px);white-space:nowrap}
+.pain-titlebar p{max-width:620px;font-size:25px;line-height:1.42;color:#dbeafe;font-weight:950;text-align:right}
+.pain-main{display:grid;grid-template-columns:1.08fr .92fr;gap:28px;min-height:0}
+.pain-grid{grid-template-columns:1fr 1fr;gap:16px}
+.pain{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height:132px;
+  border-radius:26px;
+  padding:19px 21px;
+  background:rgba(4,8,22,.56);
+  border:1px solid rgba(255,255,255,.13);
+}
+.pain.hot-pain{
+  background:linear-gradient(135deg,rgba(251,113,133,.24),rgba(4,8,22,.58));
+  border-color:rgba(251,113,133,.52);
+}
+.pain b{display:block;font-size:24px;color:#fef08a;margin-bottom:9px}
+.pain.hot-pain b{color:#fecdd3}
+.pain span{font-size:16px;line-height:1.42;color:#dbeafe;font-weight:850}
+.solution-line{
+  width:100%;
+  margin:0 auto 46px;
+  padding:22px 30px;
+  border-radius:26px;
+  background:linear-gradient(90deg,rgba(251,113,133,.86),rgba(167,139,250,.86),rgba(34,211,238,.8));
+  color:white;
+  font-size:28px;
+  line-height:1.35;
+  font-weight:1000;
+  text-align:center;
+}
+.solution-card{
+  border-radius:34px;
+  padding:28px;
+  min-height:100%;
+}
+.solution-card h3{font-family:var(--brush);font-size:54px;line-height:1.08;letter-spacing:.02em}
+.solution-card p{margin-top:16px;font-size:22px;line-height:1.45;color:#e2e8f0;font-weight:900}
+.solution-list{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.solution-list span{
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  padding:13px 15px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  color:#eaf4ff;
+  font-size:18px;
+  font-weight:1000;
+}
+.solution-list .strong{
+  background:linear-gradient(135deg,rgba(253,224,71,.20),rgba(34,211,238,.12));
+  border-color:rgba(253,224,71,.35);
+  color:#fef9c3;
+}
+.scene-grid{grid-template-columns:repeat(4,1fr);margin-top:34px}
+.scene{
+  min-height:190px;
+  border-radius:26px;
+  padding:22px;
+  background:rgba(4,8,22,.58);
+  border:1px solid rgba(255,255,255,.13);
+  transform:translateY(18px);
+  opacity:0;
+}
+.active .scene{animation:rise .66s ease forwards;animation-delay:var(--d)}
+@keyframes rise{to{opacity:1;transform:none}}
+.scene b{display:block;font-size:27px;color:#7dd3fc;margin-bottom:14px}
+.scene p{font-size:18px;line-height:1.42;color:#dbeafe;font-weight:850}
+.shot-layout{height:100%;display:grid;grid-template-columns:.92fr 1.08fr;gap:34px;align-items:center}
+.shot{
+  position:relative;
+  overflow:hidden;
+  min-height:580px;
+  border-radius:34px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.06);
+  box-shadow:0 30px 100px rgba(0,0,0,.35);
+}
+.shot img{width:100%;height:100%;min-height:580px;object-fit:cover;display:block;filter:saturate(1.06) contrast(1.04)}
+.shot.top img{object-position:top center}
+.shot.left img{object-position:left center}
+.shot:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(2,6,23,.70),transparent 44%)}
+.shot-caption{position:absolute;left:26px;right:26px;bottom:26px;z-index:2}
+.shot-caption b{display:block;font-size:32px;margin-bottom:8px}
+.shot-caption span{font-size:19px;line-height:1.42;color:#dbeafe;font-weight:850}
+.script{
+  border-radius:34px;
+  padding:38px;
+}
+.script h2{font-family:var(--brush);font-size:clamp(50px,5.4vw,88px);line-height:1.06;letter-spacing:.02em;text-shadow:0 18px 60px rgba(0,0,0,.35)}
+.script p{margin-top:26px;font-size:27px;line-height:1.5;color:#e2e8f0;font-weight:900}
+.script ul{margin:28px 0 0;padding:0;list-style:none;display:grid;gap:15px}
+.script li{
+  padding:15px 18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  font-size:21px;
+  font-weight:900;
+  color:#eaf4ff;
+}
+.multi-shot{height:100%;display:grid;grid-template-rows:auto 1fr;gap:26px}
+.shot-row{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+.mini-shot{
+  position:relative;
+  min-height:430px;
+  overflow:hidden;
+  border-radius:28px;
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 24px 80px rgba(0,0,0,.32);
+}
+.mini-shot img{width:100%;height:100%;object-fit:cover;display:block}
+.mini-shot:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(2,6,23,.78),transparent 54%)}
+.mini-shot b{position:absolute;left:22px;right:22px;bottom:22px;z-index:2;font-size:26px;line-height:1.25}
+.knowledge-grid{grid-template-columns:.85fr 1.15fr;height:100%;align-items:center}
+.folder-stack{display:grid;gap:16px}
+.folder{
+  padding:18px 22px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(255,255,255,.075);
+  font-size:24px;
+  font-weight:950;
+}
+.folder span{display:block;margin-top:6px;color:#aebed5;font-size:17px}
+.mentor-grid{grid-template-columns:1fr 1fr;height:100%;align-items:center}
+.mentor-card{
+  min-height:520px;
+  border-radius:34px;
+  padding:38px;
+}
+.mentor-card h2{font-family:var(--brush);font-size:68px;line-height:1.06;letter-spacing:.02em}
+.mentor-card p{margin-top:26px;font-size:25px;line-height:1.5;color:#e2e8f0;font-weight:900}
+.mentor-card .chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.chips span{
+  border-radius:999px;
+  padding:12px 16px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.08);
+  font-size:20px;
+  font-weight:950;
+}
+.final{
+  height:100%;
+  display:grid;
+  place-items:center;
+  text-align:center;
+}
+.final h2{font-family:var(--brush);font-size:clamp(66px,7.4vw,126px);line-height:1.02;letter-spacing:.02em;text-shadow:0 18px 72px rgba(34,211,238,.18)}
+.final p{margin:30px auto 0;max-width:1100px;font-size:33px;line-height:1.5;color:#e2e8f0;font-weight:900}
+.pixel-bg{filter:saturate(.72) contrast(.86) brightness(.82)}
+.pixel-bg:before{opacity:.20;filter:blur(.35px)}
+.pixel-bg:after{opacity:.12;filter:blur(.8px)}
+.fullscreen{
+  right:26px;
+  bottom:22px;
+  padding:8px 15px;
+  min-width:64px;
+  font-size:14px;
+}
+.nav-controls{
+  left:auto;
+  right:102px;
+  bottom:22px;
+  transform:none;
+  gap:7px;
+  padding:5px;
+}
+.nav-controls button{
+  min-width:66px;
+  padding:8px 14px;
+  font-size:14px;
+}
+.page-count{
+  left:16px;
+  bottom:14px;
+  padding:7px 12px;
+  gap:6px;
+}
+.page-count .now{font-size:20px}
+.page-count .total{font-size:13px}
+.pain-layout{gap:18px}
+.pain-titlebar{
+  display:block;
+  text-align:center;
+  padding-top:0;
+}
+.pain-titlebar .title{font-size:clamp(62px,6.4vw,112px)}
+.pain-titlebar p{
+  max-width:1040px;
+  margin:16px auto 0;
+  font-size:clamp(22px,1.95vw,32px);
+  text-align:center;
+}
+.pain-main{
+  grid-template-columns:1.02fr .98fr;
+  gap:28px;
+}
+.pain{
+  position:relative;
+  overflow:hidden;
+  min-height:138px;
+  transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease,background .28s ease;
+}
+.pain:after,
+.solution-list span:after{
+  content:"";
+  position:absolute;
+  inset:-40% auto -40% -72%;
+  width:62%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),rgba(34,211,238,.20),transparent);
+  transform:skewX(-18deg) translateX(-120%);
+  transition:transform .72s ease;
+  pointer-events:none;
+}
+.pain:hover{
+  transform:translateY(-7px) scale(1.012);
+  border-color:rgba(253,224,71,.52);
+  box-shadow:0 22px 70px rgba(253,224,71,.13),0 12px 50px rgba(34,211,238,.10);
+  background:linear-gradient(135deg,rgba(253,224,71,.12),rgba(4,8,22,.62));
+}
+.pain:hover:after,
+.solution-list span:hover:after{transform:skewX(-18deg) translateX(360%)}
+.solution-card{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:32px;
+}
+.solution-card h3{font-size:clamp(48px,4vw,64px)}
+.solution-list{gap:13px;margin-top:22px}
+.solution-list span{
+  position:relative;
+  overflow:hidden;
+  min-height:78px;
+  transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease,background .28s ease;
+}
+.solution-list span:hover{
+  transform:translateY(-5px);
+  border-color:rgba(34,211,238,.45);
+  box-shadow:0 18px 54px rgba(34,211,238,.12);
+}
+.solution-proof{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.solution-proof span{
+  min-height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  border-radius:18px;
+  padding:12px;
+  font-size:18px;
+  line-height:1.35;
+  font-weight:1000;
+  color:#fff7ed;
+  border:1px solid rgba(251,113,133,.34);
+  background:linear-gradient(135deg,rgba(251,113,133,.24),rgba(253,224,71,.12),rgba(34,211,238,.08));
+}
+.solution-proof span{
+  flex-direction:column;
+  gap:6px;
+}
+.proof-title{
+  color:#fb7185;
+  font-weight:1000;
+  text-decoration:underline;
+  text-underline-offset:5px;
+  text-decoration-thickness:2px;
+  text-shadow:0 0 24px rgba(251,113,133,.35);
+}
+.solution-proof em{
+  font-style:normal;
+}
+.red-strong{
+  color:#fb7185;
+  font-weight:1000;
+  text-shadow:0 0 26px rgba(251,113,133,.34);
+}
+.delivery{
+  transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease,background .28s ease;
+  animation:none;
+}
+.delivery:hover{
+  transform:translateY(-7px) scale(1.012);
+  border-color:rgba(34,211,238,.50);
+  box-shadow:0 22px 70px rgba(34,211,238,.13);
+}
+.active .delivery{animation:deliverySelect 8.8s ease-in-out infinite}
+.active .delivery:nth-child(1){animation-delay:0s}
+.active .delivery:nth-child(2){animation-delay:1.15s}
+.active .delivery:nth-child(3){animation-delay:2.3s}
+.active .delivery:nth-child(4){animation-delay:3.45s}
+.active .delivery:nth-child(5){animation-delay:4.6s}
+@keyframes deliverySelect{
+  0%,18%,100%{transform:none;border-color:rgba(255,255,255,.12);box-shadow:none}
+  6%,13%{transform:translateY(-8px) scale(1.014);border-color:rgba(253,224,71,.62);box-shadow:0 22px 70px rgba(253,224,71,.14),0 12px 44px rgba(34,211,238,.12)}
+}
+.delivery.featured b{
+  background:linear-gradient(90deg,#fde047,#fb7185,#22d3ee);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.icon:before{font-weight:1000}
+.icon-video:before{content:"▶"}
+.icon-knowledge:before{content:"▣"}
+.icon-coach:before{content:"✦"}
+.icon-referral:before{content:"↗"}
+.icon-community:before{content:"∞"}
+.result-slide .title{
+  white-space:nowrap;
+  font-size:clamp(56px,6vw,104px);
+}
+.result-slide .scene-grid{margin-top:44px}
+.value-slide .kicker{margin-bottom:24px}
+.value-slide .title{
+  max-width:1780px;
+  white-space:normal;
+  font-size:clamp(42px,4.1vw,74px);
+  line-height:1.14;
+}
+.value-slide .title .nowrap{white-space:nowrap}
+.value-slide .scene-grid{
+  grid-template-columns:repeat(4,1fr);
+  gap:28px;
+  margin-top:48px;
+}
+.value-slide .scene{
+  min-height:166px;
+  padding:22px 24px;
+}
+.value-slide .scene b{font-size:26px}
+.value-slide .scene p{font-size:17px}
+.value-slide .scene.more{
+  background:linear-gradient(145deg,rgba(253,224,71,.13),rgba(34,211,238,.08),rgba(4,8,22,.62));
+  border-color:rgba(253,224,71,.32);
+}
+.scene{
+  transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease,background .28s ease;
+}
+.scene:hover{
+  transform:translateY(-8px) scale(1.018)!important;
+  border-color:rgba(34,211,238,.48);
+  box-shadow:0 22px 70px rgba(34,211,238,.14),0 12px 45px rgba(167,139,250,.12);
+  background:linear-gradient(145deg,rgba(34,211,238,.14),rgba(4,8,22,.62));
+}
+.knowledge-slide{padding:92px 92px 68px}
+.knowledge-panel{
+  position:relative;
+  height:100%;
+  display:grid;
+  grid-template-rows:auto auto 1fr auto;
+  align-content:start;
+  gap:20px;
+  padding-top:58px;
+}
+.knowledge-panel .kicker{
+  position:absolute;
+  left:0;
+  top:-58px;
+  justify-self:start;
+  margin:0;
+}
+.knowledge-title{
+  font-family:var(--brush);
+  font-size:clamp(48px,4.9vw,86px);
+  line-height:1.08;
+}
+.knowledge-red{
+  color:#fb7185;
+  border-bottom:7px solid rgba(251,113,133,.95);
+  text-shadow:0 0 34px rgba(251,113,133,.36);
+}
+.knowledge-sub{
+  max-width:none;
+  white-space:nowrap;
+  font-size:clamp(21px,1.65vw,30px);
+  line-height:1.38;
+  color:#dbeafe;
+  font-weight:900;
+}
+.knowledge-cards{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:18px;
+  min-height:0;
+  margin-top:22px;
+}
+.knowledge-card{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-height:350px;
+  padding:30px 24px;
+  border-radius:28px;
+  color:#f8fafc;
+  text-decoration:none;
+  border:1px solid rgba(253,224,71,.28);
+  background:
+    radial-gradient(circle at 18% 12%,rgba(253,224,71,.18),transparent 30%),
+    radial-gradient(circle at 90% 18%,rgba(34,211,238,.16),transparent 34%),
+    linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045));
+  backdrop-filter:blur(16px);
+  box-shadow:0 22px 80px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.16);
+  transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease;
+  opacity:0;
+  transform:translateY(18px);
+}
+.knowledge-card:before{
+  content:"";
+  position:absolute;
+  inset:10px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 46%,rgba(253,224,71,.055));
+  pointer-events:none;
+}
+.knowledge-card:after{
+  content:"";
+  position:absolute;
+  inset:-55% auto -55% -82%;
+  width:68%;
+  background:linear-gradient(90deg,transparent,rgba(253,224,71,.26),rgba(255,255,255,.26),transparent);
+  transform:skewX(-18deg) translateX(-120%);
+  transition:transform .8s ease;
+  pointer-events:none;
+}
+.active .knowledge-card{animation:knowledgeIn .62s cubic-bezier(.16,1,.3,1) forwards;animation-delay:var(--d)}
+@keyframes knowledgeIn{to{opacity:1;transform:none}}
+.knowledge-card:hover{
+  cursor:pointer;
+  transform:translateY(-12px) scale(1.015);
+  border-color:rgba(253,224,71,.78);
+  box-shadow:0 30px 100px rgba(253,224,71,.15),0 16px 64px rgba(34,211,238,.14);
+}
+.knowledge-card:hover:after{transform:skewX(-18deg) translateX(360%)}
+.knowledge-card strong,
+.knowledge-card span,
+.knowledge-card i{position:relative;z-index:1}
+.knowledge-card strong{font-size:31px;line-height:1.25;color:#fef9c3;text-shadow:0 0 24px rgba(253,224,71,.20)}
+.knowledge-card span{font-size:19px;line-height:1.5;color:#e0f2fe;font-weight:900}
+.knowledge-card i{
+  font-style:normal;
+  font-size:54px;
+  opacity:.98;
+  color:#fde047;
+  text-shadow:0 0 28px rgba(253,224,71,.35);
+}
+.knowledge-link{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  width:100%;
+  margin-top:18px;
+  padding:21px 26px;
+  border-radius:22px;
+  text-decoration:none;
+  color:#fff;
+  background:linear-gradient(90deg,rgba(251,113,133,.90),rgba(167,139,250,.85),rgba(34,211,238,.85));
+  box-shadow:0 18px 70px rgba(34,211,238,.14);
+  font-size:23px;
+  font-weight:1000;
+}
+.knowledge-link:hover{cursor:pointer;filter:brightness(1.08);transform:translateY(-2px)}
+.final-merged{
+  padding:74px 92px 88px;
+}
+.final-merged .final-head{
+  text-align:center;
+  max-width:1720px;
+  margin:0 auto 28px;
+}
+.final-merged .final-head h2{
+  font-family:var(--brush);
+  font-size:clamp(38px,3.9vw,72px);
+  line-height:1.15;
+  letter-spacing:.02em;
+  text-shadow:0 16px 64px rgba(34,211,238,.18);
+}
+.final-merged .final-head h2 .highlight{
+  color:#fde047;
+  text-shadow:0 0 34px rgba(253,224,71,.34),0 16px 64px rgba(34,211,238,.16);
+  border-bottom:5px solid rgba(253,224,71,.78);
+  padding-bottom:.02em;
+}
+.final-merged .final-head p{
+  margin-top:16px;
+  color:#dbeafe;
+  font-size:clamp(20px,1.55vw,28px);
+  line-height:1.42;
+  font-weight:950;
+}
+.final-merged .mentor-grid{
+  height:auto;
+  max-width:1660px;
+  margin:0 auto;
+  grid-template-columns:repeat(2,1fr);
+  gap:28px;
+  align-items:stretch;
+}
+.final-merged .mentor-card{
+  min-height:404px;
+  padding:32px 36px;
+  transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease;
+}
+.final-merged .mentor-card:hover{
+  transform:translateY(-8px);
+  border-color:rgba(34,211,238,.46);
+  box-shadow:0 26px 90px rgba(34,211,238,.12),0 16px 60px rgba(251,113,133,.10);
+}
+.final-merged .mentor-card h2{font-size:clamp(44px,4.2vw,70px)}
+.final-merged .mentor-card p{font-size:23px;line-height:1.45}
+.final-merged .mentor-card .chips{margin-top:24px}
+.final-merged .chips span{font-size:18px}
+.final-merged .final-roi{
+  margin:28px auto 0;
+  display:flex;
+  max-width:1360px;
+  opacity:0;
+  transform:translateY(22px) scale(.96);
+  pointer-events:none;
+  transition:opacity .55s ease,transform .55s cubic-bezier(.16,1,.3,1);
+}
+.final-merged[data-step="1"] .final-roi{
+  opacity:1;
+  transform:none;
+}
+.final{
+  align-items:start;
+  padding-top:86px;
+}
+.final h2{
+  max-width:1500px;
+  margin:0 auto;
+  font-size:clamp(46px,5.25vw,84px);
+  line-height:1.14;
+}
+.final p{
+  max-width:1250px;
+  font-size:30px;
+}
+.final-roi{
+  margin:38px auto 0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:22px 34px;
+  border-radius:26px;
+  color:#111827;
+  background:linear-gradient(90deg,#fde047,#fb7185,#22d3ee);
+  font-size:36px;
+  font-weight:1000;
+  box-shadow:0 28px 90px rgba(251,113,133,.22),0 14px 70px rgba(34,211,238,.18);
+}
+@media(max-width:1180px){
+  .slide{padding:72px 28px 62px}
+  .title.one-line{white-space:normal}
+  .hero-grid,.pain-layout,.shot-layout,.knowledge-grid,.mentor-grid{grid-template-columns:1fr}
+  .scene-grid,.pain-grid,.shot-row{grid-template-columns:1fr}
+  .shot,.shot img{min-height:360px}
+}
+</style>
+</head>
+<body>
+<div class="pixel-bg" aria-hidden="true"></div>
+<div class="watermark"><img src="../../assets/ai_product_canyon_avatar.png" alt=""><span>AI 产品大峡谷</span></div>
+<button class="fullscreen" onclick="toggleFull()">全屏</button>
+<div class="page-count" aria-live="polite"><span class="now">01</span><span class="total">/ 05</span></div>
+<div class="nav-controls" aria-label="翻页控制">
+  <button onclick="prev()">上一页</button>
+  <button onclick="next()">下一页</button>
+</div>
+
+<main class="deck">
+  <section class="slide active">
+    <div class="pain-layout">
+      <div class="pain-titlebar">
+        <h1 class="title one-line">产品经理正在被<span class="grad">重新定义</span></h1>
+        <p>AI 不是一个单独工具，而是在改变产品经理的能力边界、表达方式和职业竞争力。</p>
+      </div>
+      <div class="pain-main">
+        <div class="pain-grid">
+          <div class="pain"><b>AI 冲击越来越大</b><span>AI 已进入洞察、文档、原型、评审、项目管理，效率差距会被持续放大。</span></div>
+          <div class="pain"><b>外部环境依然恶劣</b><span>经济下行、岗位收缩、裁员压力，让产品经理更需要证明自己的结果。</span></div>
+          <div class="pain"><b>缺乏系统学习 AI 工具</b><span>接触少、用得浅，只会零散提问，跟不上工具和工作流变化。</span></div>
+          <div class="pain"><b>缺乏 AI 实践成果</b><span>用 AI 做项目太少，交流和面试时缺少可复用、可展示的竞争力。</span></div>
+          <div class="pain"><b>面试转型缺少指导</b><span>想转到 AI 产品经理，但缺少项目包装、作品集表达和面试方法论。</span></div>
+          <div class="pain hot-pain"><b>缺乏长期陪伴的组织</b><span>没有长期交流的社区，没有 AI 氛围，没有内推渠道，依然存在信息差。</span></div>
+        </div>
+        <div class="glass solution-card">
+          <h3><span class="grad">这门课</span>解决什么？</h3>
+          <p>核心不是收藏更多工具，而是帮你提升产品经理在 AI 时代的竞争力。</p>
+          <div class="solution-list">
+            <span>系统视频课程：按真实产品工作流讲</span>
+            <span class="strong">完整知识库：课件、Skill、模板、案例</span>
+            <span>AI 方法论：把判断和工具结合起来</span>
+            <span>AI 实践案例：能展示、能复用、能讲清楚</span>
+            <span>面试辅导：项目包装、作品集和表达路径</span>
+            <span class="strong">长期社群陪伴：答疑、交流、持续迭代</span>
+          </div>
+          <div class="solution-proof">
+            <span><b class="proof-title">提升竞争力</b><em>让 AI 真正进入工作流</em></span>
+            <span><b class="proof-title">沉淀成果</b><em>让项目经验能被看见</em></span>
+            <span><b class="proof-title">持续成长</b><em>用社群和知识库托住长期迭代</em></span>
+          </div>
+        </div>
+      </div>
+      <div class="solution-line">AI 产品经理 = 传统产品技能 + AI 方法论 + AI 工具 / skills 等 + AI 应用思维 + 实践与落地</div>
+    </div>
+  </section>
+
+  <section class="slide step-slide" data-max-step="1">
+    <div class="hero">
+      <div class="hero-head">
+        <h2 class="title one-line"><span class="grad title-spark">AI 增强型</span>产品经理</h2>
+        <p class="lead">说白了，这门课就是为了提高产品经理的竞争力：<strong class="red-strong">升职加薪</strong>、<strong class="red-strong">不被淘汰</strong>，在 AI 时代更好地生存和发展，并<strong class="red-strong">认识一群做 AI 的产品经理一起进步</strong>。</p>
+      </div>
+      <div class="hero-grid">
+        <div class="deliveries">
+          <div class="delivery"><div class="icon icon-video"></div><div><b>视频课程</b><p>围绕产品经理真实工作流系统讲解。</p></div></div>
+          <div class="delivery"><div class="icon icon-knowledge"></div><div><b>知识库（配套资料）</b><p>安装指南、Skill、模板、案例集中沉淀。</p></div></div>
+          <div class="delivery"><div class="icon icon-coach"></div><div><b>面试辅导</b><p>项目包装、作品集表达、面试讲法。</p></div></div>
+          <div class="delivery"><div class="icon icon-referral"></div><div><b>岗位内推</b><p>连接 AI 产品相关岗位与机会。</p></div></div>
+          <div class="delivery featured"><div class="icon icon-community"></div><div><b>长期社群陪伴</b><p>答疑、交流、同频共创、持续更新。</p></div><span class="hot">HOT</span></div>
+        </div>
+        <div class="sticky-board">
+          <div class="sticky-grid">
+            <span class="sticky" style="--r:-3deg">市场洞察</span>
+            <span class="sticky" style="--r:2deg">需求调研</span>
+            <span class="sticky" style="--r:-2deg">竞品分析</span>
+            <span class="sticky" style="--r:3deg">原型设计</span>
+            <span class="sticky" style="--r:-1deg">PRD</span>
+            <span class="sticky" style="--r:2deg">BRD</span>
+            <span class="sticky" style="--r:-3deg">MRD</span>
+            <span class="sticky" style="--r:3deg">需求评审</span>
+            <span class="sticky" style="--r:-2deg">项目管理</span>
+            <span class="sticky" style="--r:2deg">运营复盘</span>
+            <span class="sticky" style="--r:-2deg">Vibe Coding</span>
+            <span class="sticky" style="--r:3deg">产品架构图</span>
+            <span class="sticky" style="--r:-2deg">业务流程图</span>
+            <span class="sticky" style="--r:2deg">验收测试</span>
+            <span class="sticky" style="--r:-3deg">甘特图</span>
+            <span class="sticky" style="--r:2deg">数据复盘</span>
+            <span class="sticky" style="--r:-1deg">向上汇报</span>
+            <span class="sticky" style="--r:3deg">产品命名</span>
+            <span class="sticky" style="--r:-2deg">PPT</span>
+            <span class="sticky" style="--r:2deg">HTML 报告</span>
+            <span class="sticky" style="--r:-3deg">建设方案</span>
+            <span class="sticky" style="--r:2deg">OpenClaw</span>
+            <span class="sticky" style="--r:-1deg">面试项目包装</span>
+            <span class="sticky" style="--r:2deg">SWOT</span>
+            <span class="sticky" style="--r:-3deg">PESTEL</span>
+            <span class="sticky" style="--r:2deg">KANO</span>
+            <span class="sticky" style="--r:-1deg">优先级矩阵</span>
+            <span class="sticky" style="--r:3deg">需求池</span>
+            <span class="sticky" style="--r:-2deg">功能清单</span>
+            <span class="sticky" style="--r:2deg">用户旅程</span>
+            <span class="sticky" style="--r:-3deg">泳道图</span>
+            <span class="sticky" style="--r:2deg">PMBOK</span>
+            <span class="sticky" style="--r:-1deg">项目风险</span>
+            <span class="sticky" style="--r:3deg">验收报告</span>
+            <span class="sticky" style="--r:-2deg">飞书知识库</span>
+            <span class="sticky" style="--r:2deg">Codex</span>
+            <span class="sticky" style="--r:-3deg">Claude Code</span>
+            <span class="sticky" style="--r:2deg">Gemini</span>
+            <span class="sticky" style="--r:-2deg">AI 认知</span>
+            <span class="sticky" style="--r:3deg">AI 工具</span>
+            <span class="sticky" style="--r:-1deg">面试辅导</span>
+            <span class="sticky" style="--r:2deg">面试内推</span>
+            <span class="sticky" style="--r:-3deg">资源链接</span>
+            <span class="sticky" style="--r:3deg">长期陪伴</span>
+            <span class="sticky" style="--r:-2deg">专属分享</span>
+            <span class="sticky" style="--r:2deg">案例拆解</span>
+            <span class="sticky" style="--r:-1deg">作品集</span>
+            <span class="sticky" style="--r:3deg">工具清单</span>
+            <span class="sticky" style="--r:-2deg">岗位机会</span>
+            <span class="sticky" style="--r:2deg">同频交流</span>
+            <span class="sticky" style="--r:-3deg">AI 写作</span>
+            <span class="sticky" style="--r:2deg">提示词</span>
+            <span class="sticky" style="--r:-1deg">用户反馈</span>
+            <span class="sticky" style="--r:3deg">业务判断</span>
+            <span class="sticky" style="--r:-2deg">产品路线图</span>
+            <span class="sticky" style="--r:2deg">汇报材料</span>
+            <span class="sticky" style="--r:-3deg">复盘报告</span>
+            <span class="sticky" style="--r:3deg">测试报告</span>
+            <span class="sticky" style="--r:-1deg">流程优化</span>
+            <span class="sticky" style="--r:2deg">数据指标</span>
+            <span class="sticky" style="--r:-2deg">AARRR</span>
+            <span class="sticky" style="--r:3deg">HEART</span>
+            <span class="sticky" style="--r:-3deg">5-Why</span>
+            <span class="sticky" style="--r:2deg">客户访谈</span>
+            <span class="sticky" style="--r:-1deg">模拟评审</span>
+            <span class="sticky" style="--r:3deg">文档模板</span>
+            <span class="sticky" style="--r:-2deg">案例库</span>
+            <span class="sticky" style="--r:2deg">资源包</span>
+            <span class="sticky" style="--r:-3deg">社群答疑</span>
+            <span class="sticky" style="--r:3deg">简历优化</span>
+            <span class="sticky" style="--r:3deg">...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide knowledge-slide">
+    <div class="knowledge-panel">
+      <span class="kicker">KNOWLEDGE BASE</span>
+      <h2 class="knowledge-title">配套<span class="knowledge-red">知识库</span>：内部资料，让课程学习更高效</h2>
+      <p class="knowledge-sub">每节课都有对应课件、Skill、模板、案例、本地资料和安装说明，学完后可以随时回到资料里继续查、继续用、继续迭代。</p>
+      <div class="knowledge-cards">
+        <a class="knowledge-card" style="--d:.04s" href="https://zcnotzbbokcu.feishu.cn/wiki/OxOTwH9Bnix1f8ktiyVcudzwnXe?from=from_copylink" target="_blank" rel="noopener"><i>01</i><strong>Codex 桌面端配置指南</strong><span>先解决工具安装、模型接入和基础环境。</span></a>
+        <a class="knowledge-card" style="--d:.12s" href="https://zcnotzbbokcu.feishu.cn/wiki/OxOTwH9Bnix1f8ktiyVcudzwnXe?from=from_copylink" target="_blank" rel="noopener"><i>02</i><strong>市场洞察与文档输出</strong><span>市场洞察、BRD/MRD、竞品分析和报告输出。</span></a>
+        <a class="knowledge-card" style="--d:.20s" href="https://zcnotzbbokcu.feishu.cn/wiki/OxOTwH9Bnix1f8ktiyVcudzwnXe?from=from_copylink" target="_blank" rel="noopener"><i>03</i><strong>需求调研与用户反馈</strong><span>VoC、需求池、竞品分析、OpenClaw 自动化。</span></a>
+        <a class="knowledge-card" style="--d:.28s" href="https://zcnotzbbokcu.feishu.cn/wiki/OxOTwH9Bnix1f8ktiyVcudzwnXe?from=from_copylink" target="_blank" rel="noopener"><i>04</i><strong>产品设计与需求评审</strong><span>架构图、原型、PRD、流程图、需求评审。</span></a>
+        <a class="knowledge-card" style="--d:.36s" href="https://zcnotzbbokcu.feishu.cn/wiki/OxOTwH9Bnix1f8ktiyVcudzwnXe?from=from_copylink" target="_blank" rel="noopener"><i>05</i><strong>运营、项目与日常提效</strong><span>复盘、汇报、项目管理、PPT、长文档和报告。</span></a>
+      </div>
+      <a class="knowledge-link" href="https://zcnotzbbokcu.feishu.cn/wiki/OxOTwH9Bnix1f8ktiyVcudzwnXe?from=from_copylink" target="_blank" rel="noopener"><span>打开飞书课程知识库</span><span>https://zcnotzbbokcu.feishu.cn/wiki/OxOTwH9Bnix1f8ktiyVcudzwnXe</span></a>
+    </div>
+  </section>
+
+  <section class="slide result-slide value-slide">
+    <span class="kicker">COURSE SYSTEM</span>
+    <h2 class="title"><span class="nowrap">系统的视频讲解 + 完善的配套资料</span><br><span class="nowrap">持续的信息链接 + 长期的社群陪伴</span></h2>
+    <div class="scene-grid">
+      <div class="scene" style="--d:.05s"><b>市场洞察</b><p>从行业、用户、竞品和机会，输出老板能看的洞察。</p></div>
+      <div class="scene" style="--d:.10s"><b>VoC 需求池</b><p>把客户访谈、用户反馈和业务诉求整理成功能清单。</p></div>
+      <div class="scene" style="--d:.15s"><b>竞品分析</b><p>从竞品动作里找到机会点和差异化打法。</p></div>
+      <div class="scene" style="--d:.20s"><b>原型设计</b><p>用 AI 快速做小程序、后台系统和高低保真 Demo。</p></div>
+      <div class="scene" style="--d:.25s"><b>PRD 文档</b><p>从原型和模板继续生成结构完整的需求文档。</p></div>
+      <div class="scene" style="--d:.30s"><b>需求评审</b><p>提前模拟研发、测试、设计、业务方会问什么。</p></div>
+      <div class="scene" style="--d:.35s"><b>项目管理</b><p>生成甘特图、进度表、关键路径和风险提醒。</p></div>
+      <div class="scene" style="--d:.40s"><b>运营复盘</b><p>从数据变化里拆原因、找动作、形成复盘报告。</p></div>
+      <div class="scene" style="--d:.45s"><b>建设方案</b><p>把复杂资料整理成可交付、可审阅的超长建设方案。</p></div>
+      <div class="scene" style="--d:.50s"><b>验收测试</b><p>用 Agent 跑功能验收，输出带截图的测试报告。</p></div>
+      <div class="scene" style="--d:.55s"><b>Vibe Coding</b><p>把想法做成可演示项目，补齐产品作品感。</p></div>
+      <div class="scene more" style="--d:.60s"><b>更多...</b><p>后续资料、工具链接和实战案例会持续补充。</p></div>
+    </div>
+  </section>
+
+  <section class="slide final-merged" data-max-step="1">
+    <div class="final-head">
+      <h2>AI不只是辅助工具，它更是一个思维，也会是你<span class="highlight">最大的机遇</span>和未来<span class="highlight">最核心的竞争力</span>。</h2>
+      <p>如果你也希望和一群小伙伴共同探索 AI，更高效地成长，也希望升职加薪、不被淘汰，并始终保持高效。</p>
+    </div>
+    <div class="mentor-grid">
+      <div class="glass mentor-card">
+        <span class="kicker">COACHING</span>
+        <h2>一对一辅导<br><span class="grad">把能力讲出来</span></h2>
+        <p>学 AI 不只是为了会用工具，更是为了把项目经验包装成能被面试官、领导和团队理解的表达。</p>
+        <div class="chips"><span>简历优化</span><span>项目包装</span><span>作品集表达</span><span>模拟面试</span><span>一对一辅导</span></div>
+      </div>
+      <div class="glass mentor-card">
+        <span class="kicker">COMMUNITY</span>
+        <h2>社群陪伴<br><span class="grad">同频交流</span></h2>
+        <p>AI 变化很快，一个人摸索很慢。社群里可以交流工具、课程案例、实战问题和新的 AI 产品机会。</p>
+        <div class="chips"><span>长期答疑</span><span>工具更新</span><span>案例共创</span><span>岗位内推</span><span>同频交流</span><span>内部信息分享</span></div>
+      </div>
+    </div>
+    <div class="final-roi">选择这门课，以及社群链接，可能是你投资 AI，ROI 最高的一个决策！</div>
+  </section>
+</main>
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let current=0;
+const pageNow=document.querySelector('.page-count .now');
+const pageTotal=document.querySelector('.page-count .total');
+function pad(n){return String(n).padStart(2,'0')}
+function updatePage(){
+  pageNow.textContent=pad(current+1);
+  pageTotal.textContent=`/ ${pad(slides.length)}`;
+}
+function clearSteps(slide){slide.dataset.step='0'}
+function show(i){
+  clearSteps(slides[current]);
+  slides[current].classList.remove('active');
+  current=(i+slides.length)%slides.length;
+  slides[current].classList.add('active');
+  clearSteps(slides[current]);
+  updatePage();
+}
+function next(){
+  const slide=slides[current];
+  const max=Number(slide.dataset.maxStep||0);
+  const step=Number(slide.dataset.step||0);
+  if(step<max){slide.dataset.step=String(step+1);return}
+  show(current+1);
+}
+function prev(){show(current-1)}
+function toggleFull(){document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.()}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ') next();
+  if(e.key==='ArrowLeft') prev();
+  if(e.key==='f'||e.key==='F') toggleFull();
+});
+document.querySelector('.deck').addEventListener('click',e=>{if(!e.target.closest('button')) next()});
+updatePage();
+</script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pm-naming · 产品命名大师使用指南</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #0f172a;
+    --border: #334155; --text: #e2e8f0; --muted: #94a3b8;
+    --cyan: #22d3ee; --green: #34d399; --violet: #a78bfa;
+    --amber: #fbbf24; --rose: #fb7185;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Inter', sans-serif; line-height: 1.7;
+    padding: 0 24px 80px;
+  }
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(15,23,42,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); padding: 14px 0; margin: 0 -24px;
+  }
+  .nav-inner { max-width: 900px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 12px; }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .nav-title { font-size: 14px; font-weight: 600; font-family: 'JetBrains Mono', monospace; color: var(--cyan); }
+  .nav-sep { color: var(--border); }
+  .nav-sub { font-size: 13px; color: var(--muted); }
+  .page { max-width: 900px; margin: 0 auto; }
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--border); }
+  .hero h1 { font-size: 42px; font-weight: 700; letter-spacing: -1px; margin-bottom: 16px; }
+  .hero h1 span { color: var(--cyan); }
+  .hero p { font-size: 18px; color: var(--muted); max-width: 600px; }
+  .section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+  .section h2 { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+  .section h2 .num { color: var(--muted); font-weight: 400; font-size: 16px; margin-right: 8px; }
+  .section .desc { color: var(--muted); margin-bottom: 32px; font-size: 15px; }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 14px; background: var(--surface); padding: 2px 8px; border-radius: 4px; color: var(--cyan); }
+  pre { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.6; margin: 16px 0; }
+  pre .cmd { color: var(--cyan); }
+  pre .arg { color: var(--amber); }
+  pre .comment { color: #64748b; }
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 13px; }
+  th { text-align: left; padding: 12px 16px; background: var(--surface); color: var(--muted); font-weight: 600; font-size: 12px; border-bottom: 2px solid var(--border); }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  td code { font-size: 12px; }
+  .tip { background: rgba(34,211,238,0.06); border: 1px solid rgba(34,211,238,0.2); border-radius: 10px; padding: 16px 20px; margin: 24px 0; font-size: 13px; color: var(--cyan); }
+  .tip::before { content: '💡 '; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+  .style-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px;
+    transition: border-color 0.15s;
+  }
+  .style-card:hover { border-color: var(--cyan); }
+  .style-card .letter { font-size: 28px; font-weight: 800; color: var(--cyan); margin-bottom: 8px; }
+  .style-card h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .style-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .dim-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 24px;
+    text-align: center;
+  }
+  .dim-card .weight { font-size: 36px; font-weight: 800; color: var(--cyan); }
+  .dim-card .label { font-size: 13px; font-weight: 600; margin: 8px 0 4px; }
+  .dim-card .hint { font-size: 11px; color: var(--muted); }
+  .risk-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .risk-tag.red { background: rgba(251,113,133,0.15); color: var(--rose); }
+  .risk-tag.yellow { background: rgba(251,191,36,0.15); color: var(--amber); }
+  .risk-tag.green { background: rgba(52,211,153,0.15); color: var(--green); }
+  .footer { padding: 48px 0; text-align: center; color: var(--muted); font-size: 13px; }
+  .flow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 24px 0; font-size: 13px; }
+  .flow-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 18px; font-weight: 600; }
+  .flow-arrow { color: var(--cyan); font-size: 18px; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 28px; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-dot"></div>
+    <span class="nav-title">pm-naming</span>
+    <span class="nav-sep">/</span>
+    <span class="nav-sub">产品命名大师 · 使用指南</span>
+  </div>
+</nav>
+
+<div class="page">
+
+  <header class="hero">
+    <h1>让产品命名</h1>从"拍脑袋"变成<span>有方法论、能说服</span>
+    <p>引入 Qualtrics XM 命名体系和 4 维度评估框架，为新功能/新模块/新产品生成经过推敲的命名候选，并预警文化、法律和传播风险。</p>
+  </header>
+
+  <!-- 核心理念 -->
+  <section class="section">
+    <h2><span class="num">01</span>为什么需要命名方法论</h2>
+    <p class="desc">"感觉好听"不是命名理由。一个差的名字会让团队在走廊里用另一个名字代替它。</p>
+
+    <div class="grid-2">
+      <div class="style-card">
+        <h4 style="color: var(--rose); margin-bottom: 12px;">没有方法论的命名</h4>
+        <p>
+          拍脑袋想几个 → 内部投票 → 选票最多的 → 上线后发现撞名/歧义/没人记得住 → 改又不好改<br><br>
+          结果：<strong>一个产品有三个名字</strong>（文档一个、代码一个、大家嘴里一个）
+        </p>
+      </div>
+      <div class="style-card">
+        <h4 style="color: var(--green); margin-bottom: 12px;">使用 pm-naming</h4>
+        <p>
+          定义命名对象 → 分析公司风格 → 多风格候选 → 四维度评分 → 风险审查 → 推荐方案<br><br>
+          结果：<strong>一个名字，经得起所有角色追问</strong>（品牌说、法务审、开发用、用户搜）
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 四种风格 -->
+  <section class="section">
+    <h2><span class="num">02</span>四种命名风格</h2>
+    <p class="desc">没有绝对正确，只有是否适合场景和体系。Skill 会根据你的公司风格推荐主推方向。</p>
+
+    <div class="grid-4">
+      <div class="style-card">
+        <div class="letter">A</div>
+        <h4>功能描述型</h4>
+        <p>"订单管理中心""批量导入""智能巡检"<br>一看就懂，零解释成本</p>
+        <p style="margin-top: 12px; font-size: 12px; color: var(--muted);">适合：B 端工具、后台系统、内部产品</p>
+      </div>
+      <div class="style-card">
+        <div class="letter">B</div>
+        <h4>品牌前缀型</h4>
+        <p>"飞鱼洞察""XM Discover"<br>建立品牌资产，可体系化扩展</p>
+        <p style="margin-top: 12px; font-size: 12px; color: var(--muted);">适合：产品线、对外品牌、平台级能力</p>
+      </div>
+      <div class="style-card">
+        <div class="letter">C</div>
+        <h4>隐喻意象型</h4>
+        <p>"朋友圈""瀑布流""银河"<br>有记忆点，有故事可讲</p>
+        <p style="margin-top: 12px; font-size: 12px; color: var(--muted);">适合：C 端产品、品牌功能、营销传播</p>
+      </div>
+      <div class="style-card">
+        <div class="letter">D</div>
+        <h4>动作引导型</h4>
+        <p>"一键诊断""先买后付""猜你喜欢"<br>突出用户能获得什么</p>
+        <p style="margin-top: 12px; font-size: 12px; color: var(--muted);">适合：增长功能、CTA 场景、工具型产品</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qualtrics -->
+  <section class="section">
+    <h2><span class="num">03</span>Qualtrics XM 命名体系的启示</h2>
+    <p class="desc">每一层名称都传递两个信息——属于谁，干什么的。</p>
+
+    <table>
+      <thead>
+        <tr><th>层级</th><th>命名方式</th><th>Qualtrics 示例</th><th>类比示例</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>平台级</strong></td><td>公司品牌 + Platform</td><td>XM Platform</td><td>钉钉智能办公平台</td></tr>
+        <tr><td><strong>产品线</strong></td><td>品牌前缀 + 功能描述</td><td>XM Discover / XM Engage</td><td>飞鱼洞察 / 飞鱼客服</td></tr>
+        <tr><td><strong>领域应用</strong></td><td>领域缩写 + 产品类型</td><td>CX Dashboard / EX Dashboard</td><td>运营数据看板 / HR 数据看板</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 四个维度 -->
+  <section class="section">
+    <h2><span class="num">04</span>四维度评估框架</h2>
+    <p class="desc">每个候选名称从四个维度打分（1-5），告别"感觉好听"式的判断。</p>
+
+    <div class="grid-4">
+      <div class="dim-card">
+        <div class="weight">30%</div>
+        <div class="label">语义清晰度</div>
+        <div class="hint">不需要解释就能懂吗？</div>
+      </div>
+      <div class="dim-card">
+        <div class="weight">25%</div>
+        <div class="label">品牌一致性</div>
+        <div class="hint">和已有名字协调吗？</div>
+      </div>
+      <div class="dim-card">
+        <div class="weight">25%</div>
+        <div class="label">传播力</div>
+        <div class="hint">好记、好说、好搜吗？</div>
+      </div>
+      <div class="dim-card">
+        <div class="weight">20%</div>
+        <div class="label">风险可控性</div>
+        <div class="hint">有歧义、撞名吗？</div>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 32px; font-size: 15px; font-weight: 600;">传播力三测试</h3>
+    <div class="grid-4">
+      <div class="style-card">
+        <h4>走廊测试</h4>
+        <p>在走廊遇到同事，能自然说出"你用 XX 查一下"吗？</p>
+      </div>
+      <div class="style-card">
+        <h4>搜索测试</h4>
+        <p>用户会在搜索框输入什么？这个名称能匹配上吗？</p>
+      </div>
+      <div class="style-card">
+        <h4>缩写测试</h4>
+        <p>这个名称被缩略后会变成什么？缩略后还清晰吗？</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 使用流程 -->
+  <section class="section">
+    <h2><span class="num">05</span>使用流程</h2>
+    <p class="desc">从描述到推荐，6 步完成一次命名决策。</p>
+
+    <div class="flow">
+      <span class="flow-item">了解命名对象</span><span class="flow-arrow">→</span>
+      <span class="flow-item">确定命名风格</span><span class="flow-arrow">→</span>
+      <span class="flow-item">生成候选</span><span class="flow-arrow">→</span>
+      <span class="flow-item">四维评分</span><span class="flow-arrow">→</span>
+      <span class="flow-item">风险审查</span><span class="flow-arrow">→</span>
+      <span class="flow-item">输出报告</span>
+    </div>
+  </section>
+
+  <!-- 风险 -->
+  <section class="section">
+    <h2><span class="num">06</span>风险审查：四个不能踩的雷</h2>
+    <p class="desc">好名字可能死在一个没注意到的风险上。</p>
+
+    <table>
+      <thead>
+        <tr><th>风险类型</th><th>检查内容</th><th>示例</th><th>等级</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>语言歧义</strong></td><td>谐音、方言、缩写、中英文双关</td><td>"惠普"在方言中谐音"废品"</td><td><span class="risk-tag yellow">中风险</span></td></tr>
+        <tr><td><strong>撞名风险</strong></td><td>竞品、内部项目、知名产品</td><td>新产品叫"钉钉助手"就撞了</td><td><span class="risk-tag yellow">中风险</span></td></tr>
+        <tr><td><strong>商标/法律</strong></td><td>商标局查询、域名、行业管制</td><td>"百事通"撞 Pepsi 注册商标</td><td><span class="risk-tag red">高风险</span></td></tr>
+        <tr><td><strong>文化/地域</strong></td><td>数字忌讳、地域敏感、文化符号</td><td>Nova 在西班牙语中 ="不走"</td><td><span class="risk-tag red">高风险</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      有高风险就一票否决。不要心存侥幸——品牌和法务迟早会发现。
+    </div>
+  </section>
+
+  <!-- 安装 -->
+  <section class="section">
+    <h2><span class="num">07</span>安装与使用</h2>
+    <p class="desc">一行命令安装，30 秒开始使用。</p>
+
+    <pre><span class="comment"># 安装 Skill</span>
+<span class="cmd">Copy-Item</span> skills\pm-naming\SKILL.md <span class="arg">"$env:USERPROFILE\.claude\skills\pm-naming\SKILL.md"</span></pre>
+
+    <p style="margin-top: 16px; font-size: 13px; color: var(--muted);">
+      安装后重启 Claude Code，输入 <code>/pm-naming</code>，告诉 AI 你想给什么起名、它是做什么的。支持新功能命名、新产品命名、名称评估和改名四种场景。
+    </p>
+  </section>
+
+  <footer class="footer">
+    <p>pm-naming Skill · AI PM 效率课程 · 第4章 产品运营与管理</p>
+  </footer>
+
+</div>
+</body>
+</html>

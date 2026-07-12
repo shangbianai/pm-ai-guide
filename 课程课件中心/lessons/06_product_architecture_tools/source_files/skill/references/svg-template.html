@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>[系统名] Architecture</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
+          integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"
+          integrity="sha384-en/ztfPSRkGfME4KIm05joYXynqzUgbsG5nMrj/xEFAHXkeZfO3yMK8QQ+mP7p1/"
+          crossorigin="anonymous"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #020617; color: white; font-family: 'JetBrains Mono', monospace; padding: 24px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .title-area { display: flex; align-items: center; gap: 12px; }
+    .dot { width: 10px; height: 10px; background: #22d3ee; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    h1 { font-size: 22px; font-weight: 700; }
+    .subtitle { font-size: 12px; color: #64748b; margin-top: 4px; }
+    .toolbar { position: relative; }
+    .toolbar-toggle { background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 13px; }
+    .toolbar-toggle:hover { background: #334155; color: white; }
+    .toolbar-actions { display: none; position: absolute; right: 0; top: 36px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 8px; gap: 6px; flex-direction: column; min-width: 140px; z-index: 10; }
+    .toolbar-actions.open { display: flex; }
+    .toolbar-actions button { background: #0f172a; border: 1px solid #334155; color: #94a3b8; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; text-align: left; }
+    .toolbar-actions button:hover { background: #1e293b; color: white; }
+    .diagram-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 20px; overflow: hidden; }
+    svg { width: 100%; height: auto; display: block; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card { background: #0f172a; border: 1px solid #1e293b; border-radius: 10px; padding: 16px; }
+    .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .card-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .card-dot.cyan { background: #22d3ee; }
+    .card-dot.green { background: #34d399; }
+    .card-dot.violet { background: #a78bfa; }
+    .card h3 { font-size: 12px; font-weight: 600; }
+    .card ul { list-style: none; }
+    .card li { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+    .footer { text-align: center; font-size: 10px; color: #334155; margin-top: 16px; }
+    @media print { .toolbar { display: none !important; } }
+  </style>
+</head>
+<body>
+<div class="container" id="report-container">
+  <div class="header">
+    <div class="title-area">
+      <div class="dot"></div>
+      <div>
+        <h1>[系统名] Architecture</h1>
+        <div class="subtitle">[副标题]</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button class="toolbar-toggle" onclick="this.nextElementSibling.classList.toggle('open')">⋯</button>
+      <div class="toolbar-actions">
+        <button onclick="copyAsImage()">📋 复制 PNG</button>
+        <button onclick="downloadPNG()">🖼️ 下载 PNG</button>
+        <button onclick="downloadPDF()">📄 下载 PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+        </pattern>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+        </marker>
+      </defs>
+      <rect width="1000" height="680" fill="#020617"/>
+      <rect width="1000" height="680" fill="url(#grid)"/>
+
+      <!-- 箭头（先于组件绘制） -->
+
+      <!-- 组件框 -->
+
+      <!-- 图例 -->
+    </svg>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-header"><div class="card-dot cyan"></div><h3>核心组件</h3></div>
+      <ul><li>• 组件 1</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-dot green"></div><h3>数据流向</h3></div>
+      <ul><li>• 流程 1</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-dot violet"></div><h3>技术栈</h3></div>
+      <ul><li>• 技术 1</li></ul>
+    </div>
+  </div>
+  <div class="footer">[系统名] · Architecture Diagram</div>
+</div>
+<script>
+  function captureOptions() {
+    const r = document.getElementById('report-container').getBoundingClientRect();
+    const toolbar = document.querySelector('.toolbar');
+    return { x: r.left+scrollX, y: r.top+scrollY, width: r.width, height: r.height, scale: 2, ignoreElements: el => el===toolbar };
+  }
+  function copyAsImage() {
+    html2canvas(document.body, captureOptions()).then(c => c.toBlob(b => navigator.clipboard.write([new ClipboardItem({'image/png':b})])));
+  }
+  function downloadPNG() {
+    html2canvas(document.body, captureOptions()).then(c => { const a=document.createElement('a'); a.download='architecture.png'; a.href=c.toDataURL(); a.click(); });
+  }
+  function downloadPDF() {
+    html2canvas(document.body, captureOptions()).then(c => {
+      const {jsPDF}=window.jspdf;
+      const pdf=new jsPDF({orientation:'landscape',unit:'px',format:[c.width/2+64,c.height/2+64]});
+      pdf.addImage(c.toDataURL('image/png'),'PNG',32,32,c.width/2,c.height/2);
+      pdf.save('architecture.pdf');
+    });
+  }
+</script>
+</body>
+</html>

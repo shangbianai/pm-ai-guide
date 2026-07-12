@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>运营数据复盘 Skill</title>
+  <style>
+    :root {
+      --bg: #061014;
+      --paper: #f5fbf7;
+      --paper2: #edf8f1;
+      --ink: #0b211b;
+      --soft: #5d716b;
+      --muted: #8a9a95;
+      --line: rgba(11, 33, 27, .12);
+      --green: #08d978;
+      --cyan: #28b7ff;
+      --amber: #ffbf47;
+      --red: #ff4f64;
+      --blue: #3b72ff;
+      --shadow: 0 26px 80px rgba(0, 0, 0, .24);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(720px 420px at 12% 10%, rgba(8, 217, 120, .20), transparent 62%),
+        radial-gradient(760px 440px at 88% 0%, rgba(40, 183, 255, .15), transparent 60%),
+        linear-gradient(180deg, #071317, #041014);
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(180deg, #000, transparent 88%);
+    }
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 84px;
+      z-index: 80;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      background: rgba(6,16,20,.78);
+      backdrop-filter: blur(16px);
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--green); box-shadow: 0 0 28px rgba(8,217,120,.78); }
+    .brand-title { font-size: 22px; font-weight: 950; line-height: 1.08; }
+    .brand-sub { margin-top: 4px; color: rgba(255,255,255,.54); font-size: 12px; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; }
+    .top-actions { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 900; color: rgba(255,255,255,.72); }
+    .top-btn, .draw-btn, .note-btn {
+      border: 1px solid rgba(255,255,255,.16);
+      color: #fff;
+      background: rgba(255,255,255,.08);
+      border-radius: 13px;
+      height: 38px;
+      min-width: 38px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 950;
+    }
+    .deck {
+      position: fixed;
+      inset: 84px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 44px 76px;
+    }
+    .slide {
+      display: none;
+      width: min(1500px, calc(100vw - 88px));
+      height: min(820px, calc(100vh - 190px));
+      min-height: 0;
+      border-radius: 30px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(225,243,233,.96));
+      border: 1px solid rgba(255,255,255,.62);
+      box-shadow: var(--shadow);
+      padding: 48px 58px;
+    }
+    .slide.active { display: block; animation: slideIn .28s ease both; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px) scale(.995); } to { opacity: 1; transform: none; } }
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(11,33,27,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(11,33,27,.045) 1px, transparent 1px);
+      background-size: 58px 58px;
+    }
+    .slide.dark {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(6,16,20,.98), rgba(13,39,40,.94));
+      border-color: rgba(255,255,255,.14);
+    }
+    .slide.dark::before {
+      background-image:
+        linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
+    }
+    .content { position: relative; z-index: 1; height: 100%; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; align-items: center; height: 100%; }
+    .two.wide { grid-template-columns: .92fr 1.08fr; }
+    .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .cols4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.62);
+      border: 1px solid var(--line);
+      color: var(--soft);
+      font-size: 13px;
+      font-weight: 950;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+    .slide.dark .eyebrow { color: rgba(255,255,255,.72); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.13); }
+    .eyebrow::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 18px rgba(8,217,120,.72); }
+    h1, h2, h3, p { margin: 0; letter-spacing: 0; }
+    h1 { margin-top: 28px; font-size: clamp(46px, 5vw, 76px); line-height: 1.06; font-weight: 950; }
+    h2 { margin-top: 24px; font-size: clamp(38px, 4.2vw, 62px); line-height: 1.12; font-weight: 950; }
+    h3 { font-size: 24px; line-height: 1.25; font-weight: 950; }
+    p { color: var(--soft); font-size: 20px; line-height: 1.72; font-weight: 760; }
+    .slide.dark p { color: rgba(255,255,255,.72); }
+    .lead { margin-top: 24px; max-width: 930px; }
+    .grad { background: linear-gradient(90deg, var(--green), var(--cyan), var(--amber)); color: transparent; -webkit-background-clip: text; background-clip: text; }
+    .focus {
+      margin-top: 22px;
+      border-radius: 17px;
+      padding: 16px 20px;
+      border: 1px solid rgba(8,217,120,.22);
+      border-left: 5px solid var(--green);
+      background: rgba(8,217,120,.09);
+      color: #11613b;
+      font-size: 19px;
+      line-height: 1.56;
+      font-weight: 950;
+    }
+    .slide.dark .focus { color: #c8ffe4; background: rgba(8,217,120,.10); }
+    .card {
+      border-radius: 21px;
+      padding: 24px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 30px rgba(11,33,27,.06);
+    }
+    .card p { margin-top: 10px; font-size: 17px; line-height: 1.58; }
+    .card ul { margin: 14px 0 0; padding: 0; list-style: none; }
+    .card li { padding: 9px 0; border-bottom: 1px solid var(--line); color: var(--soft); font-size: 17px; line-height: 1.55; font-weight: 780; }
+    .card li:last-child { border-bottom: 0; }
+    .dashboard {
+      min-height: 440px;
+      border-radius: 24px;
+      padding: 26px;
+      background: rgba(6,16,20,.9);
+      border: 1px solid rgba(255,255,255,.12);
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+    .dashboard::after { content: ""; position: absolute; right: -80px; top: -80px; width: 230px; height: 230px; border-radius: 50%; background: radial-gradient(circle, rgba(8,217,120,.22), transparent 70%); }
+    .dash-head { display: flex; justify-content: space-between; margin-bottom: 22px; color: rgba(255,255,255,.58); font-size: 13px; font-weight: 950; letter-spacing: 2px; }
+    .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+    .metric { padding: 19px; border-radius: 17px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.10); }
+    .metric strong { display: block; margin-bottom: 8px; font-size: 33px; line-height: 1; }
+    .metric span { color: rgba(255,255,255,.58); font-size: 13px; font-weight: 900; }
+    .bars { height: 112px; border-radius: 17px; display: flex; align-items: end; gap: 10px; padding: 14px; background: rgba(255,255,255,.07); }
+    .bar { flex: 1; border-radius: 8px 8px 3px 3px; background: linear-gradient(180deg, var(--green), rgba(8,217,120,.28)); }
+    .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 28px; }
+    .step { min-height: 185px; border-radius: 20px; padding: 20px 16px; background: rgba(255,255,255,.72); border: 1px solid var(--line); }
+    .step b { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 14px; color: #fff; background: var(--ink); font-weight: 950; }
+    .step p { margin-top: 9px; font-size: 15px; line-height: 1.52; }
+    .model-card { position: relative; min-height: 455px; }
+    .q {
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(11,33,27,.15);
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      margin-left: 10px;
+      background: #fff;
+      cursor: pointer;
+      color: var(--soft);
+      font-weight: 950;
+    }
+    .model-title { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; font-size: 33px; font-weight: 950; }
+    .model-title b { width: 50px; height: 50px; border-radius: 17px; display: grid; place-items: center; background: rgba(8,217,120,.14); color: #087443; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .pill { padding: 8px 13px; border-radius: 999px; background: rgba(8,217,120,.10); color: #16633d; border: 1px solid rgba(8,217,120,.20); font-size: 14px; font-weight: 950; }
+    .code {
+      border-radius: 22px;
+      padding: 24px;
+      background: #071014;
+      color: #d8ffe9;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 16px;
+      line-height: 1.62;
+      white-space: pre-wrap;
+      max-height: 520px;
+      overflow: auto;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.10);
+    }
+    .table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 18px; background: rgba(255,255,255,.72); border: 1px solid var(--line); }
+    .table th, .table td { border-bottom: 1px solid var(--line); padding: 13px 15px; text-align: left; vertical-align: top; color: var(--soft); font-size: 16px; line-height: 1.45; }
+    .table th { color: var(--ink); background: rgba(8,217,120,.09); font-weight: 950; }
+    .table tr:last-child td { border-bottom: 0; }
+    .report-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 24px; }
+    .report-item { min-height: 106px; border-radius: 18px; padding: 18px; background: rgba(255,255,255,.72); border: 1px solid var(--line); }
+    .report-item strong { display: block; font-size: 18px; margin-bottom: 8px; }
+    .report-item span { color: var(--soft); font-size: 14px; font-weight: 760; line-height: 1.5; }
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: rgba(6,16,20,.78);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 18px 42px rgba(0,0,0,.24);
+      color: #fff;
+    }
+    .nav-btn { height: 40px; min-width: 86px; border: 1px solid rgba(255,255,255,.15); border-radius: 999px; background: rgba(255,255,255,.10); color: #fff; font-size: 15px; font-weight: 950; cursor: pointer; }
+    .nav-btn.primary { background: var(--green); color: #052015; border-color: transparent; }
+    .page-no { min-width: 54px; text-align: center; font-size: 15px; font-weight: 950; letter-spacing: 1px; }
+    .draw-toggle,
+    .draw-tools {
+      position: fixed;
+      right: 42px;
+      top: 104px;
+      z-index: 105;
+      align-items: center;
+      border-radius: 999px;
+      background: rgba(6,16,20,.78);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 18px 42px rgba(0,0,0,.22);
+    }
+    .draw-toggle {
+      display: inline-flex;
+      justify-content: center;
+      height: 38px;
+      min-width: 82px;
+      padding: 0 18px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 950;
+      cursor: pointer;
+    }
+    .draw-tools {
+      display: none;
+      gap: 8px;
+      padding: 8px;
+    }
+    body.drawing .draw-toggle { display: none; }
+    body.drawing .draw-tools { display: flex; }
+    .swatch { width: 28px; height: 28px; border: 2px solid rgba(255,255,255,.72); border-radius: 50%; cursor: pointer; padding: 0; }
+    .clear-draw { height: 28px; border: 1px solid rgba(255,255,255,.16); border-radius: 999px; background: rgba(255,255,255,.10); color: #fff; padding: 0 11px; font-size: 13px; font-weight: 950; cursor: pointer; }
+    .help {
+      position: fixed;
+      right: 42px;
+      bottom: 22px;
+      z-index: 105;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(6,16,20,.78);
+      color: #fff;
+      font-size: 24px;
+      font-weight: 950;
+      cursor: pointer;
+      backdrop-filter: blur(16px);
+    }
+    #drawCanvas { position: fixed; inset: 84px 0 0; z-index: 70; pointer-events: none; }
+    body.drawing #drawCanvas { pointer-events: auto; cursor: crosshair; }
+    .topbar, .bottom-nav, .draw-toggle, .draw-tools, .help, .modal { pointer-events: auto; }
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 130;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      background: rgba(0,0,0,.44);
+    }
+    .modal.active { display: flex; }
+    .modal-card {
+      width: min(860px, 92vw);
+      max-height: 76vh;
+      overflow: auto;
+      border-radius: 24px;
+      background: #fff;
+      padding: 34px;
+      box-shadow: var(--shadow);
+    }
+    .modal-card h3 { font-size: 30px; margin-bottom: 14px; }
+    .modal-card p { white-space: pre-wrap; font-size: 18px; }
+    @media (max-width: 1100px) {
+      .deck { padding: 24px 22px 84px; }
+      .slide { width: calc(100vw - 44px); height: calc(100vh - 190px); padding: 34px; }
+      .two, .two.wide, .cols2, .cols3, .cols4 { grid-template-columns: 1fr; }
+      .flow, .report-list { grid-template-columns: 1fr 1fr; }
+      h1 { font-size: 42px; }
+      h2 { font-size: 36px; }
+      p { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div>
+        <div class="brand-title">AI 增强型产品经理</div>
+        <div class="brand-sub">Chapter 4 · 产品运营与管理</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="top-btn" onclick="prevSlide()">‹</button>
+      <button class="top-btn" onclick="nextSlide()">›</button>
+      <span>翻页</span>
+    </div>
+  </header>
+
+  <canvas id="drawCanvas"></canvas>
+
+  <main class="deck">
+    <section class="slide active dark" data-note="开场先讲这节的核心：运营数据复盘不是看报表，而是把数据变成判断和行动。">
+      <div class="content two">
+        <div>
+          <div class="eyebrow">OPS DATA REVIEW</div>
+          <h1>运营数据复盘<br><span class="grad">Skill</span></h1>
+          <p class="lead">产品上线之后，数据不是用来堆满报告的。数据要回答三个问题：表现怎么样，为什么这样，接下来怎么办。</p>
+          <div class="pill-row">
+            <span class="pill">AARRR</span><span class="pill">HEART</span><span class="pill">5-Why</span><span class="pill">行动方案</span>
+          </div>
+        </div>
+        <div class="dashboard">
+          <div class="dash-head"><span>OPERATIONS COMMAND CENTER</span><span>LIVE</span></div>
+          <div class="metric-grid">
+            <div class="metric"><strong style="color:var(--green)">72K</strong><span>UV · +24.1%</span></div>
+            <div class="metric"><strong style="color:var(--cyan)">19.2%</strong><span>注册转化率</span></div>
+            <div class="metric"><strong style="color:var(--amber)">19%</strong><span>7日留存</span></div>
+            <div class="metric"><strong style="color:var(--red)">37%</strong><span>券包咨询占比</span></div>
+          </div>
+          <div class="bars">
+            <div class="bar" style="height:42%"></div><div class="bar" style="height:56%"></div><div class="bar" style="height:64%"></div><div class="bar" style="height:58%"></div><div class="bar" style="height:74%"></div><div class="bar" style="height:86%"></div><div class="bar" style="height:70%"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页把价值讲透：报告的目标不是展示努力，而是让老板知道怎么决策。">
+      <div class="content">
+        <div class="eyebrow">WHY</div>
+        <h2>运营复盘不是数据罗列</h2>
+        <p class="lead">很多复盘的问题，不是数据不够，而是只有数字，没有判断。老板真正需要的是：这组数据意味着什么，要不要动，怎么动，先动哪里。</p>
+        <div class="cols3" style="margin-top:32px">
+          <div class="card"><h3>表现怎么样</h3><p>指标健康还是预警？同比环比是否异常？增长是结构性变化，还是一次性波动？</p></div>
+          <div class="card"><h3>为什么这样</h3><p>问题发生在哪个环节？是渠道质量、产品体验、活动规则，还是用户结构变化？</p></div>
+          <div class="card"><h3>接下来怎么办</h3><p>给 P0/P1/P2 行动方案，说明负责人、时间点、预期效果，以及哪些事先不要做。</p></div>
+        </div>
+        <div class="focus">好的数据复盘，最终不是“我分析了很多”，而是“我们接下来应该这样做”。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里讲 Skill 产物：它最终会通过模板和脚本生成 HTML 报告，所以结构稳定。">
+      <div class="content">
+        <div class="eyebrow">WHAT</div>
+        <h2>这个 Skill 能做什么？</h2>
+        <p class="lead">它把产品上线后的运营数据，整理成一份结构化复盘报告：有指标仪表盘、有漏斗分析、有留存和商业化判断，也有问题诊断和行动计划。</p>
+        <div class="flow">
+          <div class="step"><b>1</b><h3>读数据</h3><p>接收 UV、PV、DAU、转化率、留存、收入、反馈。</p></div>
+          <div class="step"><b>2</b><h3>拆链路</h3><p>用 AARRR 看获客、激活、留存、变现和推荐。</p></div>
+          <div class="step"><b>3</b><h3>看体验</h3><p>用 HEART 补充满意度、参与度、采纳率。</p></div>
+          <div class="step"><b>4</b><h3>找根因</h3><p>用趋势、交叉分析、5-Why 定位问题。</p></div>
+          <div class="step"><b>5</b><h3>出报告</h3><p>通过模板和脚本生成稳定的 HTML 报告。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页解决输入问题：告诉学员数据复盘前要准备什么。">
+      <div class="content">
+        <div class="eyebrow">INPUTS</div>
+        <h2>使用前，准备四类输入</h2>
+        <p class="lead">复盘质量不只取决于 AI，也取决于你给它什么材料。最关键的是产品背景、上线信息、运营数据和反馈材料。</p>
+        <div class="cols2" style="margin-top:28px">
+          <div class="card"><h3>产品与版本</h3><p>产品名称、功能简介、上线时间、渠道。让 AI 先知道这次复盘讨论的是哪个产品、哪个版本、什么业务背景。</p></div>
+          <div class="card"><h3>核心数据</h3><p>UV、DAU、转化、留存、收入、NPS。不要只给总数，最好给上期、本期、环比、渠道和漏斗拆分。</p></div>
+          <div class="card"><h3>业务材料</h3><p>PRD、活动方案、用户反馈、客服记录。帮助 AI 判断数据变化背后的业务事件。</p></div>
+          <div class="card"><h3>复盘重点</h3><p>增长、活跃、转化、留存、商业化。告诉 AI 这次最需要老板决策的方向。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="先解释 AARRR 的来源和别名，再讲它适合解决什么问题。">
+      <div class="content two wide">
+        <div>
+          <div class="eyebrow">AARRR</div>
+          <h2>AARRR：增长漏斗，也叫海盗指标</h2>
+          <p class="lead">AARRR 来自 Dave McClure 的 Pirate Metrics，因为 Acquisition、Activation、Retention、Revenue、Referral 连起来像“AAARRR”的海盗喊声，所以常被叫作海盗指标。</p>
+          <div class="focus">运营角度看，它帮我们把“用户生命周期”拆开：用户从哪来、有没有体验到价值、是否回来、是否付费、是否推荐。</div>
+        </div>
+        <div class="card model-card">
+          <h3>五个阶段</h3>
+          <ul>
+            <li>Acquisition 获客：渠道带来了多少用户，质量如何</li>
+            <li>Activation 激活：用户是否完成首次核心体验</li>
+            <li>Retention 留存：用户是否持续回来</li>
+            <li>Revenue 变现：用户是否带来收入，收入效率如何</li>
+            <li>Referral 推荐：用户是否分享、邀请、形成口碑传播</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页专门讲 AARRR 使用场景，帮助学员知道什么时候用。">
+      <div class="content">
+        <div class="eyebrow">USE CASE</div>
+        <h2>AARRR 能帮运营复盘做好什么？</h2>
+        <div class="cols3" style="margin-top:30px">
+          <div class="card"><h3>找最大瓶颈</h3><p>不要平均优化所有环节，先看漏斗里掉得最厉害的地方。</p></div>
+          <div class="card"><h3>判断渠道质量</h3><p>不只看新增数量，还要看渠道用户的留存、转化和 LTV。</p></div>
+          <div class="card"><h3>对齐增长动作</h3><p>明确当前应该做获客、激活、留存、变现，还是推荐。</p></div>
+        </div>
+        <table class="table" style="margin-top:26px">
+          <tr><th>常见问题</th><th>AARRR 的切入点</th><th>可能行动</th></tr>
+          <tr><td>新增涨了，收入没涨</td><td>获客质量、激活、付费转化</td><td>调整渠道投放，优化首次体验和付费路径</td></tr>
+          <tr><td>活动带来很多用户，但很快流失</td><td>激活和留存</td><td>优化核心价值触达，设置次日/7日召回动作</td></tr>
+          <tr><td>老用户活跃下降</td><td>留存、推荐、功能使用深度</td><td>做用户分群，找到沉默原因和召回策略</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="slide" data-note="解释 HEART 的来源和它和 AARRR 的区别。">
+      <div class="content two wide">
+        <div>
+          <div class="eyebrow">HEART</div>
+          <h2>HEART：Google 的用户体验度量框架</h2>
+          <p class="lead">HEART 是 Google 提出的体验指标框架，用来把“用户体验好不好”拆成可观察的信号。它和 AARRR 不冲突：AARRR 看业务链路，HEART 看体验健康度。</p>
+          <div class="focus">运营角度看，HEART 可以帮我们解释为什么某个环节掉了：是满意度问题、参与度问题、采纳率问题，还是任务完成率问题。</div>
+        </div>
+        <div class="card model-card">
+          <h3>五个维度</h3>
+          <ul>
+            <li>Happiness：满意度、NPS、用户评价</li>
+            <li>Engagement：使用频率、时长、深度</li>
+            <li>Adoption：新功能采纳率、功能渗透率</li>
+            <li>Retention：用户是否持续回访</li>
+            <li>Task Success：任务完成率、错误率、阻塞点</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页讲 HEART 怎么落到运营动作上。">
+      <div class="content">
+        <div class="eyebrow">USE CASE</div>
+        <h2>HEART 能帮运营复盘做好什么？</h2>
+        <div class="cols3" style="margin-top:30px">
+          <div class="card"><h3>解释体验问题</h3><p>当转化或留存下降时，用满意度、任务成功率、错误率解释原因。</p></div>
+          <div class="card"><h3>衡量新功能效果</h3><p>看功能采纳率、功能渗透率和核心任务完成率，而不只看上线了没有。</p></div>
+          <div class="card"><h3>连接反馈和数据</h3><p>把 NPS、客服记录、用户评价和实际行为数据放到同一张图里看。</p></div>
+        </div>
+        <table class="table" style="margin-top:26px">
+          <tr><th>体验信号</th><th>运营解释</th><th>动作方向</th></tr>
+          <tr><td>NPS 下降，投诉集中</td><td>用户主观感受变差，可能影响口碑和复购</td><td>聚类投诉主题，先处理高频痛点</td></tr>
+          <tr><td>功能采纳率低</td><td>用户不知道、看不懂，或价值不够强</td><td>优化入口、引导、命名和场景提示</td></tr>
+          <tr><td>任务成功率下降</td><td>路径变复杂，或新规则增加理解成本</td><td>简化流程，补充错误提示和兜底路径</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页把两个模型放在一起，用问号打开完整解释。">
+      <div class="content">
+        <div class="eyebrow">FRAMEWORK</div>
+        <h2>AARRR 看链路，HEART 看体验</h2>
+        <p class="lead">一个好复盘通常需要两副眼镜：一副看业务增长链路，一副看用户体验健康度。</p>
+        <div class="cols2" style="margin-top:26px">
+          <div class="card model-card">
+            <div class="model-title"><b>A</b>AARRR<button class="q" onclick="openModel('aarrr')">?</button></div>
+            <ul>
+              <li>获客：用户从哪里来，渠道质量如何</li>
+              <li>激活：用户有没有完成首次核心体验</li>
+              <li>留存：用户会不会回来，在哪一天掉队</li>
+              <li>变现：收入效率、付费转化、LTV/CAC</li>
+              <li>推荐：分享、邀请、口碑传播是否成立</li>
+            </ul>
+          </div>
+          <div class="card model-card">
+            <div class="model-title"><b>H</b>HEART<button class="q" onclick="openModel('heart')">?</button></div>
+            <ul>
+              <li>Happiness：满意度、NPS、用户评价</li>
+              <li>Engagement：使用频率、时长、深度</li>
+              <li>Adoption：新功能采纳率、功能渗透率</li>
+              <li>Retention：用户是否持续回访</li>
+              <li>Task Success：任务完成率、错误率、阻塞点</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="展示 Skill 结构，强调不是模型临场手写网页，而是结构化数据加模板生成。">
+      <div class="content">
+        <div class="eyebrow">IMPLEMENTATION</div>
+        <h2>这个 Skill 是怎么实现的？</h2>
+        <p class="lead">它不是让模型临时手写网页，而是先产出结构化 JSON，再用固定模板和脚本生成稳定报告。</p>
+        <div class="code" style="margin-top:24px">ops-data-review/
+├── SKILL.md                  主指令：定义输入、流程、输出
+├── reference/
+│   ├── data-analysis-framework.md
+│   └── metrics-system.md
+├── scripts/
+│   └── generate-report.py    读取 JSON 并生成 HTML
+└── assets/
+    └── report-template.html  固定报告模板</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="实操前给最小输入模板，下一步可以直接复制使用。">
+      <div class="content two wide">
+        <div>
+          <div class="eyebrow">HOW TO USE</div>
+          <h2>实操时，可以这样输入</h2>
+          <p class="lead">最小可用输入只需要：产品、上线信息、复盘周期、关注重点、核心数据和资料路径。数据越完整，结论越可信。</p>
+          <div class="focus">先跑出初稿，再让 AI 补问缺失数据，是更高效的实操方式。</div>
+        </div>
+        <div class="code">请使用 ops-data-review Skill，帮我做一份运营数据复盘报告。
+
+产品：CityCup 咖啡小程序
+上线信息：V1.3 会员日活动版，2026-06-01 上线
+复盘周期：上线后 14 天
+重点关注：转化、留存、用户反馈
+运营数据：见《模拟运营数据样例.md》
+相关资料：PRD / 活动方案 / 用户反馈记录
+
+输出要求：
+先给执行摘要，再按 AARRR 和 HEART 分析，
+最后输出 P0/P1/P2 行动方案和 HTML 复盘报告。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="结尾自然承接实操，用模拟数据跑完整报告。">
+      <div class="content two">
+        <div>
+          <div class="eyebrow">RECAP</div>
+          <h2>回顾重点：这节课的价值</h2>
+          <p class="lead">这一节的重点，是让运营复盘从“数据展示”升级成“业务判断”。AI 可以帮我们整理指标、交叉分析、定位根因，但产品经理要负责判断哪些动作真正值得做。</p>
+          <div class="focus">接下来，我们进入实操环节，用一份模拟运营数据跑出完整复盘报告。</div>
+        </div>
+        <div class="card">
+          <h3>你应该带走三件事</h3>
+          <ul>
+            <li>运营复盘要围绕表现、原因、行动</li>
+            <li>AARRR 和 HEART 可以让分析更完整</li>
+            <li>Skill 输出报告后，还要人工校准业务判断</li>
+          </ul>
+          <div class="pill-row">
+            <span class="pill">指标体系</span><span class="pill">根因分析</span><span class="pill">行动方案</span><span class="pill">监测计划</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="bottom-nav">
+    <button class="nav-btn" onclick="prevSlide()">上一页</button>
+    <div class="page-no"><span id="pageNo">1</span> / <span id="pageTotal">12</span></div>
+    <button class="nav-btn primary" onclick="nextSlide()">下一页</button>
+  </div>
+
+  <button class="draw-toggle" onclick="enterDraw()">标注</button>
+  <div class="draw-tools">
+    <button class="swatch" title="红色标注" style="background:#ff3b30" onclick="setPen('#ff3b30')"></button>
+    <button class="swatch" title="黄色标注" style="background:#ffd60a" onclick="setPen('#ffd60a')"></button>
+    <button class="swatch" title="绿色标注" style="background:#30d158" onclick="setPen('#30d158')"></button>
+    <button class="clear-draw" onclick="clearDraw()">清空</button>
+    <button class="clear-draw" onclick="exitDraw()">退出</button>
+  </div>
+  <button class="help" onclick="openNote()">?</button>
+
+  <div class="modal" id="noteModal" onclick="closeModal(event)">
+    <div class="modal-card">
+      <h3 id="modalTitle">讲师备注</h3>
+      <p id="modalText"></p>
+    </div>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let current = 0;
+    const pageNo = document.getElementById('pageNo');
+    const pageTotal = document.getElementById('pageTotal');
+    const modal = document.getElementById('noteModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalText = document.getElementById('modalText');
+    pageTotal.textContent = slides.length;
+
+    const modelNotes = {
+      aarrr: `AARRR 又叫 Pirate Metrics，中文常说“海盗指标”或“增长漏斗”。它不是一个单纯的漏斗图，而是一套用户生命周期分析框架。
+
+五个阶段：
+1. Acquisition 获客：用户从哪里来，渠道质量如何。
+2. Activation 激活：用户是否体验到产品核心价值。
+3. Retention 留存：用户是否持续回来。
+4. Revenue 变现：用户是否付费，收入效率如何。
+5. Referral 推荐：用户是否分享、邀请、形成口碑传播。
+
+常见使用场景：
+- 新产品上线后，判断增长卡在哪个环节。
+- 活动复盘时，判断是渠道问题、激活问题还是留存问题。
+- 用户增长很好但收入不好时，排查激活和变现链路。
+- 向老板汇报增长策略时，把动作拆成获客、激活、留存、变现、推荐五类。
+
+从运营角度，它能帮我们避免“只看新增”，而是看完整链路质量。`,
+      heart: `HEART 是 Google 提出的用户体验度量框架，用来把“体验好不好”拆成可观察、可追踪的指标。
+
+五个维度：
+1. Happiness：满意度、NPS、用户评价。
+2. Engagement：使用频率、使用时长、使用深度。
+3. Adoption：新功能采纳率、功能渗透率。
+4. Retention：用户是否持续回访。
+5. Task Success：任务完成率、错误率、阻塞点。
+
+常见使用场景：
+- 新功能上线后，判断用户是否真的用起来。
+- 转化下降时，判断是不是任务路径变复杂。
+- 留存下降时，结合满意度和使用深度解释原因。
+- 用户反馈很多时，把定性反馈和定量指标合并判断。
+
+从运营角度，它能帮我们把“用户体验”转成指标体系，不只凭感觉判断。`
+    };
+
+    function showSlide(index) {
+      slides[current].classList.remove('active');
+      current = (index + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      pageNo.textContent = current + 1;
+      clearDraw();
+    }
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'Escape') modal.classList.remove('active');
+    });
+    function openNote() {
+      modalTitle.textContent = '讲师备注';
+      modalText.textContent = slides[current].dataset.note || '这一页没有额外备注。';
+      modal.classList.add('active');
+    }
+    function openModel(type) {
+      modalTitle.textContent = type === 'aarrr' ? 'AARRR 模型解释' : 'HEART 模型解释';
+      modalText.textContent = modelNotes[type];
+      modal.classList.add('active');
+    }
+    function closeModal(event) {
+      if (event.target.id === 'noteModal') event.currentTarget.classList.remove('active');
+    }
+
+    const canvas = document.getElementById('drawCanvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    let pen = '#ff3b30';
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = (window.innerHeight - 84) * dpr;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = (window.innerHeight - 84) + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    function enterDraw() { document.body.classList.add('drawing'); }
+    function setPen(color) { pen = color; enterDraw(); }
+    function exitDraw() { drawing = false; document.body.classList.remove('drawing'); }
+    function getPos(e) { return { x: e.clientX, y: e.clientY - 84 }; }
+    canvas.addEventListener('pointerdown', (e) => {
+      drawing = true;
+      const p = getPos(e);
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      if (!drawing) return;
+      const p = getPos(e);
+      ctx.strokeStyle = pen;
+      ctx.lineWidth = 4;
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    });
+    window.addEventListener('pointerup', () => drawing = false);
+    function clearDraw() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+  </script>
+</body>
+</html>

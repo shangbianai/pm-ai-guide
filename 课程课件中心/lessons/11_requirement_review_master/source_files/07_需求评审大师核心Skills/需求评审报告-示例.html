@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>需求评审报告 — 订单管理系统（OMS）</title>
+<style>
+  :root {
+    --red: #e74c3c;
+    --red-bg: #fdf0ef;
+    --red-border: #f5c6cb;
+    --yellow: #f39c12;
+    --yellow-bg: #fef9e7;
+    --yellow-border: #f9e79f;
+    --green: #27ae60;
+    --green-bg: #eafaf1;
+    --green-border: #a9dfbf;
+    --primary: #2c3e50;
+    --text: #333;
+    --text-secondary: #666;
+    --text-muted: #999;
+    --bg: #f5f6fa;
+    --card-bg: #fff;
+    --border: #e8e8e8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: #fff;
+    padding: 40px 0;
+    margin-bottom: 32px;
+  }
+  .header .container { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 24px; }
+  .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .header .subtitle { font-size: 14px; opacity: 0.75; }
+  .header .meta { display: flex; gap: 24px; font-size: 13px; opacity: 0.85; flex-wrap: wrap; }
+  .header .meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* Dashboard Cards */
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .stat-card .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+  .stat-card .value { font-size: 36px; font-weight: 700; }
+  .stat-card .sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .stat-card.red .value { color: var(--red); }
+  .stat-card.yellow .value { color: var(--yellow); }
+  .stat-card.green .value { color: var(--green); }
+
+  /* Filters */
+  .filters {
+    display: flex; gap: 12px; margin-bottom: 24px;
+    flex-wrap: wrap; align-items: center;
+  }
+  .filters .label { font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+  .filter-btn {
+    padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--card-bg); cursor: pointer; font-size: 13px;
+    transition: all 0.15s; color: var(--text-secondary);
+  }
+  .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .filter-btn.severity-red.active { background: var(--red); border-color: var(--red); }
+  .filter-btn.severity-yellow.active { background: var(--yellow); border-color: var(--yellow); color: #fff; }
+  .filter-btn.severity-green.active { background: var(--green); border-color: var(--green); }
+
+  .role-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  .role-tag {
+    padding: 5px 14px; border-radius: 6px; font-size: 12px;
+    border: 1px solid var(--border); background: var(--card-bg);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .role-tag:hover { border-color: var(--primary); }
+  .role-tag.active { background: #eaf2f8; border-color: #5b9bd5; color: #2c5f8a; font-weight: 600; }
+
+  /* Section */
+  .section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+  }
+  .section h2 {
+    font-size: 20px; font-weight: 700; margin-bottom: 8px;
+    padding-bottom: 12px; border-bottom: 2px solid #f0f0f0;
+  }
+  .section h3 { font-size: 16px; font-weight: 600; margin: 20px 0 12px; }
+
+  /* Question Card */
+  .q-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.15s;
+    position: relative;
+  }
+  .q-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .q-card.severity-red { border-left: 4px solid var(--red); }
+  .q-card.severity-yellow { border-left: 4px solid var(--yellow); }
+  .q-card.severity-green { border-left: 4px solid var(--green); }
+
+  .q-card .q-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+  .q-card .q-id { font-weight: 700; font-size: 14px; color: var(--primary); }
+  .q-card .q-title { font-size: 16px; font-weight: 600; flex: 1; min-width: 200px; }
+  .q-card .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .badge-role { background: #eaf2f8; color: #2c5f8a; }
+  .badge-feature { background: #f4ecf7; color: #7d3c98; }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+  .badge-yellow { background: var(--yellow-bg); color: #b8730a; }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+
+  .q-card .q-body { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.7; }
+
+  .q-card .q-section-title {
+    font-size: 13px; font-weight: 700; color: var(--primary);
+    margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .q-card .solution-list { list-style: none; padding: 0; }
+  .q-card .solution-list li {
+    padding: 6px 0 6px 20px; position: relative; font-size: 13px;
+    color: var(--text-secondary); line-height: 1.6;
+  }
+  .q-card .solution-list li::before {
+    content: ''; position: absolute; left: 0; top: 12px;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--primary);
+  }
+  .q-card .script-box {
+    background: #f8f9fa; border-radius: 8px; padding: 14px 18px;
+    margin-top: 8px; font-size: 13px; color: var(--text-secondary);
+    border-left: 3px solid var(--primary); line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* Expand toggle */
+  .expand-toggle {
+    color: var(--primary); font-size: 13px; cursor: pointer;
+    font-weight: 600; margin-top: 12px; display: inline-block;
+    user-select: none;
+  }
+  .expand-toggle:hover { text-decoration: underline; }
+  .q-detail { display: none; }
+  .q-detail.open { display: block; }
+
+  /* Summary table */
+  .summary-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .summary-table th { background: #f8f9fa; padding: 10px 14px; text-align: left; font-weight: 600; border-bottom: 2px solid #e0e0e0; font-size: 12px; color: var(--text-secondary); }
+  .summary-table td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; }
+  .summary-table .status-check { color: var(--green); }
+  .summary-table .status-warn { color: var(--yellow); }
+  .summary-table .status-fail { color: var(--red); }
+
+  /* Script Library */
+  .script-card {
+    border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px;
+    margin-bottom: 14px; background: #fafafa;
+  }
+  .script-card .scene { font-weight: 700; font-size: 14px; margin-bottom: 10px; color: var(--primary); }
+  .script-card .script-text {
+    font-size: 13px; color: var(--text-secondary); line-height: 1.8;
+    padding: 12px 18px; background: #fff; border-radius: 8px;
+    border: 1px solid #eee; font-style: italic;
+  }
+
+  /* Status coverage grid */
+  .coverage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .coverage-item {
+    border: 1px solid var(--border); border-radius: 8px; padding: 16px;
+    background: #fafafa;
+  }
+  .coverage-item .page-name { font-weight: 600; font-size: 14px; margin-bottom: 10px; }
+  .coverage-dots { display: flex; gap: 10px; flex-wrap: wrap; }
+  .coverage-dot { font-size: 12px; display: flex; align-items: center; gap: 4px; }
+  .coverage-dot.pass { color: var(--green); }
+  .coverage-dot.warn { color: var(--yellow); }
+  .coverage-dot.fail { color: var(--red); }
+
+  /* Improvement table */
+  .improve-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .improve-table th { background: #f8f9fa; padding: 10px 14px; text-align: left; font-weight: 600; border-bottom: 2px solid #e0e0e0; font-size: 12px; color: var(--text-secondary); }
+  .improve-table td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .improve-table .priority-p0 { color: var(--red); font-weight: 700; }
+  .improve-table .priority-p1 { color: var(--yellow); font-weight: 700; }
+
+  /* Print styles */
+  @media print {
+    body { background: #fff; }
+    .header { background: #2c3e50 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .section { box-shadow: none; break-inside: avoid; }
+    .q-card { break-inside: avoid; }
+    .filters { display: none; }
+    .q-detail { display: block !important; }
+    .container { max-width: 100%; }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .dashboard { grid-template-columns: repeat(2, 1fr); }
+    .header .container { flex-direction: column; }
+    .section { padding: 20px; }
+    .q-card { padding: 16px; }
+    .filters { flex-direction: column; align-items: flex-start; }
+  }
+
+  .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
+  .results-count { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <div>
+      <h1>需求评审报告</h1>
+      <p class="subtitle">AI 模拟多角色评审 · pm-review Skill</p>
+    </div>
+    <div class="meta">
+      <span>产品：订单管理系统（OMS）</span>
+      <span>评审日期：2026-05-24</span>
+      <span>输入类型：HTML 原型</span>
+      <span>版本：v1.0</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Dashboard -->
+  <div class="dashboard">
+    <div class="stat-card">
+      <div class="label">发现问题总数</div>
+      <div class="value">22</div>
+      <div class="sub">覆盖 8 个功能点</div>
+    </div>
+    <div class="stat-card red">
+      <div class="label">🔴 阻塞问题</div>
+      <div class="value">5</div>
+      <div class="sub">必须解决才能开发</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="label">🟡 重要问题</div>
+      <div class="value">11</div>
+      <div class="sub">影响质量或体验</div>
+    </div>
+    <div class="stat-card green">
+      <div class="label">🟢 优化建议</div>
+      <div class="value">6</div>
+      <div class="sub">锦上添花</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">应对覆盖率</div>
+      <div class="value" style="color: var(--primary)">82%</div>
+      <div class="sub">18/22 已有方案</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <span class="label">严重度：</span>
+    <button class="filter-btn severity-red active" data-severity="all">全部</button>
+    <button class="filter-btn severity-red" data-severity="red">🔴 阻塞 (5)</button>
+    <button class="filter-btn severity-yellow" data-severity="yellow">🟡 重要 (11)</button>
+    <button class="filter-btn severity-green" data-severity="green">🟢 建议 (6)</button>
+    <span style="margin-left: 16px;" class="label">角色：</span>
+    <div class="role-filters">
+      <button class="role-tag active" data-role="all">全部角色</button>
+      <button class="role-tag" data-role="前端开发">前端</button>
+      <button class="role-tag" data-role="后端开发">后端</button>
+      <button class="role-tag" data-role="设计师">设计</button>
+      <button class="role-tag" data-role="测试">测试</button>
+      <button class="role-tag" data-role="业务方">业务方</button>
+      <button class="role-tag" data-role="老板">老板</button>
+    </div>
+  </div>
+  <div class="results-count" id="resultsCount">显示全部 22 个问题</div>
+
+  <!-- Review Summary Section -->
+  <div class="section" id="summary">
+    <h2>评审概览</h2>
+    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
+      订单管理系统（OMS）面向电商运营团队，提供订单全生命周期管理能力。核心功能包括订单列表查看、多条件筛选、订单详情查看、订单状态流转、批量操作和基础数据看板。目标用户为日均处理 500+ 订单的中型电商运营团队。
+    </p>
+
+    <h3>HTML 原型状态覆盖检查</h3>
+    <div class="coverage-grid">
+      <div class="coverage-item">
+        <div class="page-name">订单列表页</div>
+        <div class="coverage-dots">
+          <span class="coverage-dot pass">✅ 加载</span>
+          <span class="coverage-dot pass">✅ 空数据</span>
+          <span class="coverage-dot warn">⚠️ 错误</span>
+          <span class="coverage-dot pass">✅ 成功</span>
+          <span style="font-size:12px;color:var(--text-muted);">3/4</span>
+        </div>
+      </div>
+      <div class="coverage-item">
+        <div class="page-name">订单详情页</div>
+        <div class="coverage-dots">
+          <span class="coverage-dot warn">⚠️ 加载</span>
+          <span style="font-size:12px;color:var(--text-muted);">— 空</span>
+          <span class="coverage-dot fail">❌ 错误</span>
+          <span class="coverage-dot pass">✅ 成功</span>
+          <span style="font-size:12px;color:var(--text-muted);">1/3</span>
+        </div>
+      </div>
+      <div class="coverage-item">
+        <div class="page-name">数据看板</div>
+        <div class="coverage-dots">
+          <span class="coverage-dot fail">❌ 加载</span>
+          <span class="coverage-dot fail">❌ 空数据</span>
+          <span class="coverage-dot fail">❌ 错误</span>
+          <span class="coverage-dot pass">✅ 成功</span>
+          <span style="font-size:12px;color:var(--text-muted);">1/4</span>
+        </div>
+      </div>
+      <div class="coverage-item">
+        <div class="page-name">批量操作弹窗</div>
+        <div class="coverage-dots">
+          <span class="coverage-dot fail">❌ 加载</span>
+          <span style="font-size:12px;color:var(--text-muted);">— 空</span>
+          <span class="coverage-dot fail">❌ 错误</span>
+          <span class="coverage-dot pass">✅ 成功</span>
+          <span style="font-size:12px;color:var(--text-muted);">1/3</span>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">⚠️ 原型整体状态覆盖不足，错误和加载状态大量缺失，是评审重点。</p>
+  </div>
+
+  <!-- Questions Section -->
+  <div class="section" id="questions">
+    <h2>角色评审详情</h2><div id="questionList">
+
+      <!-- Q-001 -->
+      <div class="q-card severity-red" data-severity="red" data-role="后端开发">
+        <div class="q-header">
+          <span class="q-id">Q-001</span>
+          <span class="q-title">订单并发操作时的数据一致性如何保证？</span>
+          <div class="badge-row">
+            <span class="badge badge-red">🔴 阻塞</span>
+            <span class="badge badge-role">后端开发</span>
+            <span class="badge badge-feature">F-003 订单状态流转</span>
+          </div>
+        </div>
+        <div class="q-body">
+          如果两个运营同时操作同一订单——A 在点"发货"，B 同时点了"取消"——系统怎么处理？目前原型中没有看到任何并发控制机制。这是一个非常现实的场景，日均 500+ 订单的团队不可能只有一个人在操作。
+        </div>
+        <span class="expand-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '收起应对方案 ▲' : '展开应对方案 ▼'">展开应对方案 ▼</span>
+        <div class="q-detail">
+          <div class="q-section-title">应对方案</div>
+          <ol class="solution-list">
+            <li><strong>乐观锁方案（推荐）：</strong>订单表增加 version 字段，每次更新时校验版本号。版本号不匹配时提示"订单状态已变更，请刷新后重试"</li>
+            <li><strong>状态机约束：</strong>定义严格的订单状态流转规则，"已发货"状态不能直接变"已取消"，后端做状态校验</li>
+          </ol>
+          <div class="q-section-title">追问预判</div>
+          <ul class="solution-list">
+            <li>追问"乐观锁失败体验不好"：前端可做乐观更新 + 失败回滚，先让用户感觉操作成功，后台校验失败后再提示</li>
+          </ul>
+          <div class="q-section-title">兜底话术</div>
+          <div class="script-box">
+            "并发控制是必须做的，这是系统可靠性的底线。具体用乐观锁还是状态机校验，会后和 backend 同学对齐，我的倾向是乐观锁——改动小、性能好、对用户体验影响可控。"
+          </div>
+        </div>
+      </div>
+
+      <!-- Q-002 -->
+      <div class="q-card severity-red" data-severity="red" data-role="后端开发">
+        <div class="q-header">
+          <span class="q-id">Q-002</span>
+          <span class="q-title">批量操作的性能和容错机制？</span>
+          <div class="badge-row">
+            <span class="badge badge-red">🔴 阻塞</span>
+            <span class="badge badge-role">后端开发</span>
+            <span class="badge badge-feature">F-004 批量操作</span>
+          </div>
+        </div>
+        <div class="q-body">
+          批量发货如果一次勾选 200 单，是同步处理还是异步？如果第 50 单失败了，前 49 单是回滚还是保留？用户怎么知道哪些成功了哪些失败了？原型中完全没有体现。
+        </div>
+        <span class="expand-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '收起应对方案 ▲' : '展开应对方案 ▼'">展开应对方案 ▼</span>
+        <div class="q-detail">
+          <div class="q-section-title">应对方案</div>
+          <ol class="solution-list">
+            <li><strong>异步处理 + 进度反馈：</strong>批量操作提交后台异步队列，前端轮询获取进度，展示"正在处理 X/200"</li>
+            <li><strong>部分成功策略：</strong>单条失败不影响其他订单，每条独立事务。操作完成后展示成功 X 条/失败 Y 条，列出失败原因</li>
+            <li><strong>超大批量限流：</strong>单次批量操作上限 500 条，超过提示分批次操作</li>
+          </ol>
+          <div class="q-section-title">兜底话术</div>
+          <div class="script-box">
+            "批量操作不能做成同步的，200 单同步处理用户等不了，而且一条失败全部回滚也不合理。我们用异步队列 + 逐条独立事务的方案，会后和 backend 确认技术选型。"
+          </div>
+        </div>
+      </div>
+
+      <!-- Q-003 -->
+      <div class="q-card severity-red" data-severity="red" data-role="老板">
+        <div class="q-header">
+          <span class="q-id">Q-003</span>
+          <span class="q-title">权限模型不清晰——运营和管理员的权限边界在哪里？</span>
+          <div class="badge-row">
+            <span class="badge badge-red">🔴 阻塞</span>
+            <span class="badge badge-role">老板</span>
+            <span class="badge badge-feature">F-008 权限管理</span>
+          </div>
+        </div>
+        <div class="q-body">
+          原型中提到"运营"和"管理员"两个角色，但没有明确权限矩阵。管理员能做什么运营不能做的？批量导出谁可以用？订单取消需要什么权限？如果权限不清晰，开发没法写代码。
+        </div>
+        <span class="expand-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '收起应对方案 ▲' : '展开应对方案 ▼'">展开应对方案 ▼</span>
+        <div class="q-detail">
+          <div class="q-section-title">应对方案</div>
+          <ol class="solution-list">
+            <li><strong>输出权限矩阵表：</strong>明确运营 vs 管理员的页面/按钮/API 权限差异</li>
+            <li><strong>前端 + 后端双重校验：</strong>前端按权限隐藏按钮，后端接口做权限拦截</li>
+          </ol>
+          <div class="q-section-title">兜底话术</div>
+          <div class="script-box">
+            "权限矩阵确实还没整理，这是我的疏忽。会后我补充一个完整的 RBAC 权限表，先按'运营'和'管理员'两个角色定义，后续如果角色细分再扩展。开发可以先按这个表预留权限中间件。"
+          </div>
+        </div>
+      </div>
+
+      <!-- Q-004 -->
+      <div class="q-card severity-red" data-severity="red" data-role="测试">
+        <div class="q-header">
+          <span class="q-id">Q-004</span>
+          <span class="q-title">订单列表的错误状态处理不完整</span>
+          <div class="badge-row">
+            <span class="badge badge-red">🔴 阻塞</span>
+            <span class="badge badge-role">测试</span>
+            <span class="badge badge-feature">F-001 订单列表页</span>
+          </div>
+        </div>
+        <div class="q-body">
+          目前原型只有 toast 提示网络错误，但实际场景中可能出现：接口超时（30s 没响应）、接口返回 500、接口返回数据格式异常、用户在弱网环境。每种场景的表现和用户引导都不一样，toast 一闪而过不够用。
+        </div>
+        <span class="expand-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '收起应对方案 ▲' : '展开应对方案 ▼'">展开应对方案 ▼</span>
+        <div class="q-detail">
+          <div class="q-section-title">应对方案</div>
+          <ol class="solution-list">
+            <li><strong>错误分级处理：</strong>网络断开→全屏提示+重试按钮；超时/500→列表区错误插画+保留筛选条件；数据异常→降级显示+联系技术支持</li>
+            <li><strong>重试策略：</strong>自动重试 1 次（无感），失败后再展示错误提示</li>
+          </ol>
+          <div class="q-section-title">兜底话术</div>
+          <div class="script-box">
+            "错误处理确实做得不够，我们梳理 4 种常见错误场景，会后补充到原型里。核心原则是——不要让用户看到白屏或不知所措。"
+          </div>
+        </div>
+      </div>
+
+      <!-- Q-005 -->
+      <div class="q-card severity-red" data-severity="red" data-role="设计师">
+        <div class="q-header">
+          <span class="q-id">Q-005</span>
+          <span class="q-title">空状态没有引导，用户不知道下一步做什么</span>
+          <div class="badge-row">
+            <span class="badge badge-red">🔴 阻塞</span>
+            <span class="badge badge-role">设计师</span>
+            <span class="badge badge-feature">F-001 / F-002 / F-005</span>
+          </div>
+        </div>
+        <div class="q-body">
+          订单列表为空时展示一个插画，但没有引导用户下一步操作。详情页没有数据时直接空白。数据看板首次使用时全是 0，没有说明。空状态应该是用户引导的最佳时机，而不是一个"这里什么都没有"的死胡同。
+        </div>
+        <span class="expand-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '收起应对方案 ▲' : '展开应对方案 ▼'">展开应对方案 ▼</span>
+        <div class="q-detail">
+          <div class="q-section-title">应对方案</div>
+          <ol class="solution-list">
+            <li><strong>订单列表空状态：</strong>区分"筛选后无结果"（引导清除筛选）和"从未有过订单"（引导接入数据）</li>
+            <li><strong>数据看板空状态：</strong>"数据看板将在订单接入后自动生成，预计接入后 5 分钟内可查看"</li>
+            <li><strong>详情页错误：</strong>订单不存在时展示"订单不存在或已被删除"+ 返回列表按钮</li>
+          </ol>
+          <div class="q-section-title">兜底话术</div>
+          <div class="script-box">
+            "空状态是用户引导的好位置，我补充三处空状态的文案和引导按钮，下次原型更新一并体现。"
+          </div>
+        </div>
+      </div>
+
+      <!-- Q-006 ~ Q-016: 重要问题 -->
+      <div class="q-card severity-yellow" data-severity="yellow" data-role="前端开发">
+        <div class="q-header">
+          <span class="q-id">Q-006</span>
+          <span class="q-title">订单列表的筛选条件是否支持组合和保存？</span>
+          <div class="badge-row">
+            <span class="badge badge-yellow">🟡 重要</span>
+            <span class="badge badge-role">前端开发</span>
+            <span class="badge badge-feature">F-001 订单列表页</span>
+          </div>
+        </div>
+        <div class="q-body">
+          筛选条件用 URL query 参数保存，方便分享和刷新保留。高频筛选组合支持保存为快捷筛选标签。
+        </div>
+      </div>
+
+      <div class="q-card severity-yellow" data-severity="yellow" data-role="设计师">
+        <div class="q-header">
+          <span class="q-id">Q-007</span>
+          <span class="q-title">订单详情页加载态缺失</span>
+          <div class="badge-row">
+            <span class="badge badge-yellow">🟡 重要</span>
+            <span class="badge badge-role">设计师</span>
+            <span class="badge badge-feature">F-002 订单详情页</span>
+          </div>
+        </div>
+        <div class="q-body">
+          详情页增加骨架屏（订单信息区 + 商品列表区），与列表页骨架屏风格统一。
+        </div>
+      </div>
+
+      <div class="q-card severity-yellow" data-severity="yellow" data-role="业务方">
+        <div class="q-header">
+          <span class="q-id">Q-008</span>
+          <span class="q-title">订单状态变更没有操作确认和撤销机制</span>
+          <div class="badge-row">
+            <span class="badge badge-yellow">🟡 重要</span>
+            <span class="badge badge-role">业务方</span>
+            <span class="badge badge-feature">F-003 订单状态流转</span>
+          </div>
+        </div>
+        <div class="q-body">
+          关键操作增加二次确认弹窗。"发货"操作在 30 秒内支持撤销（延迟队列实现）。
+        </div>
+      </div>
+
+      <div class="q-card severity-yellow" data-severity="yellow" data-role="后端开发">
+        <div class="q-header">
+          <span class="q-id">Q-009</span>
+          <span class="q-title">批量导出数据量大时怎么办？</span>
+          <div class="badge-row">
+            <span class="badge badge-yellow">🟡 重要</span>
+            <span class="badge badge-role">后端开发</span>
+            <span class="badge badge-feature">F-004 批量操作</span>
+          </div>
+        </div>
+        <div class="q-body">
+          超过 1000 条时走异步导出，生成 Excel 后飞书/邮件通知用户下载。导出文件保留 7 天后自动清理。
+        </div>
+      </div>
+
+      <div class="q-card severity-yellow" data-severity="yellow" data-role="测试">
+        <div class="q-header">
+          <span class="q-id">Q-010</span>
+          <span class="q-title">操作日志记录哪些内容？保留多久？</span>
+          <div class="badge-row">
+            <span class="badge badge-yellow">🟡 重要</span>
+            <span class="badge badge-role">测试</span>
+            <span class="badge badge-feature">F-006 操作日志</span>
+          </div>
+        </div>
+        <div class="q-body">
+          记录"谁 + 什么时间 + 对哪个订单 + 做了什么操作 + 操作前后的状态变化"。日志保留 90 天。
+        </div>
+      </div>
+
+      <div class="q-card severity-yellow" data-severity="yellow" data-role="老板">
+        <div class="q-header">
+          <span class="q-id">Q-011</span>
+          <span class="q-title">数据看板的实时性要求</span>
+          <div class="badge-row">
+            <span class="badge badge-yellow">🟡 重要</span>
+            <span class="badge badge-role">老板</span>
+            <span class="badge badge-feature">F-005 数据看板</span>
+          </div>
+        </div>
+        <div class="q-body">
+          数据看板准实时即可（延迟 < 5 分钟），不需要实时。用定时任务每分钟刷新一次缓存，降低架构复杂度。
+        </div>
+      </div>
+
+      <div class="q-card severity-yellow" data-severity="yellow" data-role="设计师">
+        <div class="q-header">
+          <span class="q-id">Q-012</span>
+          <span class="q-title">原型在不同屏幕尺寸下的表现</span>
+          <div class="badge-row">
+            <span class="badge badge-yellow">🟡 重要</span>
+            <span class="badge badge-role">设计师</span>
+            <span class="badge badge-feature">全部</span>
+          </div>
+        </div>
+        <div class="q-body">
+          B 端管理系统，主适配 1440px 和 1920px，最小支持 1366px。表格列太多时支持横向滚动或列自定义显示。
+        </div>
+      </div>
+
+      <div class="q-card severity-yellow" data-severity="yellow" data-role="测试">
+        <div class="q-header">
+          <span class="q-id">Q-013</span>
+          <span class="q-title">订单搜索是否支持模糊搜索和精确匹配？</span>
+          <div class="badge-row">
+            <span class="badge badge-yellow">🟡 重要</span>
+            <span class="badge badge-role">测试</span>
+            <span class="badge badge-feature">F-001 订单列表页</span>
+          </div>
+        </div>
+        <div class="q-body">
+          订单号精确匹配，收件人姓名/手机号模糊搜索。输入框 300ms 防抖。
+        </div>
+      </div>
+
+      <div class="q-card severity-yellow" data-severity="yellow" data-role="后端开发">
+        <div class="q-header">
+          <span class="q-id">Q-014</span>
+          <span class="q-title">表单输入是否有校验和防注入？</span>
+          <div class="badge-row">
+            <span class="badge badge-yellow">🟡 重要</span>
+            <span class="badge badge-role">后端开发</span>
+            <span class="badge badge-feature">全部表单场景</span>
+          </div>
+        </div>
+        <div class="q-body">
+          前后端双重校验。前端做格式校验，后端做 XSS/SQL 注入过滤。所有输入统一 trim 和转义。
+        </div>
+      </div>
+
+      <div class="q-card severity-yellow" data-severity="yellow" data-role="业务方">
+        <div class="q-header">
+          <span class="q-id">Q-015</span>
+          <span class="q-title">原型中没有体现异常订单的处理入口</span>
+          <div class="badge-row">
+            <span class="badge badge-yellow">🟡 重要</span>
+            <span class="badge badge-role">业务方</span>
+            <span class="badge badge-feature">F-007 异常订单标记</span>
+          </div>
+        </div>
+        <div class="q-body">
+          订单列表增加"异常"状态标签，点击查看异常原因。运营可手动标记异常并填写备注。
+        </div>
+      </div>
+
+      <div class="q-card severity-yellow" data-severity="yellow" data-role="测试">
+        <div class="q-header">
+          <span class="q-id">Q-016</span>
+          <span class="q-title">没有考虑无权限时的前端表现</span>
+          <div class="badge-row">
+            <span class="badge badge-yellow">🟡 重要</span>
+            <span class="badge badge-role">测试</span>
+            <span class="badge badge-feature">F-008 权限管理</span>
+          </div>
+        </div>
+        <div class="q-body">
+          无权限的页面/按钮直接不展示（而非置灰）。用户通过 URL 直接访问无权限页面时展示 403 提示。
+        </div>
+      </div>
+
+      <!-- Green suggestions -->
+      <div class="q-card severity-green" data-severity="green" data-role="设计师">
+        <div class="q-header">
+          <span class="q-id">Q-017</span>
+          <span class="q-title">订单列表支持行内快捷操作</span>
+          <div class="badge-row">
+            <span class="badge badge-green">🟢 建议</span>
+            <span class="badge badge-role">设计师</span>
+            <span class="badge badge-feature">F-001</span>
+          </div>
+        </div>
+        <div class="q-body">鼠标 hover 显示"发货"按钮，减少进入详情页的步骤。</div>
+      </div>
+
+      <div class="q-card severity-green" data-severity="green" data-role="前端开发">
+        <div class="q-header">
+          <span class="q-id">Q-018</span>
+          <span class="q-title">列表页支持键盘快捷键</span>
+          <div class="badge-row">
+            <span class="badge badge-green">🟢 建议</span>
+            <span class="badge badge-role">前端开发</span>
+            <span class="badge badge-feature">F-001</span>
+          </div>
+        </div>
+        <div class="q-body">Ctrl+F 聚焦搜索框，↑↓ 切换行，Enter 打开详情。</div>
+      </div>
+
+      <div class="q-card severity-green" data-severity="green" data-role="业务方">
+        <div class="q-header">
+          <span class="q-id">Q-019</span>
+          <span class="q-title">数据看板增加"异常订单占比"指标</span>
+          <div class="badge-row">
+            <span class="badge badge-green">🟢 建议</span>
+            <span class="badge badge-role">业务方</span>
+            <span class="badge badge-feature">F-005</span>
+          </div>
+        </div>
+        <div class="q-body">帮助运营快速发现问题订单。</div>
+      </div>
+
+      <div class="q-card severity-green" data-severity="green" data-role="测试">
+        <div class="q-header">
+          <span class="q-id">Q-020</span>
+          <span class="q-title">增加 E2E 自动化测试覆盖核心流程</span>
+          <div class="badge-row">
+            <span class="badge badge-green">🟢 建议</span>
+            <span class="badge badge-role">测试</span>
+            <span class="badge badge-feature">全部</span>
+          </div>
+        </div>
+        <div class="q-body">登录→筛选→发货核心流程自动化，减少回归成本。</div>
+      </div>
+
+      <div class="q-card severity-green" data-severity="green" data-role="老板">
+        <div class="q-header">
+          <span class="q-id">Q-021</span>
+          <span class="q-title">增加周报自动生成功能</span>
+          <div class="badge-row">
+            <span class="badge badge-green">🟢 建议</span>
+            <span class="badge badge-role">老板</span>
+            <span class="badge badge-feature">F-005</span>
+          </div>
+        </div>
+        <div class="q-body">每周一自动发送订单数据分析到管理群。</div>
+      </div>
+
+      <div class="q-card severity-green" data-severity="green" data-role="设计师">
+        <div class="q-header">
+          <span class="q-id">Q-022</span>
+          <span class="q-title">订单状态标签用颜色区分</span>
+          <div class="badge-row">
+            <span class="badge badge-green">🟢 建议</span>
+            <span class="badge badge-role">设计师</span>
+            <span class="badge badge-feature">F-001</span>
+          </div>
+        </div>
+        <div class="q-body">待发货-蓝色，已发货-绿色，异常-红色，提高扫描效率。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script Library Section -->
+  <div class="section" id="scripts">
+    <h2>应对话术库</h2>
+
+    <h3>通用应对框架</h3>
+
+    <div class="script-card">
+      <div class="scene">场景 1：被问到没准备的问题</div>
+      <div class="script-text">
+        "这是一个很好的切入点，让我从已有分析的角度先回应一部分。目前我们的初步判断是 [方向]。具体方案需要在设计阶段和 [角色] 一起细化。我在会后和 [角色] 单独对齐，下次评审同步进展。"
+      </div>
+    </div>
+
+    <div class="script-card">
+      <div class="scene">场景 2：多个角色意见冲突</div>
+      <div class="script-text">
+        "我理解 [A] 关注 [X]，[B] 关注 [Y]，这两个角度都很重要。我们今天的重点是确认需求方向是否正确，具体实现方案可以在技术评审会上专门讨论。我建议 [折中方向]，核心依据是 [决策原则]。大家觉得这个原则可以吗？"
+      </div>
+    </div>
+
+    <div class="script-card">
+      <div class="scene">场景 3：需求被质疑价值</div>
+      <div class="script-text">
+        "这个需求的背景是 [数据/用户反馈/业务目标]。我们预估上线后 [X] 指标会有 [Y] 的提升。如果大家觉得数据不够充分，我们可以先做一个最小版本快速验证，再决定是否全量投入。"
+      </div>
+    </div>
+
+    <div class="script-card">
+      <div class="scene">场景 4：老板临时增加需求（范围蔓延）</div>
+      <div class="script-text">
+        "这个方向很有价值，我先记下来。不过我担心在当前版本范围里加入会影响到 [A] 和 [B] 的交付时间。建议我们先把这个版本的核心功能交付，[新需求] 可以作为下个迭代的优先项。您觉得这样的节奏可以吗？"
+      </div>
+    </div>
+
+    <h3>本产品场景专用话术</h3>
+    <table class="summary-table">
+      <thead>
+        <tr><th>角色</th><th>场景</th><th>话术</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>后端</td><td>质疑并发方案</td><td>"订单并发是现实场景，乐观锁方案实现成本低、性能好，对于日均 500 单的量级足够。如果后续量级上来了再讨论升级方案。"</td></tr>
+        <tr><td>前端</td><td>质疑批量操作交互</td><td>"批量操作的异步反馈是标配了，我们会做进度条 + 结果汇总，不会让用户干等。具体交互会后补充到原型里。"</td></tr>
+        <tr><td>设计</td><td>质疑空状态</td><td>"三处空状态我补充引导文案和操作按钮，把'什么都没有'变成'从这里开始'。会后更新原型。"</td></tr>
+        <tr><td>测试</td><td>质疑错误处理</td><td>"4 种错误场景我已经梳理了，每种都有对应的前端展示和重试策略。测试同学帮忙检查有没有遗漏的异常路径。"</td></tr>
+        <tr><td>业务方</td><td>质疑撤销机制</td><td>"30 秒撤销窗口是一个平衡——既能挽回误操作，又不会让业务流程变得太复杂。如果运营反馈 30 秒不够可以再调。"</td></tr>
+        <tr><td>老板</td><td>质疑优先级</td><td>"订单管理是这个阶段的核心，没有它后面的数据分析和营销自动化都跑不起来。所以排在第一位。"</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Improvement Checklist -->
+  <div class="section" id="improvements">
+    <h2>改进清单</h2>
+    <table class="improve-table">
+      <thead>
+        <tr><th>编号</th><th>改进项</th><th>优先级</th><th>关联问题</th><th>建议操作</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>IMP-001</td><td>补充订单状态机定义</td><td class="priority-p0">P0</td><td>Q-001</td><td>画出完整状态流转图，标注每个状态的可达条件和不可逆规则</td></tr>
+        <tr><td>IMP-002</td><td>补充 RBAC 权限矩阵</td><td class="priority-p0">P0</td><td>Q-003</td><td>输出权限矩阵表，明确每个角色的页面/按钮/API 权限</td></tr>
+        <tr><td>IMP-003</td><td>补充错误处理设计</td><td class="priority-p0">P0</td><td>Q-004</td><td>覆盖网络断开、超时、500、数据异常 4 种场景</td></tr>
+        <tr><td>IMP-004</td><td>补充空状态引导</td><td class="priority-p0">P0</td><td>Q-005</td><td>三处空状态增加引导文案和操作入口</td></tr>
+        <tr><td>IMP-005</td><td>批量操作异步流程</td><td class="priority-p0">P0</td><td>Q-002</td><td>异步队列 + 进度反馈 + 结果汇总 + 失败重试</td></tr>
+        <tr><td>IMP-006</td><td>补充加载态</td><td class="priority-p1">P1</td><td>Q-007</td><td>详情页、数据看板增加骨架屏</td></tr>
+        <tr><td>IMP-007</td><td>操作确认与撤销</td><td class="priority-p1">P1</td><td>Q-008</td><td>关键操作二次确认 + 30 秒撤销窗口</td></tr>
+        <tr><td>IMP-008</td><td>表单校验规则</td><td class="priority-p1">P1</td><td>Q-014</td><td>前后端校验规则清单 + 防注入方案</td></tr>
+        <tr><td>IMP-009</td><td>筛选条件持久化</td><td class="priority-p1">P1</td><td>Q-006</td><td>URL query 保存筛选条件 + 快捷筛选标签</td></tr>
+        <tr><td>IMP-010</td><td>导出异步化</td><td class="priority-p1">P1</td><td>Q-009</td><td>大批量导出走异步 + 通知下载 + 自动清理</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+// Filter logic
+(function() {
+  let activeSeverity = 'all';
+  let activeRole = 'all';
+
+  const severityBtns = document.querySelectorAll('[data-severity]');
+  const roleBtns = document.querySelectorAll('[data-role]');
+  const questionCards = document.querySelectorAll('.q-card');
+  const resultsCount = document.getElementById('resultsCount');
+
+  function updateFilters() {
+    let count = 0;
+    questionCards.forEach(card => {
+      const cardSeverity = card.dataset.severity;
+      const cardRole = card.dataset.role;
+      const severityMatch = activeSeverity === 'all' || cardSeverity === activeSeverity;
+      const roleMatch = activeRole === 'all' || cardRole === activeRole;
+      if (severityMatch && roleMatch) {
+        card.style.display = '';
+        count++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    resultsCount.textContent = `显示 ${count} 个问题`;
+  }
+
+  severityBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      severityBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeSeverity = btn.dataset.severity;
+      updateFilters();
+    });
+  });
+
+  roleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      roleBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeRole = btn.dataset.role;
+      updateFilters();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

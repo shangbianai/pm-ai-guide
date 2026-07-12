@@ -1,0 +1,267 @@
+{
+  "product": "CityCup 咖啡小程序",
+  "cover_title": "运营数据复盘：CityCup 咖啡小程序",
+  "cover_lead": "V1.3 会员日活动版上线 14 天——规模增长强劲，但留存、变现效率、满意度三杀，是一次典型的「以折扣换规模」",
+  "period": "2026-06-01 至 2026-06-14（上线后 14 天）",
+  "launch_info": "V1.3 会员日活动版｜渠道：微信小程序 + 门店桌贴二维码 + 公众号推文 + 社群活动｜本次新增：会员日券包、附近门店推荐、快速复购入口",
+
+  "executive_summary": {
+    "overall_evaluation": "整体健康度：需关注（黄灯偏红）。V1.3 版本成功拉动规模增长——UV +24%、新增注册 +44%，但增长质量明显存疑：留存全线回落（7日 -4pct、30日 -2pct）、单位变现效率下降（ARPU -7.2%）、NPS 下滑 6 点。一句话：规模上去了，健康度下来了，本质是「以折扣换规模」，不可持续。",
+    "top_findings": [
+      {
+        "finding": "规模增长强劲，但增长质量同步下滑",
+        "data": "UV +24%、新增注册 +44%，但 ARPU 由 ¥3.07 降至 ¥2.85（-7.2%）、7日留存由 23% 降至 19%（-4pct）、NPS 由 48 降至 42（-6）。收入 +15% 完全靠流量撑，单位效率在变差。"
+      },
+      {
+        "finding": "授权注册是全链路最大漏斗，封死了 UV→收入的上限",
+        "data": "72,000 访问用户中仅 13,800 完成注册/授权，流失 58,200 人，单步流失率 80.8%，是漏斗中绝对值最大的断点。"
+      },
+      {
+        "finding": "社群渠道拉新质量垫底，券包拉来大量薅券用户",
+        "data": "社群活动渠道占新增 21%，但 7日留存仅 13%、付费转化 4.4%，均为各渠道最低，明显稀释整体留存与 ARPU。"
+      }
+    ],
+    "top_actions": [
+      {"priority": "P0", "action": "改造授权流程：门店扫码「先逛后登」，授权弹窗延后至下单前", "effect": "预计注册转化率提升 5-10pct，直接放大 UV→收入漏斗"},
+      {"priority": "P0", "action": "会员日券包规则简化 + 设置复购门槛（第二杯半价 / 满减）", "effect": "预计 NPS 回升、券核销率提升、新客质量改善"},
+      {"priority": "P0", "action": "社群渠道质量治理：接入薅券风控、按质量调权重", "effect": "预计整体留存与 ARPU 企稳回升"}
+    ]
+  },
+
+  "dashboard": {
+    "metrics": [
+      {
+        "category": "用户规模",
+        "items": [
+          {"value": "72,000", "label": "UV", "trend": "+24.1%", "health": "green", "trend_health": "green"},
+          {"value": "252,000", "label": "PV", "trend": "+35.5%", "health": "green", "trend_health": "green"},
+          {"value": "8,900", "label": "DAU", "trend": "+30.9%", "health": "green", "trend_health": "green"},
+          {"value": "50,000", "label": "MAU", "trend": "+19.0%", "health": "green", "trend_health": "green"}
+        ]
+      },
+      {
+        "category": "转化效率",
+        "items": [
+          {"value": "19.2%", "label": "注册转化率", "trend": "+2.6pct", "health": "amber", "trend_health": "green"},
+          {"value": "44.2%", "label": "注册→下单", "trend": "-10pct", "health": "red", "trend_health": "red"},
+          {"value": "8.5%", "label": "整体付费转化", "trend": "-0.5pct", "health": "red", "trend_health": "red"}
+        ]
+      },
+      {
+        "category": "留存",
+        "items": [
+          {"value": "38%", "label": "次日留存", "trend": "-3pct", "health": "amber", "trend_health": "red"},
+          {"value": "19%", "label": "7日留存", "trend": "-4pct", "health": "red", "trend_health": "red"},
+          {"value": "9%", "label": "30日留存", "trend": "-2pct", "health": "red", "trend_health": "red"}
+        ]
+      },
+      {
+        "category": "商业化",
+        "items": [
+          {"value": "¥205,000", "label": "总收入", "trend": "+15.2%", "health": "green", "trend_health": "green"},
+          {"value": "¥2.85", "label": "ARPU", "trend": "-7.2%", "health": "red", "trend_health": "red"},
+          {"value": "¥33.6", "label": "ARPPU", "trend": "-1.8%", "health": "amber", "trend_health": "amber"}
+        ]
+      }
+    ]
+  },
+
+  "user_growth": {
+    "new_users_trend": [
+      {"period": "上期 14 天", "value": "9,600"},
+      {"period": "本期 14 天", "value": "13,800"},
+      {"period": "环比", "value": "+43.8%"}
+    ],
+    "channel_analysis": [
+      {"channel": "门店二维码", "proportion": "44.9%", "quality": "高", "note": "7日留存 24%、付费转化 9.8%，质量最优"},
+      {"channel": "公众号推文", "proportion": "24.6%", "quality": "中", "note": "量级可观但 7日留存 17%、付费转化 5.1%"},
+      {"channel": "社群活动", "proportion": "21.0%", "quality": "低", "note": "7日留存 13%、付费转化 4.4%，薅券用户偏多"},
+      {"channel": "自然搜索", "proportion": "9.4%", "quality": "高", "note": "规模小但 7日留存 20%、付费转化 6.8%，质量稳定"}
+    ],
+    "activation_funnel": [
+      {"step": "访问→注册", "conversion_rate": "19.2%", "drop_rate": "80.8%"},
+      {"step": "注册→浏览", "conversion_rate": "79.0%", "drop_rate": "21.0%"},
+      {"step": "浏览→加购", "conversion_rate": "66.1%", "drop_rate": "33.9%"},
+      {"step": "加购→提交", "conversion_rate": "90.3%", "drop_rate": "9.7%"},
+      {"step": "提交→支付", "conversion_rate": "93.8%", "drop_rate": "6.2%"}
+    ]
+  },
+
+  "user_activity": {
+    "dau_mau": {
+      "dau": "8,900",
+      "mau": "50,000",
+      "ratio": "17.8%",
+      "trend": "DAU/MAU 由 16.2% 升至 17.8%（+1.6pct），粘性提升，但增量主要来自新用户拉动，需观察是否可持续"
+    },
+    "user_segments": [
+      {"segment": "活跃老用户", "users": "24,000", "proportion": "48.0%", "trend": "稳定"},
+      {"segment": "本期新增用户", "users": "13,800", "proportion": "27.6%", "trend": "环比 +43.8%"},
+      {"segment": "回流用户（券包召回）", "users": "7,200", "proportion": "14.4%", "trend": "上升"},
+      {"segment": "沉默/边缘用户", "users": "5,000", "proportion": "10.0%", "trend": "略升，需关注"}
+    ],
+    "feature_heatmap": [
+      {"feature": "门店扫码点单", "usage_rate": "80%", "frequency": "高", "satisfaction": "高"},
+      {"feature": "会员日券包", "usage_rate": "71%", "frequency": "高（活动期）", "satisfaction": "低（规则看不懂）"},
+      {"feature": "快速复购入口", "usage_rate": "62%", "frequency": "高", "satisfaction": "高（正反馈明显）"},
+      {"feature": "常买商品推荐", "usage_rate": "55%", "frequency": "中高", "satisfaction": "高"},
+      {"feature": "附近门店推荐", "usage_rate": "48%", "frequency": "中", "satisfaction": "中（排序偶尔不准）"}
+    ]
+  },
+
+  "conversion_funnel": {
+    "funnel": [
+      {"step": "访问小程序", "users": "72,000", "cumulative_rate": "100%", "drop_rate": "—"},
+      {"step": "完成注册/授权", "users": "13,800", "cumulative_rate": "19.2%", "drop_rate": "80.8%"},
+      {"step": "浏览商品", "users": "10,900", "cumulative_rate": "15.1%", "drop_rate": "21.0%"},
+      {"step": "加入购物车", "users": "7,200", "cumulative_rate": "10.0%", "drop_rate": "33.9%"},
+      {"step": "提交订单", "users": "6,500", "cumulative_rate": "9.0%", "drop_rate": "9.7%"},
+      {"step": "支付成功", "users": "6,100", "cumulative_rate": "8.5%", "drop_rate": "6.2%"}
+    ],
+    "bottleneck": {
+      "step": "完成注册/授权",
+      "drop_rate": "80.8%（流失约 58,200 人）",
+      "possible_reasons": [
+        "授权弹窗前置，用户尚未感知产品价值即被要求授权",
+        "涉及手机号等隐私信息，用户顾虑导致流失",
+        "门店扫码「即来即点」场景与强制授权冲突，摩擦被放大",
+        "次要瓶颈：浏览→加购流失 33.9%，套餐规则理解成本高 + 商品页加载偏慢"
+      ]
+    }
+  },
+
+  "retention": {
+    "data": [
+      {"type": "次日留存", "value": "38%（上期 41%）", "benchmark": "餐饮/咖啡小程序约 30-35%", "status": "amber"},
+      {"type": "7日留存", "value": "19%（上期 23%）", "benchmark": "行业约 15-20%", "status": "red"},
+      {"type": "30日留存", "value": "9%（上期 11%）", "benchmark": "行业约 8-12%", "status": "red"}
+    ],
+    "health_assessment": "绝对水平尚可（次日、7日留存仍处于或略高于行业中位），但趋势全面下行是核心警报：三个留存指标环比全降，7日 -4pct 跌幅最大。结合社群渠道低留存拉新，判断为「低质量新客稀释整体留存」，而非产品本身留存能力崩塌——这是可修复的结构性问题，但必须立刻止血。",
+    "warnings": [
+      {"signal": "7日留存环比 -4pct", "detail": "本期 19% vs 上期 23%，用户「来一次就走」倾向加重", "severity": "高"},
+      {"signal": "30日留存持续走低至 9%", "detail": "长期留存根基削弱，直接影响 LTV 与会员体系价值", "severity": "高"},
+      {"signal": "新客质量稀释整体留存", "detail": "社群渠道 7日留存仅 13%、付费转化 4.4%，拖低大盘", "severity": "中"}
+    ]
+  },
+
+  "monetization": {
+    "revenue_trend": [
+      {"period": "上期 14 天", "revenue": "¥178,000"},
+      {"period": "本期 14 天", "revenue": "¥205,000"},
+      {"period": "环比", "revenue": "+15.2%"}
+    ],
+    "arpu": {"current": "¥2.85 / UV", "trend": "¥3.07 → ¥2.85，-7.2%（单位流量变现变差）"},
+    "arppu": {"current": "¥33.6 / 下单用户", "trend": "¥34.2 → ¥33.6，-1.8%（客单价 ¥19.7，基本持平略降）"},
+    "pay_conversion_funnel": [
+      {"step": "访问→注册", "conversion_rate": "19.2%"},
+      {"step": "注册→下单", "conversion_rate": "44.2%"},
+      {"step": "访问→下单（整体付费转化）", "conversion_rate": "8.5%"}
+    ],
+    "ltv_estimate": {"value": "¥80 / 注册用户（估）", "cac": "¥10 / 注册（混合渠道，估，含券补贴）", "ratio": "约 8（整体健康；但社群新客 LTV/CAC <2，边际亏损，预警）"}
+  },
+
+  "user_feedback": {
+    "nps": {"current": "42", "trend": "48 → 42，-6 点（满意度下滑）"},
+    "top_themes": [
+      {"theme": "会员日券包规则看不懂", "frequency": "高频", "sentiment": "负面", "sample": "「券包到底能不能叠加，领了到结算才知道不能用」"},
+      {"theme": "快速复购入口体验好", "frequency": "中频", "sentiment": "正面", "sample": "「一键复购上次订单，比排队快多了」"},
+      {"theme": "常买商品推荐贴心", "frequency": "中频", "sentiment": "正面", "sample": "「推荐的就是我常喝的，省事」"},
+      {"theme": "门店扫码点单快", "frequency": "中频", "sentiment": "正面", "sample": "「扫码直接点，不用排队」"},
+      {"theme": "附近门店排序偶尔不准", "frequency": "低频", "sentiment": "负面", "sample": "「推荐的不是离我最近的店」"}
+    ],
+    "pain_clusters": [
+      {"cluster": "券包规则认知成本高", "count": "客服咨询占比 37%", "severity": "高", "affected_users": "活动期全量领券用户"},
+      {"cluster": "券不可叠加提示不清", "count": "中频反馈", "severity": "中", "affected_users": "领券后到结算才发现的用户"},
+      {"cluster": "附近门店排序异常", "count": "低频反馈", "severity": "低", "affected_users": "异地 / 多门店用户"}
+    ]
+  },
+
+  "cross_analysis": {
+    "segment_behavior": [
+      {"segment": "门店扫码老客", "behavior": "即来即点、复购稳定", "retention": "高（次日 40%+）", "value": "高价值，核心盘"},
+      {"segment": "会员日券包新客", "behavior": "领券驱动、低复购", "retention": "低（7日 13%）", "value": "低边际价值，薅券为主"},
+      {"segment": "常买推荐活跃用户", "behavior": "高频使用复购入口", "retention": "高", "value": "高潜力，可重点运营"},
+      {"segment": "公众号引流用户", "behavior": "浏览为主、转化一般", "retention": "中（7日 17%）", "value": "中等，需内容承接"}
+    ],
+    "channel_quality_cost": [
+      {"channel": "门店二维码", "quality_score": "9/10", "cac": "¥4（估）", "ltv": "¥42（估）", "roi": "10.5"},
+      {"channel": "自然搜索", "quality_score": "8/10", "cac": "¥3（估）", "ltv": "¥36（估）", "roi": "12.0"},
+      {"channel": "公众号推文", "quality_score": "5/10", "cac": "¥9（估）", "ltv": "¥22（估）", "roi": "2.4"},
+      {"channel": "社群活动", "quality_score": "3/10", "cac": "¥7（估）", "ltv": "¥14（估）", "roi": "2.0"}
+    ],
+    "feature_retention_impact": [
+      {"feature": "快速复购入口", "usage_rate": "62%", "retention_impact": "正向（提升复购频次）", "satisfaction": "高"},
+      {"feature": "常买商品推荐", "usage_rate": "55%", "retention_impact": "正向（提升粘性）", "satisfaction": "高"},
+      {"feature": "会员日券包", "usage_rate": "71%", "retention_impact": "负向（拉低新客留存质量）", "satisfaction": "低"},
+      {"feature": "附近门店推荐", "usage_rate": "48%", "retention_impact": "中性", "satisfaction": "中"}
+    ]
+  },
+
+  "problem_diagnosis": {
+    "problems": [
+      {
+        "problem": "授权注册是全链路最大漏斗，80.8% 访问用户未授权即流失",
+        "data_evidence": "72,000 访问 → 13,800 注册，流失 58,200 人（80.8%），单步流失率为全漏斗最高，注册转化率绝对值仅 19.2%。",
+        "root_cause": "5-Why：①为何流失多？授权弹窗前置；②为何前置？V1.3 默认注册才能点单；③为何用户不愿授权？尚未感知价值即被要求授权手机号等隐私；④根因：价值前置不足 + 隐私摩擦，与门店扫码「即来即点」的高即时性场景冲突。",
+        "impact_scope": "影响 58,200 访问用户 / 14天，直接封死 UV→收入转化上限，是收入增长的最大天花板。",
+        "urgency": "P0",
+        "suggested_direction": "门店扫码「先逛后登」改造，授权延后至下单前；A/B 测试延迟授权对注册转化与下单转化的影响。"
+      },
+      {
+        "problem": "会员日券包拉新质量差，留存与变现效率双降",
+        "data_evidence": "社群渠道占新增 21%，但 7日留存 13%、付费转化 4.4% 均垫底；整体 7日留存 -4pct、30日 -2pct、ARPU -7.2%、注册→下单 -10pct。",
+        "root_cause": "5-Why：①留存为何降？新增用户质量下降；②为何下降？社群渠道券包拉来大量薅券用户；③为何？V1.3 券包设计偏重「拉新激励」而非「复购引导」；④根因：增长策略以折扣换规模，未设质量门槛与复购闭环。",
+        "impact_scope": "拉低整体留存与 ARPU，券补贴 ROI 偏低（社群 LTV/CAC <2），若持续将损害会员体系长期价值。",
+        "urgency": "P0",
+        "suggested_direction": "券包设置复购门槛（第二杯半价 / 满减），社群渠道接入薅券风控，设计非纯折扣的复购激励。"
+      },
+      {
+        "problem": "会员日券包规则认知成本高，拖累 NPS 与客服成本",
+        "data_evidence": "NPS 48 → 42（-6）；客服券包相关咨询占比 37%（明显高于平时）；高频反馈「规则看不懂」「券不可叠加提示不清」。",
+        "root_cause": "5-Why：①为何看不懂？叠加、有效期、使用门槛规则复杂；②为何复杂未被发现？领取时未前置说明；③根因：券包 UX 侧重促销力度，缺利益前置与规则可视化。",
+        "impact_scope": "NPS 下滑、客服成本上升、券核销率可能受损，影响活动期体验与口碑。",
+        "urgency": "P0",
+        "suggested_direction": "券包规则简化 + 领取页利益前置说明，不可叠加时即时提示，券包使用状态可视化。"
+      },
+      {
+        "problem": "浏览→加购环节流失偏大（33.9%），体验摩擦",
+        "data_evidence": "浏览 10,900 → 加购 7,200，流失 3,700（33.9%）；反馈指向商品页加载偏慢、套餐规则理解成本高。",
+        "root_cause": "商品页加载慢影响决策 + 套餐组合规则信息架构不清，导致用户在加购前放弃。",
+        "impact_scope": "影响约 3,700 用户 / 14天，是注册后到下单之间的主要摩擦点。",
+        "urgency": "P1",
+        "suggested_direction": "商品页性能优化（首屏 <1.5s）+ 套餐规则可视化。"
+      }
+    ]
+  },
+
+  "action_plan": {
+    "short_term": [
+      {"priority": "P0", "action": "门店扫码「先逛后登」改造，授权弹窗延后至下单前，A/B 验证", "expected_effect": "注册转化率预计 +5-10pct，放大全链路漏斗", "owner": "产品 + 前端", "deadline": "2 周内"},
+      {"priority": "P0", "action": "会员日券包规则简化 V1：领取页利益前置 + 不可叠加即时提示", "expected_effect": "NPS 回升、券包客服咨询占比下降", "owner": "产品 + 运营", "deadline": "1 周内"},
+      {"priority": "P0", "action": "社群渠道券包加复购门槛（第二杯半价 / 满减）+ 接入薅券风控", "expected_effect": "新客留存与付费转化企稳回升", "owner": "运营 + 风控", "deadline": "2 周内"},
+      {"priority": "P1", "action": "商品页加载性能优化 + 套餐规则可视化", "expected_effect": "浏览→加购流失率下降", "owner": "前端", "deadline": "2 周内"}
+    ],
+    "mid_term": [
+      {"priority": "P1", "action": "搭建非折扣驱动的复购体系：常买推荐 + 会员积分 + 打卡，承接「快速复购入口」正反馈", "expected_effect": "7日/30日留存回升", "owner": "产品 + 运营", "timeline": "1 个月"},
+      {"priority": "P1", "action": "搭建分渠道质量看板（CAC / LTV / ROI），社群渠道按质量调权重", "expected_effect": "投放 ROI 提升，低质渠道收缩", "owner": "增长 + 数据", "timeline": "1 个月"},
+      {"priority": "P2", "action": "附近门店排序算法修正（距离 + 营业状态 + 库存）", "expected_effect": "门店推荐满意度提升", "owner": "技术", "timeline": "1-2 个月"}
+    ],
+    "long_term": [
+      {"priority": "P2", "action": "会员日从「券包促销」升级为「会员权益日」，构建长期留存飞轮", "expected_effect": "30日留存回升至 12%+", "milestone": "30日留存 ≥12%、NPS ≥48"},
+      {"priority": "P2", "action": "数据基础设施：归因与渠道 LTV 追踪，支撑精细化投放与单位经济管理", "expected_effect": "分渠道 ROI 可量化、可优化", "milestone": "分渠道 LTV/CAC 看板上线"}
+    ],
+    "not_to_do": [
+      {"item": "不要继续单纯加大券包折扣力度冲量", "reason": "会进一步恶化留存、ARPU、NPS，强化「以折扣换规模」的恶性循环"},
+      {"item": "不要在授权流程增加更多必填项", "reason": "授权已是全链路最大漏斗，增加摩擦等于自断流量"},
+      {"item": "不要盲目扩投社群渠道", "reason": "当前质量最差（LTV/CAC<2），需先治理质量再考虑扩量"}
+    ]
+  },
+
+  "monitoring_plan": [
+    {"signal": "注册转化回升", "metric": "访问→注册转化率、授权完成率", "source": "小程序埋点", "frequency": "日"},
+    {"signal": "留存企稳", "metric": "次日 / 7日 / 30日留存、分渠道留存", "source": "留存看板", "frequency": "周"},
+    {"signal": "变现效率改善", "metric": "ARPU、ARPPU、客单价、注册→下单", "source": "BI 报表", "frequency": "周"},
+    {"signal": "券包体验改善", "metric": "券包客服咨询占比、券核销率、NPS", "source": "客服系统 + 用户调研", "frequency": "周"},
+    {"signal": "渠道质量变化", "metric": "分渠道 7日留存、付费转化、ROI", "source": "渠道看板", "frequency": "周"}
+  ]
+}

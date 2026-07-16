@@ -233,8 +233,15 @@ skills/pm-slide-deck/
 
 - `pm-skills-sc/`：PM Skills 参考仓库（65 项技能 + 36 个工作流），源自 [Osiris/pm-skills-sc](https://github.com/Osiris/pm-skills-sc)
 
+## 开源协议
+
+本项目采用 [**CC BY-NC-SA 4.0**](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans)（署名-非商业性使用-相同方式共享 4.0 国际）协议。
+
+- ✅ **允许**：分享、改编（需署名、以相同协议共享）
+- ❌ **禁止**：商业性使用
+- 🔗 **要求**：衍生作品必须采用相同的 CC BY-NC-SA 4.0 协议
+
 ## 仓库信息
 
 - **组织**：shangbianai
 - **可见性**：公开
-- **用途**：课程内部资料，请勿外传

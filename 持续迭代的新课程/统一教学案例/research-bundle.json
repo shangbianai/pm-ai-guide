@@ -1,0 +1,30 @@
+{
+  "meta": {"title":"设备预测性维护用户调研","subject":"维修班长与一线工程师","scenario":"高风险设备告警到工单闭环","core_task":"发现风险、安排检修并确认设备恢复","synthetic":true,"limitations":["为课程模拟数据，需用真实访谈与日志验证"]},
+  "sources":[{"id":"SRC-001","name":"维修班长访谈笔记.txt","type":"notes","status":"已读取","privacy":"课程模拟，无个人隐私"},{"id":"SRC-002","name":"现场工单观察记录.csv","type":"table","status":"已读取","privacy":"课程模拟，设备编号已虚构"}],
+  "evidence":[
+    {"id":"E-001","source_id":"SRC-001","locator":"第 4 行","kind":"用户原话","content":"早班最怕看到一片红，不知道先处理哪个。"},
+    {"id":"E-002","source_id":"SRC-001","locator":"第 11 行","kind":"用户原话","content":"到现场才发现图纸和备件不全，还得再跑一趟。"},
+    {"id":"E-003","source_id":"SRC-002","locator":"18 条模拟工单","kind":"数据记录","content":"11 条工单的故障原因只写‘已处理’，不能用于后续复盘。"}
+  ],
+  "contradictions":[{"description":"班长认为告警太多，但信息化人员认为告警规则已足够精细","evidence_ids":["E-001"],"handling":"导出一周告警日志，核对重复率和有效处置率"}],
+  "findings":[
+    {"id":"F-001","status":"已验证事实","statement":"班长需要的不是更多告警，而是可执行的风险优先级","why_it_matters":"决定首页应以风险事件而非原始告警为主","evidence_ids":["E-001"],"validation":""},
+    {"id":"F-002","status":"已验证事实","statement":"派单前准备信息不完整会造成二次往返","why_it_matters":"工单必须自带设备档案、图纸、历史故障和备件建议","evidence_ids":["E-002"],"validation":""},
+    {"id":"F-003","status":"合理推断","statement":"结构化回填可以降低重复故障","why_it_matters":"处理结果需形成模型与规则迭代的数据闭环","evidence_ids":["E-003"],"validation":"试点期对比结构化回填前后的重复故障率"}
+  ],
+  "persona":{"label":"维修班长","claims":[{"dimension":"目标","statement":"在不影响生产的前提下先处理最高风险","evidence_ids":["E-001"]},{"dimension":"痛点","statement":"告警过载，派单前信息不完整","evidence_ids":["E-001","E-002"]}]},
+  "journey":[
+    {"stage":"发现","goal":"识别真正风险","actions":"对比多个系统告警","touchpoints":"监控大屏、微信","emotion":-2,"pain":"告警过载","status":"已验证事实","evidence_ids":["E-001"],"opportunity":"聚合告警并给出优先级"},
+    {"stage":"判断","goal":"判断原因与影响","actions":"查历史、打电话问人","touchpoints":"EAM、电话","emotion":-1,"pain":"经验依赖个人","status":"合理推断","evidence_ids":["E-003"],"opportunity":"提供原因和相似案例"},
+    {"stage":"派单","goal":"正确分派","actions":"微信通知工程师","touchpoints":"企业微信","emotion":0,"pain":"资料未随工单同步","status":"已验证事实","evidence_ids":["E-002"],"opportunity":"工单自带资料和备件建议"},
+    {"stage":"处置","goal":"恢复设备","actions":"到场检修并记录","touchpoints":"移动端、纸质单","emotion":-1,"pain":"二次往返与离线限制","status":"已验证事实","evidence_ids":["E-002"],"opportunity":"离线工单与到场确认"},
+    {"stage":"复盘","goal":"减少再发","actions":"周会整理表格","touchpoints":"Excel、周会","emotion":-1,"pain":"原因记录不可用","status":"已验证事实","evidence_ids":["E-003"],"opportunity":"结构化回填与经验闭环"}
+  ],
+  "opportunities":[
+    {"rank":1,"outcome":"班长能在 30 秒内确定首要处理对象","why_now":"高频且直接影响停机风险","impact":5,"frequency":5,"risk":2,"evidence_ids":["E-001"],"next_test":"用一周告警日志测试风险聚合和排序"},
+    {"rank":2,"outcome":"工程师首次到场就拿齐资料与备件","why_now":"可明显减少等待和往返","impact":4,"frequency":4,"risk":2,"evidence_ids":["E-002"],"next_test":"为 10 条试点工单自动附件资料清单"},
+    {"rank":3,"outcome":"每次处理都能成为下次诊断的有效证据","why_now":"是模型持续改善的前提","impact":4,"frequency":5,"risk":3,"evidence_ids":["E-003"],"next_test":"将处理结果改为原因、动作、备件、验证四个必填字段"}
+  ],
+  "feishu_sync":{"requested":false,"upload_all_sources":false,"numbered_h1":true,"evidence_display":"id+description+source+locator","highlight_policy":"critical-risks-only","document_title":"设备预测性维护用户调研演示"},
+  "next_questions":["风险优先级的人工判断标准是什么？","哪些信息能让工程师减少二次往返？","无网环境持续多久？","高风险告警误报的容忍度是多少？","哪些处理结果必须结构化回填？"]
+}

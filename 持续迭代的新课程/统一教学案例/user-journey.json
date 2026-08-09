@@ -1,0 +1,16 @@
+{
+  "title":"设备高风险告警闭环体验旅程",
+  "persona":"维修班长",
+  "scenario":"早班接收到多条设备告警",
+  "core_task":"从识别最高风险到完成维修闭环",
+  "evidence_note":"课程模拟资料，基于 E-001 至 E-003 构建，待真实访谈验证。",
+  "stages":[
+    {"name":"发现风险","goal":"从告警中找到真正危险的设备","actions":"查看监控大屏并对比告警","touchpoints":"监控大屏、企业微信","thoughts":"哪一条真的会导致停机？","emotion":-2,"pain":"告警过载且缺少优先级","evidence_status":"已验证事实","evidence":"E-001","opportunity":"聚合为风险事件，解释排序原因","impact":5,"frequency":5,"current_solution":1},
+    {"name":"快速判断","goal":"判断原因和影响","actions":"查历史工单、电话问资深工程师","touchpoints":"EAM、电话","thoughts":"这次和上次是同一类问题吗？","emotion":-1,"pain":"经验散落在人脑和自由文本中","evidence_status":"合理推断","evidence":"E-003 显示处理结果不可检索","opportunity":"匹配相似案例与可解释的原因建议","impact":4,"frequency":4,"current_solution":2},
+    {"name":"准备派单","goal":"把任务和资料一次给齐","actions":"选人、联系、找图纸和备件","touchpoints":"企业微信、文件夹、EAM","thoughts":"到现场别再缺东西。","emotion":0,"pain":"资料与工单分离","evidence_status":"已验证事实","evidence":"E-002","opportunity":"自动附带档案、图纸、备件和安全要求","impact":4,"frequency":4,"current_solution":2},
+    {"name":"现场处置","goal":"安全恢复设备","actions":"到场、诊断、更换备件、试运行","touchpoints":"移动端、设备、纸质工单","thoughts":"没网也得能查资料和记录。","emotion":-1,"pain":"网络不稳定、二次往返","evidence_status":"已验证事实","evidence":"E-002 与业务约束","opportunity":"离线工单、到场确认、处置检查表","impact":5,"frequency":4,"current_solution":2},
+    {"name":"验收回填","goal":"证明设备已恢复并留下有效记录","actions":"试运行、拍照、填写原因与动作","touchpoints":"移动端、验收看板","thoughts":"别再让我写一遍纸和表格。","emotion":1,"pain":"多处重复回填，字段不统一","evidence_status":"已验证事实","evidence":"E-003","opportunity":"一次结构化回填，同步 EAM 和分析平台","impact":4,"frequency":5,"current_solution":2},
+    {"name":"复盘改善","goal":"降低相同故障再发","actions":"周会查看趋势、调整规则和维保计划","touchpoints":"管理看板、周会","thoughts":"这套系统到底减少了多少损失？","emotion":1,"pain":"只有停机结果，缺少过程价值","evidence_status":"待验证假设","evidence":"需以试点前后数据验证","opportunity":"展示被提前阻断的风险与维保 ROI","impact":5,"frequency":3,"current_solution":1}
+  ],
+  "research_questions":["排序解释需要展示到什么粒度？","离线模式需要支持哪些动作？","验收是否需要双人确认？","哪些指标最能证明试点价值？"]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "产品思维导图生成"
+  short_description: "把会议、长文和产品资料整理成可交互、可折叠、可导出的思维导图"
+  default_prompt: "使用 $create-product-mind-map 把这份产品资料整理成可交互思维导图。"

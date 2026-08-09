@@ -1,0 +1,4 @@
+interface:
+  display_name: "用户体验旅程地图"
+  short_description: "把用户研究材料转成可编辑、可展示、带情绪曲线的体验旅程地图"
+  default_prompt: "Use $create-user-journey-map to turn my user research into an evidence-based journey map with JSON, interactive HTML, PNG, and optional Excel."

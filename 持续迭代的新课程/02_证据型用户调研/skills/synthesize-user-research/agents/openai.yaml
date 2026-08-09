@@ -1,0 +1,4 @@
+interface:
+  display_name: "用户调研证据综合"
+  short_description: "把访谈、照片和表格整理成可追溯的研究结论与飞书证据档案"
+  default_prompt: "请使用 $synthesize-user-research 分析我提供的全部调研素材，生成证据化客户画像和用户旅程，并将图片、音频、转写和所有原始附件同步到飞书文档。"

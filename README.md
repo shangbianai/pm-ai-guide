@@ -66,6 +66,18 @@
 - 新兴趣：Vibe Coding 分享 N 个产品项目
 - 新链接：常用 AI 工具 + 书籍 + KOL + 社群
 
+### 持续迭代的新课程
+
+新课程不再以“收藏一个工具”为目标，而是把 Skill、测试提示词、模拟素材和可见成果一起交付。本次新增五套课程，并用“智能制造设备预测性维护平台”串成一条完整链路：
+
+- `create-product-mind-map`：把长材料压缩成可讨论的产品问题结构。
+- `synthesize-user-research`：把访谈、观察和表格整理成可追溯的证据链。
+- `create-user-journey-map`：把证据放回用户完整任务，找到体验断点与产品机会。
+- `product-architecture-diagrams`：生成结构精确、可编辑的单文件 HTML 产品架构图。
+- `product-architecture-imagegen`：从 16 种构图风格中预览、自动选择或随机选择，使用 Image2 生成高表现力架构图。
+
+入口：[`/持续迭代的新课程`](/%E6%8C%81%E7%BB%AD%E8%BF%AD%E4%BB%A3%E7%9A%84%E6%96%B0%E8%AF%BE%E7%A8%8B/README.md)
+
 ## 已完成的 Skills
 
 多数报告类 Skill 采用 **JSON 数据 + Python 脚本 + HTML 模板** 架构：AI 分析结果整理为 JSON → `generate-report.py` 基于模板渲染 → 同时输出 HTML 报告和 Markdown 文档；部分 Skill（如 html-report）为**零依赖单文件模板直出**，Agent 直接编辑模板四要素（Hero 头部 / 章节正文 / REPORT_DATA / 指标卡）即交付。

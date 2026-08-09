@@ -1,0 +1,7 @@
+interface:
+  display_name: "产品架构图 Image 2 工作室"
+  short_description: "提供16种编号参考风格、提示词优化和产品架构图生成"
+  brand_color: "#155EEF"
+  default_prompt: "Use $product-architecture-imagegen to optimize my product description, preview the numbered style catalog, and generate a product architecture image."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,4 @@
+interface:
+  display_name: "讨论白板生成"
+  short_description: "把会议讨论和跨部门沟通整理成手绘式可编辑白板、图片与汇报材料"
+  default_prompt: "使用 $create-discussion-whiteboard 把这次讨论整理成可编辑手绘白板。"

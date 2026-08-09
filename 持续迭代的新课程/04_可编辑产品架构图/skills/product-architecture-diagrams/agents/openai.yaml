@@ -1,7 +1,0 @@
-interface:
-  display_name: "产品架构图生成"
-  short_description: "生成可导出图片的绚烂分层产品架构图"
-  default_prompt: "Use $product-architecture-diagrams to create a polished layered HTML product architecture diagram with PNG/JPG export from my product scope, modules, users, data, and technology stack."
-
-policy:
-  allow_implicit_invocation: true

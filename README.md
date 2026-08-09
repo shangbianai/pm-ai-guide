@@ -73,7 +73,7 @@
 - `create-product-mind-map`：把长材料压缩成可讨论的产品问题结构。
 - `synthesize-user-research`：把访谈、观察和表格整理成可追溯的证据链。
 - `create-user-journey-map`：把证据放回用户完整任务，找到体验断点与产品机会。
-- `product-architecture-diagrams`：生成结构精确、可编辑的单文件 HTML 产品架构图。
+- `create-discussion-whiteboard`：把会议讨论、领导指令和跨部门沟通整理成可继续编辑的 Excalidraw 手绘白板。
 - `product-architecture-imagegen`：从 16 种构图风格中预览、自动选择或随机选择，使用 Image2 生成高表现力架构图。
 
 入口：[`/持续迭代的新课程`](/%E6%8C%81%E7%BB%AD%E8%BF%AD%E4%BB%A3%E7%9A%84%E6%96%B0%E8%AF%BE%E7%A8%8B/README.md)

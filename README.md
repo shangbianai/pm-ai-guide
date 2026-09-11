@@ -236,18 +236,18 @@ skills/pm-slide-deck/
 
 ### 🎬 动效组件目录 Skill（animated-components）
 
-位置：`动效与3D组件Skill/animated-components/`
+位置：`附录_动效与3D组件Skill/animated-components/`
 
 2D 动效组件库目录与安装引导：**react-bits**（171 个组件，含大量 WebGL/shader 背景，极简依赖）+ **Magic UI**（78 个组件，shadcn 生态正统）。做落地页、营销站、dashboard 的动效时先查目录选组件、再 CLI 安装，不手写 Framer Motion / GSAP 重造轮子。适用于第 3 章原型设计与第 7 章 Vibe Coding 场景。
 
 ### 🧊 3D 组件目录 Skill（threejs-3d-components）
 
-位置：`动效与3D组件Skill/threejs-3d-components/`
+位置：`附录_动效与3D组件Skill/threejs-3d-components/`
 
 3D/WebGL 组件目录与安装引导，三层选型：**threeui**（104 个 Three.js shader 组件，npm 即装即用）→ **React Three Fiber + drei**（声明式定制 3D 场景）→ 原生 three.js（完全控制）。做 3D hero、WebGL 背景、沉浸式滚动网站时使用。
 
 ```
-动效与3D组件Skill/
+附录_动效与3D组件Skill/
 ├── animated-components/
 │   ├── SKILL.md                    # 选型逻辑 + 安装流程
 │   └── references/

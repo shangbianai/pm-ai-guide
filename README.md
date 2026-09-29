@@ -82,6 +82,13 @@
 
 多数报告类 Skill 采用 **JSON 数据 + Python 脚本 + HTML 模板** 架构：AI 分析结果整理为 JSON → `generate-report.py` 基于模板渲染 → 同时输出 HTML 报告和 Markdown 文档；部分 Skill（如 html-report）为**零依赖单文件模板直出**，Agent 直接编辑模板四要素（Hero 头部 / 章节正文 / REPORT_DATA / 指标卡）即交付。
 
+### 原型设计 Skills
+
+- [移动端小程序原型](%E7%AC%AC3%E7%AB%A0_%E4%BA%A7%E5%93%81%E8%AE%BE%E8%AE%A1/03_%E7%A7%BB%E5%8A%A8%E7%AB%AF%E5%8E%9F%E5%9E%8B%E8%AE%BE%E8%AE%A1%EF%BC%9A%E7%94%A8Cursor%E7%94%9F%E6%88%90%E5%B0%8F%E7%A8%8B%E5%BA%8F%E9%AB%98%E4%BF%9D%E7%9C%9F%E5%8E%9F%E5%9E%8B)：`pm-miniapp-prototype`，包含安装指令、项目规则、交互示例和可下载资料包。
+- [Web 电商后台原型](%E7%AC%AC3%E7%AB%A0_%E4%BA%A7%E5%93%81%E8%AE%BE%E8%AE%A1/04_Web%E7%AB%AF%E7%B3%BB%E7%BB%9F%E5%8E%9F%E5%9E%8B%E8%AE%BE%E8%AE%A1%EF%BC%9A%E7%94%A8Cursor%E5%81%9A%E7%94%B5%E5%95%86%E5%B9%B3%E5%8F%B0%E5%8E%9F%E5%9E%8B)：`pm-web-prototype`，包含安装指令、项目规则、交互示例和可下载资料包。
+
+原型类 Skill 按需求生成可点击 HTML，不依赖报告类 Skill 的 JSON 渲染流程。
+
 ### 🏪 市场洞察 Skill（market-insight）
 
 位置：`第1章_市场洞察/02_市场洞察Skills：内置SWOT模型等方法论/skills/market-insight/`
